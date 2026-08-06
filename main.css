@@ -164,12 +164,12 @@
   }
 
   /* ========================================
-     TOP-LEFT CONSOLE NAVIGATION
+     WII U-STYLE TOP-LEFT ICON BAR
   ======================================== */
 
   .console-nav {
     position: absolute;
-    top: 18px;
+    top: 14px;
     left: 18px;
     z-index: 3;
 
@@ -179,10 +179,13 @@
 
   .console-nav-track {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-start;
 
-    gap: 2px;
+    gap: 18px;
+
+    width: auto;
+    margin: 0;
   }
 
   /* ========================================
@@ -198,10 +201,10 @@
     align-items: center;
     justify-content: center;
 
-    width: 34px;
-    height: 34px;
+    width: 46px;
+    height: 46px;
 
-    flex: 0 0 auto;
+    flex: 0 0 46px;
     padding: 0;
 
     color: var(--icon-color);
@@ -216,6 +219,15 @@
     transition:
       transform 150ms ease,
       filter 150ms ease;
+  }
+
+  /* Slightly larger profile icon */
+  .console-nav-button:first-child {
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
+
+    margin-right: 2px;
   }
 
   /* Rainbow progression */
@@ -267,8 +279,8 @@
   .console-icon svg {
     display: block;
 
-    width: 92%;
-    height: 92%;
+    width: 88%;
+    height: 88%;
 
     overflow: visible;
     color: inherit;
@@ -276,22 +288,25 @@
     transform-origin: center;
 
     /*
-      No white outline here.
-      The SVG artwork itself should contain its stroke.
+      White outlines should live inside the SVG.
+      CSS only handles the vertical floating shadow.
     */
     filter:
-      drop-shadow(0 3px 0 rgba(0, 0, 0, 0.78))
-      drop-shadow(0 6px 5px rgba(0, 0, 0, 0.44));
+      drop-shadow(0 2px 0 rgba(0, 0, 0, 0.7))
+      drop-shadow(0 4px 4px rgba(0, 0, 0, 0.32));
 
     transition:
       transform 150ms ease,
       filter 150ms ease;
   }
 
+  .console-nav-button:first-child .console-icon svg {
+    width: 92%;
+    height: 92%;
+  }
+
   /*
-    Keeps the SVG's own stroke intact.
-    Only shapes already using currentColor inherit
-    the rainbow color.
+    Preserve white strokes and special internal colors.
   */
   .console-icon svg [fill="currentColor"] {
     fill: currentColor;
@@ -315,24 +330,16 @@
     transform: scale(1.04);
 
     filter:
-      drop-shadow(0 4px 0 rgba(0, 0, 0, 0.8))
-      drop-shadow(0 8px 6px rgba(0, 0, 0, 0.48));
+      drop-shadow(0 3px 0 rgba(0, 0, 0, 0.74))
+      drop-shadow(0 6px 5px rgba(0, 0, 0, 0.38));
   }
 
   /*
-    Active icons do not grow or move.
-    Only the indicator dot changes.
+    Active icons remain exactly the same size.
   */
-  .console-nav-button.is-active {
-    transform: none;
-  }
-
+  .console-nav-button.is-active,
   .console-nav-button.is-active .console-icon svg {
     transform: none;
-
-    filter:
-      drop-shadow(0 3px 0 rgba(0, 0, 0, 0.78))
-      drop-shadow(0 6px 5px rgba(0, 0, 0, 0.44));
   }
 
   .console-nav-button:focus-visible {
@@ -348,22 +355,21 @@
 
     position: absolute;
     left: 50%;
-    bottom: -5px;
+    bottom: -7px;
 
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
 
     background: var(--icon-color);
     border-radius: 50%;
 
     box-shadow:
-      0 2px 0 rgba(0, 0, 0, 0.58);
+      0 2px 0 rgba(0, 0, 0, 0.55);
 
     opacity: 0;
     transform: translateX(-50%);
 
-    transition:
-      opacity 150ms ease;
+    transition: opacity 150ms ease;
   }
 
   .console-nav-button.is-active::after {
@@ -422,17 +428,24 @@
 
   @media screen and (max-width: 991px) {
     .console-nav {
-      top: 18px;
-      left: 18px;
+      top: 12px;
+      left: 14px;
     }
 
     .console-nav-track {
-      gap: 7px;
+      gap: 14px;
     }
 
     .console-nav-button {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
+      flex-basis: 42px;
+    }
+
+    .console-nav-button:first-child {
+      width: 50px;
+      height: 50px;
+      flex-basis: 50px;
     }
   }
 
@@ -453,7 +466,7 @@
     }
 
     .name-header {
-      padding-top: 76px;
+      padding-top: 82px;
       padding-bottom: 14px;
     }
 
@@ -465,9 +478,9 @@
 
     .console-nav {
       position: absolute;
-      top: 16px;
-      left: 14px;
-      right: 14px;
+      top: 12px;
+      left: 12px;
+      right: 12px;
 
       width: auto;
       padding: 0;
@@ -488,25 +501,30 @@
       width: max-content;
       min-width: 100%;
 
-      gap: 7px;
+      gap: 12px;
       padding: 0 0 10px;
     }
 
     .console-nav-button {
-      width: 36px;
-      height: 36px;
-      flex: 0 0 36px;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+    }
+
+    .console-nav-button:first-child {
+      width: 48px;
+      height: 48px;
+      flex-basis: 48px;
     }
 
     .console-icon svg {
-      width: 76%;
-      height: 76%;
+      width: 88%;
+      height: 88%;
     }
 
-    .console-nav-button::after {
-      bottom: -7px;
-      width: 4px;
-      height: 4px;
+    .console-nav-button:first-child .console-icon svg {
+      width: 92%;
+      height: 92%;
     }
 
     .console-content {
