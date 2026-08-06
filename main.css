@@ -1,0 +1,551 @@
+<style>
+  :root {
+    /* Background */
+    --background-top: #121214;
+    --background-middle: #0f0f11;
+    --background-bottom: #0b0b0d;
+
+    /* Rose quartz title */
+    --rose-light: #d69aaf;
+    --rose-primary: #c27c96;
+    --rose-middle: #a95f7b;
+    --rose-dark: #71384f;
+
+    /* General UI */
+    --text-color: #ece8ea;
+    --panel-background: rgba(14, 14, 17, 0.9);
+    --panel-border: rgba(255, 255, 255, 0.07);
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    background: var(--background-bottom);
+  }
+
+  body {
+    color: var(--text-color);
+    overflow-x: hidden;
+  }
+
+  /* ========================================
+     PAGE BACKGROUND
+  ======================================== */
+
+  .page-wrapper {
+    position: relative;
+    isolation: isolate;
+
+    width: 100%;
+    min-height: 100svh;
+    overflow: hidden;
+
+    background:
+      linear-gradient(
+        180deg,
+        var(--background-top) 0%,
+        var(--background-middle) 52%,
+        var(--background-bottom) 100%
+      );
+  }
+
+  .page-wrapper::before {
+    content: "";
+    position: fixed;
+    inset: -120px;
+
+    z-index: -2;
+    pointer-events: none;
+
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='48' height='42' viewBox='0 0 48 42' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23050506'%3E%3Cpath d='M12 1 L22 7 L22 19 L12 25 L2 19 L2 7 Z'/%3E%3Cpath d='M36 1 L46 7 L46 19 L36 25 L26 19 L26 7 Z'/%3E%3Cpath d='M24 22 L34 28 L34 40 L24 46 L14 40 L14 28 Z'/%3E%3Cpath d='M0 22 L10 28 L10 40 L0 46 L-10 40 L-10 28 Z'/%3E%3Cpath d='M48 22 L58 28 L58 40 L48 46 L38 40 L38 28 Z'/%3E%3C/g%3E%3C/svg%3E");
+
+    background-repeat: repeat;
+    background-size: 48px 42px;
+    background-position: 0 0;
+
+    opacity: 0.62;
+
+    will-change: background-position;
+    animation: hexagon-drift 20s linear infinite;
+  }
+
+  .page-wrapper::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.16) 0%,
+        transparent 14%,
+        transparent 86%,
+        rgba(0, 0, 0, 0.16) 100%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.1) 100%
+      );
+  }
+
+  @keyframes hexagon-drift {
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: 96px 84px;
+    }
+  }
+
+  /* ========================================
+     TITLE
+  ======================================== */
+
+  .name-header {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    padding:
+      clamp(40px, 5vw, 72px)
+      clamp(24px, 4vw, 48px)
+      20px;
+  }
+
+  .console-name {
+    margin: 0;
+
+    font-family: "Littleguy", sans-serif;
+    font-size: clamp(64px, 6.5vw, 108px);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-align: center;
+    white-space: nowrap;
+
+    color: var(--rose-primary);
+
+    background:
+      linear-gradient(
+        180deg,
+        var(--rose-light) 0%,
+        var(--rose-primary) 30%,
+        var(--rose-middle) 64%,
+        var(--rose-dark) 100%
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter:
+      drop-shadow(0 1px 0 rgba(230, 170, 193, 0.08))
+      drop-shadow(0 3px 0 rgba(47, 21, 31, 0.92))
+      drop-shadow(0 8px 10px rgba(0, 0, 0, 0.65));
+  }
+
+  /* ========================================
+     TOP-LEFT CONSOLE NAVIGATION
+  ======================================== */
+
+  .console-nav {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 3;
+
+    width: auto;
+    padding: 0;
+  }
+
+  .console-nav-track {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 2px;
+  }
+
+  /* ========================================
+     NAV BUTTONS
+  ======================================== */
+
+  .console-nav-button {
+    --icon-color: #d987a4;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 auto;
+    padding: 0;
+
+    color: var(--icon-color);
+    text-decoration: none;
+
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    cursor: pointer;
+
+    transition:
+      transform 150ms ease,
+      filter 150ms ease;
+  }
+
+  /* Rainbow progression */
+
+  .console-nav-button:nth-child(1) {
+    --icon-color: #e86e73;
+  }
+
+  .console-nav-button:nth-child(2) {
+    --icon-color: #e89955;
+  }
+
+  .console-nav-button:nth-child(3) {
+    --icon-color: #e4c758;
+  }
+
+  .console-nav-button:nth-child(4) {
+    --icon-color: #73bd75;
+  }
+
+  .console-nav-button:nth-child(5) {
+    --icon-color: #61b9c7;
+  }
+
+  .console-nav-button:nth-child(6) {
+    --icon-color: #768fd0;
+  }
+
+  .console-nav-button:nth-child(7) {
+    --icon-color: #b47ac4;
+  }
+
+  /* ========================================
+     INLINE SVG ICONS
+  ======================================== */
+
+  .console-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: var(--icon-color);
+    pointer-events: none;
+  }
+
+  .console-icon svg {
+    display: block;
+
+    width: 92%;
+    height: 92%;
+
+    overflow: visible;
+    color: inherit;
+
+    transform-origin: center;
+
+    /*
+      No white outline here.
+      The SVG artwork itself should contain its stroke.
+    */
+    filter:
+      drop-shadow(0 3px 0 rgba(0, 0, 0, 0.78))
+      drop-shadow(0 6px 5px rgba(0, 0, 0, 0.44));
+
+    transition:
+      transform 150ms ease,
+      filter 150ms ease;
+  }
+
+  /*
+    Keeps the SVG's own stroke intact.
+    Only shapes already using currentColor inherit
+    the rainbow color.
+  */
+  .console-icon svg [fill="currentColor"] {
+    fill: currentColor;
+  }
+
+  .console-icon svg [stroke="currentColor"] {
+    stroke: currentColor;
+  }
+
+  /* ========================================
+     HOVER, FOCUS, ACTIVE
+  ======================================== */
+
+  .console-nav-button:hover,
+  .console-nav-button:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .console-nav-button:hover .console-icon svg,
+  .console-nav-button:focus-visible .console-icon svg {
+    transform: scale(1.04);
+
+    filter:
+      drop-shadow(0 4px 0 rgba(0, 0, 0, 0.8))
+      drop-shadow(0 8px 6px rgba(0, 0, 0, 0.48));
+  }
+
+  /*
+    Active icons do not grow or move.
+    Only the indicator dot changes.
+  */
+  .console-nav-button.is-active {
+    transform: none;
+  }
+
+  .console-nav-button.is-active .console-icon svg {
+    transform: none;
+
+    filter:
+      drop-shadow(0 3px 0 rgba(0, 0, 0, 0.78))
+      drop-shadow(0 6px 5px rgba(0, 0, 0, 0.44));
+  }
+
+  .console-nav-button:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+
+  /* Active indicator dot */
+
+  .console-nav-button::after {
+    content: "";
+
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+
+    width: 4px;
+    height: 4px;
+
+    background: var(--icon-color);
+    border-radius: 50%;
+
+    box-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.58);
+
+    opacity: 0;
+    transform: translateX(-50%);
+
+    transition:
+      opacity 150ms ease;
+  }
+
+  .console-nav-button.is-active::after {
+    opacity: 1;
+  }
+
+  /* ========================================
+     CONTENT PANELS
+  ======================================== */
+
+  .console-content {
+    position: relative;
+    z-index: 1;
+
+    width: min(1120px, calc(100% - 48px));
+    margin: 28px auto 48px;
+  }
+
+  .console-panel {
+    display: none;
+
+    width: 100%;
+    min-height: 360px;
+
+    padding: clamp(24px, 4vw, 48px);
+
+    background: var(--panel-background);
+    border: 1px solid var(--panel-border);
+    border-radius: 22px;
+
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.025),
+      0 18px 40px rgba(0, 0, 0, 0.32);
+  }
+
+  .console-panel.is-active {
+    display: block;
+    animation: console-panel-enter 260ms ease both;
+  }
+
+  @keyframes console-panel-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ========================================
+     TABLET
+  ======================================== */
+
+  @media screen and (max-width: 991px) {
+    .console-nav {
+      top: 18px;
+      left: 18px;
+    }
+
+    .console-nav-track {
+      gap: 7px;
+    }
+
+    .console-nav-button {
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  /* ========================================
+     MOBILE
+  ======================================== */
+
+  @media screen and (max-width: 767px) {
+    .page-wrapper {
+      overflow-x: hidden;
+      overflow-y: visible;
+    }
+
+    .page-wrapper::before {
+      background-size: 36px 31.5px;
+      animation-name: hexagon-drift-mobile;
+      animation-duration: 24s;
+    }
+
+    .name-header {
+      padding-top: 76px;
+      padding-bottom: 14px;
+    }
+
+    .console-name {
+      font-size: clamp(48px, 14vw, 72px);
+      letter-spacing: -0.01em;
+      white-space: normal;
+    }
+
+    .console-nav {
+      position: absolute;
+      top: 16px;
+      left: 14px;
+      right: 14px;
+
+      width: auto;
+      padding: 0;
+
+      overflow-x: auto;
+      overflow-y: visible;
+
+      scrollbar-width: none;
+    }
+
+    .console-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .console-nav-track {
+      justify-content: flex-start;
+
+      width: max-content;
+      min-width: 100%;
+
+      gap: 7px;
+      padding: 0 0 10px;
+    }
+
+    .console-nav-button {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+    }
+
+    .console-icon svg {
+      width: 76%;
+      height: 76%;
+    }
+
+    .console-nav-button::after {
+      bottom: -7px;
+      width: 4px;
+      height: 4px;
+    }
+
+    .console-content {
+      width: calc(100% - 24px);
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    .console-panel {
+      min-height: 300px;
+      padding: 24px 18px;
+      border-radius: 18px;
+    }
+  }
+
+  @keyframes hexagon-drift-mobile {
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: 72px 63px;
+    }
+  }
+
+  /* ========================================
+     REDUCED MOTION
+  ======================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-wrapper::before,
+    .console-panel.is-active {
+      animation: none;
+    }
+
+    .console-nav-button,
+    .console-icon svg,
+    .console-nav-button::after {
+      transition: none;
+    }
+  }
+</style>
