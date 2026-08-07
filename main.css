@@ -126,7 +126,7 @@
     width: 100%;
 
     padding:
-      clamp(40px, 5vw, 72px)
+      clamp(72px, 8vw, 102px)
       clamp(24px, 4vw, 48px)
       20px;
   }
@@ -164,7 +164,7 @@
   }
 
   /* ========================================
-     WII U-STYLE TOP-LEFT ICON BAR
+     TOP SYSTEM BAR
   ======================================== */
 
   .console-nav {
@@ -173,7 +173,12 @@
     left: 18px;
     z-index: 3;
 
+    display: flex;
+    align-items: center;
+
     width: auto;
+    height: 54px;
+
     padding: 0;
   }
 
@@ -185,11 +190,13 @@
     gap: 18px;
 
     width: auto;
+    height: 100%;
+
     margin: 0;
   }
 
   /* ========================================
-     NAV BUTTONS
+    NAV BUTTONS
   ======================================== */
 
   .console-nav-button {
@@ -201,8 +208,12 @@
     align-items: center;
     justify-content: center;
 
+    /*
+      All buttons use the same vertical box now.
+      This keeps every hover label on one baseline.
+    */
     width: 46px;
-    height: 46px;
+    height: 54px;
 
     flex: 0 0 46px;
     padding: 0;
@@ -221,16 +232,18 @@
       filter 150ms ease;
   }
 
-  /* Slightly larger profile icon */
+  /* Profile gets a little extra horizontal room */
   .console-nav-button:first-child {
     width: 54px;
-    height: 54px;
     flex-basis: 54px;
 
     margin-right: 2px;
   }
 
-  /* Rainbow progression */
+
+  /* ========================================
+    RAINBOW PROGRESSION
+  ======================================== */
 
   .console-nav-button:nth-child(1) {
     --icon-color: #e86e73;
@@ -260,8 +273,9 @@
     --icon-color: #b47ac4;
   }
 
+
   /* ========================================
-     INLINE SVG ICONS
+    ICONS
   ======================================== */
 
   .console-icon {
@@ -269,11 +283,17 @@
     align-items: center;
     justify-content: center;
 
-    width: 100%;
-    height: 100%;
+    width: 46px;
+    height: 46px;
 
     color: var(--icon-color);
     pointer-events: none;
+  }
+
+  /* Profile stays slightly larger */
+  .console-nav-button:first-child .console-icon {
+    width: 54px;
+    height: 54px;
   }
 
   .console-icon svg {
@@ -287,10 +307,6 @@
 
     transform-origin: center;
 
-    /*
-      White outlines should live inside the SVG.
-      CSS only handles the vertical floating shadow.
-    */
     filter:
       drop-shadow(0 2px 0 rgba(0, 0, 0, 0.7))
       drop-shadow(0 4px 4px rgba(0, 0, 0, 0.32));
@@ -305,9 +321,6 @@
     height: 92%;
   }
 
-  /*
-    Preserve white strokes and special internal colors.
-  */
   .console-icon svg [fill="currentColor"] {
     fill: currentColor;
   }
@@ -317,7 +330,99 @@
   }
 
   /* ========================================
-     HOVER, FOCUS, ACTIVE
+    HOVER LABEL
+  ======================================== */
+
+  .console-nav-button::before {
+    content: attr(data-panel);
+
+    position: absolute;
+    left: 50%;
+    top: calc(100% - 1px);
+
+    transform:
+      translateX(-50%)
+      translateY(-2px);
+
+    color: var(--icon-color);
+
+    font-family: "Ubuntu", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1;
+
+    text-transform: capitalize;
+    white-space: nowrap;
+
+    text-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.65);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+      opacity 140ms ease,
+      transform 140ms ease,
+      visibility 140ms ease;
+  }
+
+  /* Show label on hover/focus */
+  .console-nav-button:hover::before,
+  .console-nav-button:focus-visible::before {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+      translateX(-50%)
+      translateY(0);
+  }
+
+
+  /* ========================================
+    ACTIVE PAGE INDICATOR
+  ======================================== */
+
+  .console-nav-button::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 2px;
+
+    width: 20px;
+    height: 4px;
+
+    background: var(--icon-color);
+
+    border-radius: 999px;
+
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.18),
+      0 2px 4px rgba(0,0,0,.35);
+
+    transform:
+      translateX(-50%)
+      scaleX(0);
+
+    opacity: 0;
+
+    transition: .16s ease;
+  }
+
+  .console-nav-button.is-active::after {
+    opacity: 1;
+
+    transform:
+      translateX(-50%)
+      scaleX(1);
+  }
+
+  /* ========================================
+    HOVER / FOCUS / ACTIVE
   ======================================== */
 
   .console-nav-button:hover,
@@ -335,9 +440,14 @@
   }
 
   /*
-    Active icons remain exactly the same size.
+    Being active doesn't resize or move the icon.
+    That's communicated exclusively by the dot.
   */
-  .console-nav-button.is-active,
+
+  .console-nav-button.is-active {
+    transform: none;
+  }
+
   .console-nav-button.is-active .console-icon svg {
     transform: none;
   }
@@ -348,32 +458,42 @@
     border-radius: 8px;
   }
 
-  /* Active indicator dot */
+  /* ========================================
+     CONSOLE CLOCK
+  ======================================== */
 
-  .console-nav-button::after {
-    content: "";
+  .console-time {
+      position: absolute;
 
-    position: absolute;
-    left: 50%;
-    bottom: -7px;
+      top: 14px;
+      right: 42px;
 
-    width: 5px;
-    height: 5px;
+      z-index: 4;
 
-    background: var(--icon-color);
-    border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
 
-    box-shadow:
-      0 2px 0 rgba(0, 0, 0, 0.55);
+      height: 54px;
 
-    opacity: 0;
-    transform: translateX(-50%);
+      margin: 0;
 
-    transition: opacity 150ms ease;
-  }
+      color: #ffffff;
 
-  .console-nav-button.is-active::after {
-    opacity: 1;
+      font-family: "Ubuntu", sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1;
+
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+
+      text-align: right;
+
+      text-shadow:
+          0 2px 2px rgba(0, 0, 0, 0.45);
+
+      user-select: none;
   }
 
   /* ========================================
@@ -430,6 +550,8 @@
     .console-nav {
       top: 12px;
       left: 14px;
+
+      height: 50px;
     }
 
     .console-nav-track {
@@ -446,6 +568,15 @@
       width: 50px;
       height: 50px;
       flex-basis: 50px;
+    }
+
+    .console-time {
+      top: 12px;
+      right: 18px;
+
+      height: 50px;
+
+      font-size: 16px;
     }
   }
 
@@ -478,11 +609,14 @@
 
     .console-nav {
       position: absolute;
+
       top: 12px;
       left: 12px;
-      right: 12px;
+      right: 82px;
 
       width: auto;
+      height: 48px;
+
       padding: 0;
 
       overflow-x: auto;
@@ -499,10 +633,10 @@
       justify-content: flex-start;
 
       width: max-content;
-      min-width: 100%;
+      height: 100%;
 
       gap: 12px;
-      padding: 0 0 10px;
+      padding: 0;
     }
 
     .console-nav-button {
@@ -525,6 +659,15 @@
     .console-nav-button:first-child .console-icon svg {
       width: 92%;
       height: 92%;
+    }
+
+    .console-time {
+      top: 12px;
+      right: 14px;
+
+      height: 48px;
+
+      font-size: 15px;
     }
 
     .console-content {
