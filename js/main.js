@@ -3707,3 +3707,294 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 });
+
+/* ========================================
+   SIDD ANAND — RETRO LOGO INTERACTION
+   Add this to your existing JS.
+
+   Assumes your name element is:
+   .console-name
+
+   Hover:
+   - one rose-quartz palette wave
+   - letters hop in sequence
+
+   Click:
+   - tiny stepped shake
+   - letters scatter a few pixels
+   - pixel spark burst
+======================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const name = document.querySelector(".console-name");
+
+  if (!name) return;
+
+  const originalText = name.textContent;
+
+  const prefersReducedMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+  let hoverLocked = false;
+  let clickLocked = false;
+
+
+  /* ========================================
+     PREPARE NAME LETTERS
+  ======================================== */
+
+  function buildNameLetters() {
+    name.textContent = "";
+
+    Array.from(originalText).forEach(
+      (character, index) => {
+        const letter =
+          document.createElement("span");
+
+        letter.className =
+          "console-name-letter";
+
+        letter.style.setProperty(
+          "--letter-index",
+          index
+        );
+
+        /*
+          Spaces stay real spaces so the name
+          keeps its natural spacing.
+        */
+
+        if (character === " ") {
+          letter.innerHTML = "&nbsp;";
+        } else {
+          letter.textContent = character;
+        }
+
+        name.appendChild(letter);
+      }
+    );
+  }
+
+  buildNameLetters();
+
+
+  /* ========================================
+     ACCESSIBILITY
+  ======================================== */
+
+  name.setAttribute("role", "button");
+  name.setAttribute("tabindex", "0");
+  name.setAttribute(
+    "aria-label",
+    originalText
+  );
+
+
+  /* ========================================
+     HOVER WAVE
+  ======================================== */
+
+  function playHoverWave() {
+    if (
+      hoverLocked ||
+      clickLocked ||
+      prefersReducedMotion.matches ||
+      document.documentElement.classList.contains(
+        "user-reduced-motion"
+      )
+    ) {
+      return;
+    }
+
+    hoverLocked = true;
+
+    /*
+      Remove/re-add the class so the animation
+      can replay the next time the cursor enters.
+    */
+
+    name.classList.remove("is-hovering");
+
+    void name.offsetWidth;
+
+    name.classList.add("is-hovering");
+
+    window.setTimeout(() => {
+      name.classList.remove("is-hovering");
+      hoverLocked = false;
+    }, 760);
+  }
+
+  name.addEventListener(
+    "mouseenter",
+    playHoverWave
+  );
+
+
+  /* ========================================
+     PIXEL SPARK BURST
+  ======================================== */
+
+  const sparkDirections = [
+    [-28, -20],
+    [0, -30],
+    [28, -18],
+    [-34, 2],
+    [34, 3],
+    [-23, 22],
+    [2, 28],
+    [25, 21]
+  ];
+
+  function createSparkBurst() {
+    if (
+      prefersReducedMotion.matches ||
+      document.documentElement.classList.contains(
+        "user-reduced-motion"
+      )
+    ) {
+      return;
+    }
+
+    sparkDirections.forEach(
+      ([x, y], index) => {
+        const spark =
+          document.createElement("span");
+
+        spark.className =
+          "console-name-spark";
+
+        spark.style.setProperty(
+          "--spark-x",
+          `${x}px`
+        );
+
+        spark.style.setProperty(
+          "--spark-y",
+          `${y}px`
+        );
+
+        /*
+          Alternate two rose-quartz shades.
+        */
+
+        spark.style.background =
+          index % 2 === 0
+            ? "#f7dce6"
+            : "#d990aa";
+
+        name.appendChild(spark);
+
+        window.setTimeout(() => {
+          spark.remove();
+        }, 500);
+      }
+    );
+  }
+
+
+  /* ========================================
+     CLICK LETTER DIRECTIONS
+  ======================================== */
+
+  const burstDirections = [
+    [-3, -4],
+    [1, -5],
+    [3, -3],
+    [-2, -4],
+    [0, 0],
+    [2, -5],
+    [-3, -3],
+    [3, -4],
+    [-1, -5],
+    [2, -3],
+    [-2, -4],
+    [3, -5]
+  ];
+
+  function setLetterBurstDirections() {
+    const letters =
+      name.querySelectorAll(
+        ".console-name-letter"
+      );
+
+    letters.forEach((letter, index) => {
+      const direction =
+        burstDirections[
+          index % burstDirections.length
+        ];
+
+      letter.style.setProperty(
+        "--burst-x",
+        `${direction[0]}px`
+      );
+
+      letter.style.setProperty(
+        "--burst-y",
+        `${direction[1]}px`
+      );
+    });
+  }
+
+  setLetterBurstDirections();
+
+
+  /* ========================================
+     CLICK EASTER EGG
+  ======================================== */
+
+  function playClickAnimation() {
+    if (clickLocked) return;
+
+    clickLocked = true;
+
+    name.classList.remove("is-hovering");
+    name.classList.remove("is-clicked");
+
+    void name.offsetWidth;
+
+    name.classList.add("is-clicked");
+
+    createSparkBurst();
+
+    /*
+      If your main UI already has a click SFX,
+      you can call it here instead of adding
+      another audio file.
+    */
+
+    window.setTimeout(() => {
+      name.classList.remove("is-clicked");
+      clickLocked = false;
+      hoverLocked = false;
+    }, 650);
+  }
+
+  name.addEventListener(
+    "click",
+    playClickAnimation
+  );
+
+
+  /* ========================================
+     KEYBOARD SUPPORT
+  ======================================== */
+
+  name.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        event.key !== "Enter" &&
+        event.key !== " "
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      playClickAnimation();
+    }
+  );
+});
