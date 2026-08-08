@@ -1786,7 +1786,7 @@
 
 
   /* ========================================
-     SETTINGS OVERLAY — RETRO CONSOLE
+     SETTINGS OVERLAY — ROSE QUARTZ CONSOLE
   ======================================== */
 
   body.settings-open {
@@ -1800,9 +1800,10 @@
 
     display: grid;
     place-items: center;
-    padding: 24px;
 
-    background: rgba(3, 10, 13, 0.88);
+    padding: 28px;
+
+    background: rgba(4, 4, 6, 0.90);
 
     opacity: 0;
     visibility: hidden;
@@ -1835,32 +1836,36 @@
   ======================================== */
 
   .settings-dialog {
-    --menu-ink: #f1edc7;
-    --menu-dim: #a7a78e;
-    --menu-line: #d9d5aa;
-    --menu-bg: #071c22;
-    --menu-dark: #041317;
+    --menu-ink: var(--rose-light);
+    --menu-bright: #f7dce6;
+    --menu-mid: var(--rose-primary);
+    --menu-muted: #9f7182;
+    --menu-line: #b36f88;
+    --menu-line-dim: #684052;
+    --menu-bg: #0b0b0d;
+    --menu-bg-raised: #111014;
+    --menu-black: #050506;
 
     position: relative;
     z-index: 1;
 
-    width: min(560px, calc(100vw - 40px));
-    max-height: calc(100svh - 40px);
+    width: min(720px, calc(100vw - 48px));
+    max-height: min(820px, calc(100svh - 48px));
 
     overflow: hidden;
 
-    border: 2px solid var(--menu-line);
+    border: 3px solid var(--menu-line);
     border-radius: 0;
 
     background: var(--menu-bg);
 
     box-shadow:
-      4px 4px 0 #02090b,
+      6px 6px 0 #030304,
       inset 0 0 0 3px var(--menu-bg),
-      inset 0 0 0 4px rgba(217, 213, 170, 0.18);
+      inset 0 0 0 4px var(--menu-line-dim);
 
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(5px);
 
     transition:
       opacity 70ms steps(2, end),
@@ -1874,11 +1879,12 @@
 
   .settings-dialog::before {
     content: "";
+
     position: absolute;
-    inset: 7px;
+    inset: 10px;
     z-index: 10;
 
-    border: 1px solid rgba(217, 213, 170, 0.34);
+    border: 1px solid rgba(217, 144, 170, 0.30);
 
     pointer-events: none;
   }
@@ -1900,10 +1906,15 @@
     align-items: center;
     justify-content: center;
 
-    min-height: 72px;
-    padding: 18px 58px 12px;
+    min-height: 96px;
+
+    padding:
+      28px
+      72px
+      18px;
 
     border: 0;
+
     background: transparent;
   }
 
@@ -1914,32 +1925,40 @@
   .settings-title {
     margin: 0;
 
-    color: var(--menu-ink);
+    color: var(--menu-bright);
 
     font-family:
       "Littleguy",
       monospace;
 
-    font-size: 25px;
+    font-size: 34px;
     font-weight: 400;
     line-height: 1;
 
-    letter-spacing: 0.08em;
+    letter-spacing: 0.10em;
     text-transform: uppercase;
 
-    text-shadow: 2px 2px 0 #02090b;
+    text-shadow:
+      3px 3px 0
+      #030304;
   }
 
   .settings-title::before {
     content: "◆ ";
-    font-size: 11px;
-    vertical-align: 3px;
+
+    color: var(--menu-mid);
+
+    font-size: 13px;
+    vertical-align: 5px;
   }
 
   .settings-title::after {
     content: " ◆";
-    font-size: 11px;
-    vertical-align: 3px;
+
+    color: var(--menu-mid);
+
+    font-size: 13px;
+    vertical-align: 5px;
   }
 
 
@@ -1949,20 +1968,23 @@
 
   .settings-close {
     position: absolute;
-    top: 19px;
-    right: 20px;
+
+    top: 27px;
+    right: 30px;
 
     display: grid;
     place-items: center;
 
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
+
     padding: 0;
 
     border: 0;
     border-radius: 0;
 
-    color: var(--menu-dim);
+    color: var(--menu-muted);
+
     background: transparent;
     box-shadow: none;
 
@@ -1970,7 +1992,7 @@
       "Littleguy",
       monospace;
 
-    font-size: 22px;
+    font-size: 27px;
     font-weight: 400;
     line-height: 1;
 
@@ -1979,13 +2001,16 @@
 
   .settings-close:hover,
   .settings-close:focus-visible {
-    color: var(--menu-ink);
+    color: var(--menu-bright);
     background: transparent;
   }
 
   .settings-close:focus-visible {
-    outline: 1px dashed var(--menu-ink);
-    outline-offset: 2px;
+    outline:
+      1px dashed
+      var(--menu-mid);
+
+    outline-offset: 3px;
   }
 
   .settings-close:active {
@@ -2005,20 +2030,26 @@
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    padding: 4px 42px 18px;
+    padding:
+      6px
+      58px
+      24px;
 
     background: transparent;
 
     scrollbar-width: thin;
-    scrollbar-color: var(--menu-line) var(--menu-dark);
+
+    scrollbar-color:
+      var(--menu-line)
+      var(--menu-black);
   }
 
   .settings-body::-webkit-scrollbar {
-    width: 6px;
+    width: 7px;
   }
 
   .settings-body::-webkit-scrollbar-track {
-    background: var(--menu-dark);
+    background: var(--menu-black);
   }
 
   .settings-body::-webkit-scrollbar-thumb {
@@ -2032,8 +2063,14 @@
   ======================================== */
 
   .settings-section {
-    padding: 10px 0 13px;
-    border-bottom: 1px solid rgba(217, 213, 170, 0.20);
+    padding:
+      14px
+      0
+      17px;
+
+    border-bottom:
+      1px solid
+      rgba(217, 144, 170, 0.20);
   }
 
   .settings-section:last-child {
@@ -2053,38 +2090,51 @@
     position: relative;
 
     display: grid;
-    grid-template-columns: minmax(150px, 0.72fr) minmax(190px, 1fr);
-    gap: 16px;
+
+    grid-template-columns:
+      minmax(205px, 0.76fr)
+      minmax(270px, 1fr);
+
+    gap: 24px;
+
     align-items: center;
 
-    min-height: 34px;
-    padding: 4px 4px 4px 15px;
+    min-height: 46px;
+
+    padding:
+      6px
+      6px
+      6px
+      20px;
 
     border: 0;
     border-radius: 0;
+
     background: transparent;
 
     transition: none;
   }
 
-  .settings-option + .settings-option {
-    margin-top: 0;
+  .settings-option +
+  .settings-option {
+    margin-top: 2px;
   }
 
   .settings-option::before {
     content: "▸";
 
     position: absolute;
+
     left: 0;
     top: 50%;
 
-    color: var(--menu-ink);
+    color: var(--menu-mid);
 
     font-family:
       "Littleguy",
       monospace;
 
-    font-size: 10px;
+    font-size: 13px;
 
     opacity: 0;
 
@@ -2119,14 +2169,16 @@
       "Littleguy",
       monospace;
 
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1;
 
-    letter-spacing: 0.035em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 
-    text-shadow: 2px 2px 0 #02090b;
+    text-shadow:
+      2px 2px 0
+      #030304;
   }
 
   .settings-option-description {
@@ -2135,13 +2187,18 @@
 
 
   /* ========================================
-     SETTINGS SLIDERS — SEGMENTED METER
+     SETTINGS SLIDERS — REACTIVE PIXEL METER
   ======================================== */
 
   .settings-slider-control {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 40px;
-    gap: 10px;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      50px;
+
+    gap: 14px;
+
     align-items: center;
   }
 
@@ -2149,54 +2206,102 @@
     --slider-fill: 100%;
 
     width: 100%;
-    height: 20px;
+    height: 28px;
+
     margin: 0;
 
     appearance: none;
     -webkit-appearance: none;
 
     background: transparent;
+
     cursor: pointer;
   }
 
+  /*
+    The first repeating layer only exists up to --slider-fill.
+    The second layer draws the empty segments beneath it.
+    JS updates --slider-fill continuously while dragging.
+  */
+
   .settings-slider::-webkit-slider-runnable-track {
     width: 100%;
-    height: 13px;
+    height: 17px;
 
-    border: 2px solid var(--menu-line);
+    border:
+      2px solid
+      var(--menu-line);
+
     border-radius: 0;
 
     background:
       repeating-linear-gradient(
         90deg,
-        var(--menu-ink) 0 6px,
-        transparent 6px 9px
-      ),
-      var(--menu-dark);
+        var(--menu-bright) 0 8px,
+        var(--menu-mid) 8px 11px,
+        transparent 11px 14px
+      )
+      left center /
+      var(--slider-fill) 100%
+      no-repeat,
 
-    box-shadow: 2px 2px 0 #02090b;
+      repeating-linear-gradient(
+        90deg,
+        #563444 0 8px,
+        #38232d 8px 11px,
+        transparent 11px 14px
+      )
+      left center /
+      100% 100%
+      no-repeat,
+
+      var(--menu-black);
+
+    box-shadow:
+      3px 3px 0
+      #020203;
   }
 
   .settings-slider::-moz-range-track {
-    height: 13px;
+    height: 17px;
 
-    border: 2px solid var(--menu-line);
+    border:
+      2px solid
+      var(--menu-line);
+
     border-radius: 0;
 
     background:
       repeating-linear-gradient(
         90deg,
-        var(--menu-ink) 0 6px,
-        transparent 6px 9px
-      ),
-      var(--menu-dark);
+        var(--menu-bright) 0 8px,
+        var(--menu-mid) 8px 11px,
+        transparent 11px 14px
+      )
+      left center /
+      var(--slider-fill) 100%
+      no-repeat,
 
-    box-shadow: 2px 2px 0 #02090b;
+      repeating-linear-gradient(
+        90deg,
+        #563444 0 8px,
+        #38232d 8px 11px,
+        transparent 11px 14px
+      )
+      left center /
+      100% 100%
+      no-repeat,
+
+      var(--menu-black);
+
+    box-shadow:
+      3px 3px 0
+      #020203;
   }
 
   .settings-slider::-webkit-slider-thumb {
-    width: 5px;
-    height: 19px;
+    width: 6px;
+    height: 23px;
 
     margin-top: -5px;
 
@@ -2206,63 +2311,84 @@
     border: 0;
     border-radius: 0;
 
-    background: #ffffff;
+    background: var(--menu-bright);
 
     box-shadow:
-      1px 0 0 #02090b,
-      -1px 0 0 #02090b;
+      1px 0 0 #020203,
+      -1px 0 0 #020203;
   }
 
   .settings-slider::-moz-range-thumb {
-    width: 5px;
-    height: 19px;
+    width: 6px;
+    height: 23px;
 
     border: 0;
     border-radius: 0;
 
-    background: #ffffff;
+    background: var(--menu-bright);
+  }
+
+  .settings-slider:hover::-webkit-slider-runnable-track,
+  .settings-slider:focus-visible::-webkit-slider-runnable-track {
+    border-color: var(--menu-bright);
+  }
+
+  .settings-slider:hover::-moz-range-track,
+  .settings-slider:focus-visible::-moz-range-track {
+    border-color: var(--menu-bright);
   }
 
   .settings-slider:focus-visible {
-    outline: 1px dashed var(--menu-ink);
-    outline-offset: 3px;
+    outline:
+      1px dashed
+      var(--menu-mid);
+
+    outline-offset: 4px;
   }
 
   .settings-slider-value {
-    color: var(--menu-ink);
+    color: var(--menu-mid);
 
     font-family:
       "Littleguy",
       monospace;
 
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 400;
 
     text-align: right;
-    font-variant-numeric: tabular-nums;
+
+    font-variant-numeric:
+      tabular-nums;
   }
 
 
   /* ========================================
-     SETTINGS SWITCHES — TEXT ONLY
+     SETTINGS SWITCHES — TEXT SELECTORS
   ======================================== */
 
   .settings-toggle-option {
-    grid-template-columns: minmax(150px, 0.72fr) minmax(190px, 1fr);
+    grid-template-columns:
+      minmax(205px, 0.76fr)
+      minmax(270px, 1fr);
   }
 
   .settings-switch {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
-    gap: 8px;
+
+    gap: 12px;
 
     width: 100%;
+
     padding: 0;
 
     border: 0;
 
-    color: var(--menu-dim);
+    color: var(--menu-muted);
+
     background: transparent;
 
     font-family:
@@ -2274,14 +2400,18 @@
 
   .settings-switch::before {
     content: "◂";
-    color: var(--menu-dim);
-    font-size: 10px;
+
+    color: var(--menu-muted);
+
+    font-size: 12px;
   }
 
   .settings-switch::after {
     content: "▸";
-    color: var(--menu-dim);
-    font-size: 10px;
+
+    color: var(--menu-muted);
+
+    font-size: 12px;
   }
 
   .settings-switch-track {
@@ -2289,31 +2419,36 @@
   }
 
   .settings-switch-text {
-    min-width: 44px;
+    min-width: 58px;
 
-    color: var(--menu-dim);
+    color: var(--menu-muted);
 
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 400;
-    letter-spacing: 0.04em;
+
+    letter-spacing: 0.05em;
 
     text-align: center;
   }
 
-  .settings-switch.is-on .settings-switch-text {
-    color: var(--menu-ink);
+  .settings-switch.is-on
+  .settings-switch-text {
+    color: var(--menu-bright);
   }
 
   .settings-switch:hover::before,
   .settings-switch:hover::after,
   .settings-switch:focus-visible::before,
   .settings-switch:focus-visible::after {
-    color: var(--menu-ink);
+    color: var(--menu-mid);
   }
 
   .settings-switch:focus-visible {
-    outline: 1px dashed var(--menu-ink);
-    outline-offset: 3px;
+    outline:
+      1px dashed
+      var(--menu-mid);
+
+    outline-offset: 4px;
   }
 
 
@@ -2322,15 +2457,17 @@
   ======================================== */
 
   .settings-system-section {
-    padding-top: 13px;
+    padding-top: 17px;
   }
 
   .settings-system-row {
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    min-height: 38px;
+    min-height: 48px;
+
     padding: 0;
   }
 
@@ -2341,13 +2478,19 @@
   .settings-reset {
     position: relative;
 
-    min-height: 28px;
-    padding: 3px 18px 3px 31px;
+    min-height: 34px;
+
+    padding:
+      4px
+      22px
+      4px
+      39px;
 
     border: 0;
     border-radius: 0;
 
-    color: var(--menu-dim);
+    color: var(--menu-muted);
+
     background: transparent;
     box-shadow: none;
 
@@ -2355,10 +2498,10 @@
       "Littleguy",
       monospace;
 
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 400;
 
-    letter-spacing: 0.035em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 
     cursor: pointer;
@@ -2370,8 +2513,11 @@
     content: "▸";
 
     position: absolute;
-    left: 16px;
+
+    left: 20px;
     top: 50%;
+
+    color: var(--menu-mid);
 
     opacity: 0;
 
@@ -2380,7 +2526,7 @@
 
   .settings-reset:hover,
   .settings-reset:focus-visible {
-    color: var(--menu-ink);
+    color: var(--menu-bright);
     background: transparent;
   }
 
@@ -2390,8 +2536,11 @@
   }
 
   .settings-reset:focus-visible {
-    outline: 1px dashed var(--menu-ink);
-    outline-offset: 2px;
+    outline:
+      1px dashed
+      var(--menu-mid);
+
+    outline-offset: 3px;
   }
 
   .settings-reset:active {
@@ -2409,28 +2558,35 @@
     z-index: 8;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    min-height: 42px;
-    padding: 7px 20px 13px;
+    min-height: 54px;
+
+    padding:
+      9px
+      24px
+      18px;
 
     border: 0;
+
     background: transparent;
 
     font-family:
       "Littleguy",
       monospace;
 
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .settings-footer-hint {
     display: flex;
     align-items: center;
-    gap: 7px;
 
-    color: var(--menu-dim);
+    gap: 8px;
+
+    color: var(--menu-muted);
   }
 
   .settings-key {
@@ -2438,16 +2594,18 @@
 
     min-width: 0;
     height: auto;
+
     padding: 0;
 
     border: 0;
     border-radius: 0;
 
-    color: var(--menu-ink);
+    color: var(--menu-mid);
+
     background: transparent;
     box-shadow: none;
 
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
   }
 
@@ -2473,9 +2631,12 @@
     --rose-primary: #f0aac4;
   }
 
-  html.user-high-contrast .settings-dialog {
+  html.user-high-contrast
+  .settings-dialog {
     --menu-ink: #ffffff;
-    --menu-dim: #e8e8d2;
+    --menu-bright: #ffffff;
+    --menu-mid: #f2b4ca;
+    --menu-muted: #d7b6c2;
     --menu-line: #ffffff;
   }
 
@@ -2484,17 +2645,21 @@
      LARGE TEXT
   ======================================== */
 
-  html.user-large-text .settings-option-label {
+  html.user-large-text
+  .settings-option-label {
+    font-size: 20px;
+  }
+
+  html.user-large-text
+  .settings-switch-text,
+  html.user-large-text
+  .settings-reset {
+    font-size: 18px;
+  }
+
+  html.user-large-text
+  .settings-slider-value {
     font-size: 17px;
-  }
-
-  html.user-large-text .settings-switch-text,
-  html.user-large-text .settings-reset {
-    font-size: 15px;
-  }
-
-  html.user-large-text .settings-slider-value {
-    font-size: 14px;
   }
 
 
@@ -2502,12 +2667,18 @@
      USER REDUCED MOTION
   ======================================== */
 
-  html.user-reduced-motion .settings-overlay,
-  html.user-reduced-motion .settings-dialog,
-  html.user-reduced-motion .settings-close,
-  html.user-reduced-motion .settings-option,
-  html.user-reduced-motion .settings-reset {
-    transition: none !important;
+  html.user-reduced-motion
+  .settings-overlay,
+  html.user-reduced-motion
+  .settings-dialog,
+  html.user-reduced-motion
+  .settings-close,
+  html.user-reduced-motion
+  .settings-option,
+  html.user-reduced-motion
+  .settings-reset {
+    transition:
+      none !important;
   }
 
 
@@ -2516,70 +2687,118 @@
   ======================================== */
 
   @media screen and (max-width: 767px) {
+
     .settings-overlay {
       padding: 12px;
     }
 
     .settings-dialog {
       width: 100%;
-      max-height: calc(100svh - 24px);
-      box-shadow: 3px 3px 0 #02090b;
+
+      max-height:
+        calc(100svh - 24px);
+
+      border-width: 2px;
+
+      box-shadow:
+        4px 4px 0
+        #030304;
     }
 
     .settings-header {
-      min-height: 62px;
-      padding: 16px 48px 9px;
+      min-height: 68px;
+
+      padding:
+        18px
+        54px
+        10px;
     }
 
     .settings-title {
-      font-size: 21px;
+      font-size: 24px;
     }
 
     .settings-close {
-      top: 16px;
-      right: 16px;
+      top: 17px;
+      right: 17px;
     }
 
     .settings-body {
-      padding: 2px 24px 12px;
+      padding:
+        4px
+        26px
+        14px;
     }
 
     .settings-option,
     .settings-toggle-option {
-      grid-template-columns: minmax(120px, 0.8fr) minmax(145px, 1fr);
-      gap: 10px;
+      grid-template-columns:
+        minmax(130px, 0.82fr)
+        minmax(155px, 1fr);
+
+      gap: 12px;
+
+      min-height: 40px;
+
+      padding-left: 16px;
     }
 
     .settings-option-label {
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .settings-slider-control {
-      grid-template-columns: minmax(0, 1fr) 34px;
-      gap: 7px;
+      grid-template-columns:
+        minmax(0, 1fr)
+        38px;
+
+      gap: 8px;
+    }
+
+    .settings-slider {
+      height: 24px;
+    }
+
+    .settings-slider::-webkit-slider-runnable-track {
+      height: 14px;
+    }
+
+    .settings-slider::-moz-range-track {
+      height: 14px;
     }
 
     .settings-slider-value,
     .settings-switch-text {
-      font-size: 10px;
+      font-size: 11px;
+    }
+
+    .settings-reset {
+      font-size: 13px;
     }
 
     .settings-footer {
-      padding-bottom: 11px;
+      min-height: 44px;
+
+      padding-bottom: 13px;
     }
   }
+
 
   /* ========================================
      REDUCED MOTION
   ======================================== */
 
-  @media (prefers-reduced-motion: reduce) {
+  @media (
+    prefers-reduced-motion: reduce
+  ) {
+
     .page-wrapper::before,
     .console-panel.is-active,
     .game-card-frame::before,
     .music-pixel-icon,
     .settings-screen-scan {
-      animation: none !important;
+      animation:
+        none !important;
     }
 
     .console-nav-button,
