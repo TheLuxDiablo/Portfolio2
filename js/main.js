@@ -616,7 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     consoleFooter.innerHTML = `
       <span class="console-footer-owner">
-        © ${year} Sidd Anand
+        (c) ${year} Sidd Anand
       </span>
 
       <span class="console-footer-divider"></span>
@@ -1649,9 +1649,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <span
         class="game-edge-arrow"
         aria-hidden="true"
-      >
-        ‹
-      </span>
+      ></span>
     `;
 
     rightEdge =
@@ -1670,9 +1668,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <span
         class="game-edge-arrow"
         aria-hidden="true"
-      >
-        ›
-      </span>
+      ></span>
     `;
 
     gameLibrary.appendChild(leftEdge);
@@ -3770,7 +3766,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ========================================
-   SIDD ANAND — CURSOR-REACTIVE LOGO
+   SIDD ANAND - CURSOR-REACTIVE LOGO
    Add this to your existing JS.
 
    Hover:
