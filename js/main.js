@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const GAME_HOVER_SFX_COOLDOWN = 45;
   const NAV_HOVER_SFX_COOLDOWN = 45;
 
-  const GAME_PRESS_DELAY = 85;
   const GAME_LAUNCH_DURATION = 390;
 
 
@@ -1913,30 +1912,25 @@ document.addEventListener("DOMContentLoaded", () => {
     ensureUiAudio();
     playGameLaunchSfx();
 
-    card.classList.add("is-pressing");
+    card.classList.add("is-launching");
 
     if (isReducedMotion()) {
       window.location.href = destination;
       return;
     }
 
-    window.setTimeout(() => {
-      card.classList.remove("is-pressing");
-      card.classList.add("is-launching");
+    pageWrapper?.classList.add(
+      "is-game-launching"
+    );
 
-      pageWrapper?.classList.add(
-        "is-game-launching"
-      );
-
-      fadeMusicTo(
-        0,
-        GAME_LAUNCH_DURATION
-      );
-    }, GAME_PRESS_DELAY);
+    fadeMusicTo(
+      0,
+      GAME_LAUNCH_DURATION
+    );
 
     window.setTimeout(() => {
       window.location.href = destination;
-    }, GAME_PRESS_DELAY + GAME_LAUNCH_DURATION);
+    }, GAME_LAUNCH_DURATION);
   }
 
 
