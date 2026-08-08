@@ -70,6 +70,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* ========================================
+     RESPONSIVE / TOUCH MODE
+  ======================================== */
+
+  const mobileInteractionQuery = window.matchMedia(
+    "(max-width: 767px)"
+  );
+
+  function isMobileInteractionMode() {
+    return mobileInteractionQuery.matches;
+  }
+
+  function updateViewportLayout() {
+    const viewportHeight = Math.round(
+      window.visualViewport?.height || window.innerHeight
+    );
+
+    document.documentElement.style.setProperty(
+      "--console-viewport-height",
+      `${viewportHeight}px`
+    );
+
+    if (activeGameCard) {
+      requestAnimationFrame(() => {
+        positionGameDetails(activeGameCard);
+      });
+    }
+  }
+
+
+  /* ========================================
      USER SETTINGS
   ======================================== */
 
@@ -1961,12 +1991,62 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        event.preventDefault();
+        /*
+          Mobile uses a deliberate two-tap pattern:
+          first tap = reveal the hover state/details,
+          second tap on that same card = open project.
+          Desktop keeps its normal one-click behavior.
+        */
+        if (isMobileInteractionMode()) {
+          event.preventDefault();
 
+          if (activeGameCard !== card) {
+            setActiveGame(card);
+
+            card.scrollIntoView({
+              behavior: isReducedMotion() ? "auto" : "smooth",
+              block: "nearest",
+              inline: "center"
+            });
+
+            return;
+          }
+
+          launchGameCard(card);
+          return;
+        }
+
+        event.preventDefault();
         launchGameCard(card);
       }
     );
   });
+
+
+  /* ========================================
+     MOBILE TAP-AWAY
+  ======================================== */
+
+  document.addEventListener(
+    "pointerdown",
+    event => {
+      if (
+        !isMobileInteractionMode() ||
+        !activeGameCard ||
+        settingsOpen ||
+        gameLaunchInProgress
+      ) {
+        return;
+      }
+
+      if (event.target.closest(".game-card")) {
+        return;
+      }
+
+      clearActiveGame();
+    },
+    { passive: true }
+  );
 
   function positionGameDetails(card) {
     const details = card.querySelector(".game-card-details");
@@ -1977,7 +2057,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const cardRect = card.getBoundingClientRect();
 
-    const viewportPadding = 24;
+    const viewportPadding =
+      isMobileInteractionMode() ? 14 : 24;
 
     const desiredCenter =
       cardRect.left +
@@ -1985,8 +2066,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const detailsWidth =
       Math.min(
-        620,
-        window.innerWidth * 0.78
+        isMobileInteractionMode() ? 360 : 620,
+        window.innerWidth *
+          (isMobileInteractionMode() ? 0.90 : 0.78)
       );
 
     const halfWidth =
@@ -3537,20 +3619,37 @@ document.addEventListener("DOMContentLoaded", () => {
      RESIZE
   ======================================== */
 
+  function handleViewportChange() {
+    targetPanVelocity = 0;
+    currentPanVelocity = 0;
+
+    setEdgeStrength(
+      0,
+      0
+    );
+
+    updateViewportLayout();
+
+    requestAnimationFrame(
+      updateEdgeAvailability
+    );
+  }
+
   window.addEventListener(
     "resize",
+    handleViewportChange
+  );
+
+  window.visualViewport?.addEventListener(
+    "resize",
+    handleViewportChange
+  );
+
+  mobileInteractionQuery.addEventListener?.(
+    "change",
     () => {
-      targetPanVelocity = 0;
-      currentPanVelocity = 0;
-
-      setEdgeStrength(
-        0,
-        0
-      );
-
-      requestAnimationFrame(
-        updateEdgeAvailability
-      );
+      clearActiveGame();
+      handleViewportChange();
     }
   );
 
@@ -3701,6 +3800,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   updateMusicIcon();
+  updateViewportLayout();
 
   requestAnimationFrame(
     updateEdgeAvailability
