@@ -1786,7 +1786,7 @@
 
 
   /* ========================================
-     SETTINGS OVERLAY
+     SETTINGS OVERLAY — RETRO CONSOLE
   ======================================== */
 
   body.settings-open {
@@ -1796,25 +1796,21 @@
   .settings-overlay {
     position: fixed;
     inset: 0;
-
     z-index: 1000;
 
     display: grid;
     place-items: center;
+    padding: 24px;
 
-    padding: 28px;
-
-    background:
-      rgba(5, 5, 7, 0.82);
+    background: rgba(3, 10, 13, 0.88);
 
     opacity: 0;
     visibility: hidden;
-
     pointer-events: none;
 
     transition:
-      opacity 100ms steps(3, end),
-      visibility 100ms;
+      opacity 80ms steps(2, end),
+      visibility 80ms;
   }
 
   .settings-overlay.is-open,
@@ -1830,10 +1826,7 @@
   .settings-backdrop {
     position: absolute;
     inset: 0;
-
     background: transparent;
-
-    pointer-events: auto;
   }
 
 
@@ -1842,93 +1835,53 @@
   ======================================== */
 
   .settings-dialog {
-    --settings-bg: #171619;
-    --settings-panel: #1e1c20;
-    --settings-line: #39343a;
+    --menu-ink: #f1edc7;
+    --menu-dim: #a7a78e;
+    --menu-line: #d9d5aa;
+    --menu-bg: #071c22;
+    --menu-dark: #041317;
 
     position: relative;
-
     z-index: 1;
 
-    display: flex;
-    flex-direction: column;
-
-    width:
-      min(
-        760px,
-        calc(100vw - 48px)
-      );
-
-    max-height:
-      min(
-        760px,
-        calc(100svh - 48px)
-      );
+    width: min(560px, calc(100vw - 40px));
+    max-height: calc(100svh - 40px);
 
     overflow: hidden;
 
-    border:
-      2px solid
-      #4c4248;
-
+    border: 2px solid var(--menu-line);
     border-radius: 0;
 
-    background:
-      var(--settings-bg);
+    background: var(--menu-bg);
 
     box-shadow:
-      6px 6px 0
-      #08080a;
+      4px 4px 0 #02090b,
+      inset 0 0 0 3px var(--menu-bg),
+      inset 0 0 0 4px rgba(217, 213, 170, 0.18);
 
     opacity: 0;
-
-    transform:
-      translateY(8px);
+    transform: translateY(4px);
 
     transition:
-      opacity 90ms steps(3, end),
-      transform 90ms steps(3, end);
+      opacity 70ms steps(2, end),
+      transform 70ms steps(2, end);
   }
 
-  .settings-overlay.is-open
-  .settings-dialog {
+  .settings-overlay.is-open .settings-dialog {
     opacity: 1;
-
-    transform:
-      translateY(0);
+    transform: translateY(0);
   }
-
-
-  /* ========================================
-     SUBTLE CRT TEXTURE
-  ======================================== */
 
   .settings-dialog::before {
     content: "";
-
     position: absolute;
-    inset: 0;
+    inset: 7px;
+    z-index: 10;
 
-    z-index: 7;
+    border: 1px solid rgba(217, 213, 170, 0.34);
 
     pointer-events: none;
-
-    background:
-      repeating-linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.009) 0,
-        rgba(255, 255, 255, 0.009) 1px,
-        transparent 1px,
-        transparent 4px
-      );
-
-    opacity: 0.35;
   }
-
-
-  /* ========================================
-     SCREEN SCAN
-  ======================================== */
 
   .settings-screen-scan {
     display: none;
@@ -1941,62 +1894,52 @@
 
   .settings-header {
     position: relative;
-
     z-index: 8;
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
-    min-height: 66px;
+    min-height: 72px;
+    padding: 18px 58px 12px;
 
-    padding:
-      0
-      16px
-      0
-      20px;
-
-    border-bottom:
-      2px solid
-      #3a3338;
-
-    background:
-      #211e22;
+    border: 0;
+    background: transparent;
   }
 
   .settings-header::before {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    top: 0;
-    bottom: 0;
-
-    width: 5px;
-
-    background:
-      var(--rose-primary);
+    display: none;
   }
 
   .settings-title {
     margin: 0;
 
-    color:
-      #f2ecef;
+    color: var(--menu-ink);
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size:
-      27px;
-
-    font-weight: 600;
+    font-size: 25px;
+    font-weight: 400;
     line-height: 1;
 
-    letter-spacing:
-      -0.02em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    text-shadow: 2px 2px 0 #02090b;
+  }
+
+  .settings-title::before {
+    content: "◆ ";
+    font-size: 11px;
+    vertical-align: 3px;
+  }
+
+  .settings-title::after {
+    content: " ◆";
+    font-size: 11px;
+    vertical-align: 3px;
   }
 
 
@@ -2005,61 +1948,48 @@
   ======================================== */
 
   .settings-close {
+    position: absolute;
+    top: 19px;
+    right: 20px;
+
     display: grid;
     place-items: center;
 
-    width: 36px;
-    height: 36px;
-
-    flex: 0 0 36px;
-
+    width: 28px;
+    height: 28px;
     padding: 0;
 
-    border:
-      1px solid
-      #4a4248;
-
+    border: 0;
     border-radius: 0;
 
-    color:
-      #a8a1a6;
-
-    background:
-      #151417;
-
-    box-shadow:
-      2px 2px 0
-      #09090b;
+    color: var(--menu-dim);
+    background: transparent;
+    box-shadow: none;
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size: 23px;
+    font-size: 22px;
     font-weight: 400;
     line-height: 1;
 
     cursor: pointer;
-
-    transition:
-      color 60ms linear,
-      background 60ms linear,
-      transform 60ms steps(2, end);
   }
 
   .settings-close:hover,
   .settings-close:focus-visible {
-    color:
-      #fff4f8;
+    color: var(--menu-ink);
+    background: transparent;
+  }
 
-    background:
-      #35252d;
+  .settings-close:focus-visible {
+    outline: 1px dashed var(--menu-ink);
+    outline-offset: 2px;
   }
 
   .settings-close:active {
-    transform:
-      translate(2px, 2px);
-
+    transform: translate(1px, 1px);
     box-shadow: none;
   }
 
@@ -2070,44 +2000,30 @@
 
   .settings-body {
     position: relative;
-
     z-index: 2;
-
-    flex: 1;
 
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    padding:
-      10px
-      20px
-      12px;
+    padding: 4px 42px 18px;
 
-    background:
-      var(--settings-bg);
+    background: transparent;
 
-    scrollbar-width:
-      thin;
-
-    scrollbar-color:
-      #765266
-      #111013;
+    scrollbar-width: thin;
+    scrollbar-color: var(--menu-line) var(--menu-dark);
   }
 
   .settings-body::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   .settings-body::-webkit-scrollbar-track {
-    background:
-      #111013;
+    background: var(--menu-dark);
   }
 
   .settings-body::-webkit-scrollbar-thumb {
+    background: var(--menu-line);
     border-radius: 0;
-
-    background:
-      #765266;
   }
 
 
@@ -2116,14 +2032,8 @@
   ======================================== */
 
   .settings-section {
-    padding:
-      18px
-      0
-      20px;
-
-    border-bottom:
-      1px solid
-      #302c31;
+    padding: 10px 0 13px;
+    border-bottom: 1px solid rgba(217, 213, 170, 0.20);
   }
 
   .settings-section:last-child {
@@ -2131,67 +2041,7 @@
   }
 
   .settings-section-heading {
-    display: flex;
-    align-items: center;
-
-    gap: 9px;
-
-    margin-bottom:
-      8px;
-  }
-
-  .settings-section-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 28px;
-    height: 20px;
-
-    flex: 0 0 28px;
-
-    border:
-      1px solid
-      #5d4652;
-
-    border-radius: 0;
-
-    color:
-      #e3a0b8;
-
-    background:
-      #21171d;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      9px;
-
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .settings-section-title {
-    color:
-      #d8d2d5;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      12px;
-
-    font-weight: 700;
-    line-height: 1;
-
-    letter-spacing:
-      0.08em;
-
-    text-transform:
-      uppercase;
+    display: none;
   }
 
 
@@ -2200,48 +2050,56 @@
   ======================================== */
 
   .settings-option {
+    position: relative;
+
     display: grid;
-
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(220px, 0.52fr);
-
-    gap: 24px;
-
+    grid-template-columns: minmax(150px, 0.72fr) minmax(190px, 1fr);
+    gap: 16px;
     align-items: center;
 
-    min-height: 70px;
+    min-height: 34px;
+    padding: 4px 4px 4px 15px;
 
-    padding:
-      11px
-      12px;
-
-    border:
-      1px solid
-      transparent;
-
+    border: 0;
     border-radius: 0;
+    background: transparent;
 
-    background:
-      transparent;
-
-    transition:
-      background 60ms linear,
-      border-color 60ms linear;
+    transition: none;
   }
 
-  .settings-option +
-  .settings-option {
-    margin-top: 2px;
+  .settings-option + .settings-option {
+    margin-top: 0;
+  }
+
+  .settings-option::before {
+    content: "▸";
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+
+    color: var(--menu-ink);
+
+    font-family:
+      "Littleguy",
+      monospace;
+
+    font-size: 10px;
+
+    opacity: 0;
+
+    transform: translateY(-50%);
   }
 
   .settings-option:hover,
   .settings-option:focus-within {
-    border-color:
-      #423941;
+    border-color: transparent;
+    background: transparent;
+  }
 
-    background:
-      #1c191d;
+  .settings-option:hover::before,
+  .settings-option:focus-within::before {
+    opacity: 1;
   }
 
 
@@ -2251,60 +2109,39 @@
 
   .settings-option-copy {
     min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 5px;
+    display: block;
   }
 
   .settings-option-label {
-    color:
-      #ece6e9;
+    color: var(--menu-ink);
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size:
-      14px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1;
 
-    font-weight: 500;
-    line-height: 1.2;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+
+    text-shadow: 2px 2px 0 #02090b;
   }
 
   .settings-option-description {
-    max-width:
-      430px;
-
-    color:
-      #827b80;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      11px;
-
-    font-weight: 400;
-    line-height: 1.4;
+    display: none;
   }
 
 
   /* ========================================
-     SETTINGS SLIDERS
+     SETTINGS SLIDERS — SEGMENTED METER
   ======================================== */
 
   .settings-slider-control {
     display: grid;
-
-    grid-template-columns:
-      minmax(0, 1fr)
-      46px;
-
-    gap: 11px;
-
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 10px;
     align-items: center;
   }
 
@@ -2312,403 +2149,254 @@
     --slider-fill: 100%;
 
     width: 100%;
-    height: 26px;
-
+    height: 20px;
     margin: 0;
 
     appearance: none;
     -webkit-appearance: none;
 
-    background:
-      transparent;
-
+    background: transparent;
     cursor: pointer;
   }
 
   .settings-slider::-webkit-slider-runnable-track {
     width: 100%;
-    height: 7px;
+    height: 13px;
 
-    border:
-      1px solid
-      #08080a;
-
+    border: 2px solid var(--menu-line);
     border-radius: 0;
 
     background:
-      linear-gradient(
+      repeating-linear-gradient(
         90deg,
-        #bd728d 0%,
-        #bd728d var(--slider-fill),
-        #2b282d var(--slider-fill),
-        #2b282d 100%
-      );
+        var(--menu-ink) 0 6px,
+        transparent 6px 9px
+      ),
+      var(--menu-dark);
+
+    box-shadow: 2px 2px 0 #02090b;
   }
 
   .settings-slider::-moz-range-track {
-    height: 7px;
+    height: 13px;
 
-    border:
-      1px solid
-      #08080a;
-
+    border: 2px solid var(--menu-line);
     border-radius: 0;
 
     background:
-      linear-gradient(
+      repeating-linear-gradient(
         90deg,
-        #bd728d 0%,
-        #bd728d var(--slider-fill),
-        #2b282d var(--slider-fill),
-        #2b282d 100%
-      );
+        var(--menu-ink) 0 6px,
+        transparent 6px 9px
+      ),
+      var(--menu-dark);
+
+    box-shadow: 2px 2px 0 #02090b;
   }
 
   .settings-slider::-webkit-slider-thumb {
-    width: 14px;
-    height: 20px;
+    width: 5px;
+    height: 19px;
 
-    margin-top:
-      -7px;
+    margin-top: -5px;
 
     appearance: none;
     -webkit-appearance: none;
 
-    border:
-      1px solid
-      #e7b2c5;
-
+    border: 0;
     border-radius: 0;
 
-    background:
-      #9f5d76;
+    background: #ffffff;
 
     box-shadow:
-      2px 2px 0
-      #08080a;
+      1px 0 0 #02090b,
+      -1px 0 0 #02090b;
   }
 
   .settings-slider::-moz-range-thumb {
-    width: 14px;
-    height: 20px;
+    width: 5px;
+    height: 19px;
 
-    border:
-      1px solid
-      #e7b2c5;
-
+    border: 0;
     border-radius: 0;
 
-    background:
-      #9f5d76;
-
-    box-shadow:
-      2px 2px 0
-      #08080a;
+    background: #ffffff;
   }
 
   .settings-slider:focus-visible {
-    outline:
-      1px dashed
-      #e5a5bc;
-
-    outline-offset:
-      4px;
+    outline: 1px dashed var(--menu-ink);
+    outline-offset: 3px;
   }
 
   .settings-slider-value {
-    color:
-      #d89bb2;
+    color: var(--menu-ink);
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size:
-      11px;
+    font-size: 12px;
+    font-weight: 400;
 
-    font-weight: 700;
-
-    text-align:
-      right;
-
-    font-variant-numeric:
-      tabular-nums;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
   }
 
 
   /* ========================================
-     SETTINGS SWITCHES
+     SETTINGS SWITCHES — TEXT ONLY
   ======================================== */
 
   .settings-toggle-option {
-    grid-template-columns:
-      minmax(0, 1fr)
-      auto;
+    grid-template-columns: minmax(150px, 0.72fr) minmax(190px, 1fr);
   }
 
   .settings-switch {
-    display: grid;
-
-    grid-template-columns:
-      52px
-      30px;
-
-    gap: 9px;
-
+    display: flex;
     align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
 
+    width: 100%;
     padding: 0;
 
     border: 0;
 
-    color:
-      #746f73;
-
-    background:
-      transparent;
+    color: var(--menu-dim);
+    background: transparent;
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
     cursor: pointer;
   }
 
+  .settings-switch::before {
+    content: "◂";
+    color: var(--menu-dim);
+    font-size: 10px;
+  }
+
+  .settings-switch::after {
+    content: "▸";
+    color: var(--menu-dim);
+    font-size: 10px;
+  }
+
   .settings-switch-track {
-    position: relative;
-
-    display: block;
-
-    width: 52px;
-    height: 26px;
-
-    border:
-      1px solid
-      #464047;
-
-    border-radius: 0;
-
-    background:
-      #0f0e11;
-
-    box-shadow:
-      inset
-      0 1px 0
-      rgba(255, 255, 255, 0.02);
-  }
-
-  .settings-switch-thumb {
-    position: absolute;
-
-    left: 3px;
-    top: 3px;
-
-    width: 18px;
-    height: 18px;
-
-    border-radius: 0;
-
-    background:
-      #666268;
-
-    box-shadow:
-      1px 1px 0
-      #050506;
-
-    transform:
-      translateX(0);
-
-    transition:
-      transform 70ms steps(2, end),
-      background 70ms linear;
-  }
-
-  .settings-switch.is-on
-  .settings-switch-track {
-    border-color:
-      #795265;
-
-    background:
-      #24161d;
-  }
-
-  .settings-switch.is-on
-  .settings-switch-thumb {
-    background:
-      #d990aa;
-
-    transform:
-      translateX(26px);
+    display: none;
   }
 
   .settings-switch-text {
-    font-size:
-      9px;
+    min-width: 44px;
 
-    font-weight:
-      700;
+    color: var(--menu-dim);
 
-    letter-spacing:
-      0.04em;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
 
-    text-align:
-      left;
+    text-align: center;
   }
 
-  .settings-switch.is-on
-  .settings-switch-text {
-    color:
-      #e3a5bb;
+  .settings-switch.is-on .settings-switch-text {
+    color: var(--menu-ink);
+  }
+
+  .settings-switch:hover::before,
+  .settings-switch:hover::after,
+  .settings-switch:focus-visible::before,
+  .settings-switch:focus-visible::after {
+    color: var(--menu-ink);
   }
 
   .settings-switch:focus-visible {
-    outline:
-      1px dashed
-      #e5a5bc;
-
-    outline-offset:
-      4px;
+    outline: 1px dashed var(--menu-ink);
+    outline-offset: 3px;
   }
 
 
   /* ========================================
-     SYSTEM ROW
+     SYSTEM / RESET
   ======================================== */
+
+  .settings-system-section {
+    padding-top: 13px;
+  }
 
   .settings-system-row {
     display: flex;
-
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
-    gap: 18px;
-
-    min-height:
-      52px;
-
-    padding:
-      8px
-      12px
-      2px;
+    min-height: 38px;
+    padding: 0;
   }
 
   .settings-profile-status {
-    display: flex;
-
-    align-items: center;
-
-    gap: 9px;
+    display: none;
   }
-
-  .settings-profile-dot {
-    display: block;
-
-    width: 7px;
-    height: 7px;
-
-    flex:
-      0 0 7px;
-
-    border-radius: 0;
-
-    background:
-      #76ba74;
-  }
-
-  .settings-profile-title {
-    color:
-      #c3bcc0;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      11px;
-
-    font-weight:
-      600;
-  }
-
-  .settings-profile-subtitle {
-    margin-top:
-      2px;
-
-    color:
-      #6f696d;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      9px;
-  }
-
-
-  /* ========================================
-     RESET BUTTON
-  ======================================== */
 
   .settings-reset {
-    min-height:
-      32px;
+    position: relative;
 
-    padding:
-      0
-      12px;
+    min-height: 28px;
+    padding: 3px 18px 3px 31px;
 
-    border:
-      1px solid
-      #454047;
+    border: 0;
+    border-radius: 0;
 
-    border-radius:
-      0;
-
-    color:
-      #9f989d;
-
-    background:
-      #141316;
-
-    box-shadow:
-      2px 2px 0
-      #08080a;
+    color: var(--menu-dim);
+    background: transparent;
+    box-shadow: none;
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size:
-      10px;
+    font-size: 13px;
+    font-weight: 400;
 
-    font-weight:
-      600;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
 
-    cursor:
-      pointer;
+    cursor: pointer;
 
-    transition:
-      color 60ms linear,
-      background 60ms linear,
-      transform 60ms steps(2, end);
+    transition: none;
+  }
+
+  .settings-reset::before {
+    content: "▸";
+
+    position: absolute;
+    left: 16px;
+    top: 50%;
+
+    opacity: 0;
+
+    transform: translateY(-50%);
   }
 
   .settings-reset:hover,
   .settings-reset:focus-visible {
-    color:
-      #f0c0d1;
+    color: var(--menu-ink);
+    background: transparent;
+  }
 
-    background:
-      #2d2027;
+  .settings-reset:hover::before,
+  .settings-reset:focus-visible::before {
+    opacity: 1;
+  }
+
+  .settings-reset:focus-visible {
+    outline: 1px dashed var(--menu-ink);
+    outline-offset: 2px;
   }
 
   .settings-reset:active {
-    transform:
-      translate(2px, 2px);
-
-    box-shadow:
-      none;
+    transform: translate(1px, 1px);
+    box-shadow: none;
   }
 
 
@@ -2718,100 +2406,61 @@
 
   .settings-footer {
     position: relative;
-
     z-index: 8;
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
-    gap: 16px;
+    min-height: 42px;
+    padding: 7px 20px 13px;
 
-    min-height:
-      44px;
-
-    padding:
-      7px
-      16px
-      7px
-      20px;
-
-    border-top:
-      1px solid
-      #343036;
-
-    background:
-      #111013;
+    border: 0;
+    background: transparent;
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size:
-      9px;
+    font-size: 10px;
   }
 
   .settings-footer-hint {
     display: flex;
     align-items: center;
+    gap: 7px;
 
-    gap: 8px;
-
-    color:
-      #706a6e;
+    color: var(--menu-dim);
   }
 
   .settings-key {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline;
 
-    min-width:
-      31px;
+    min-width: 0;
+    height: auto;
+    padding: 0;
 
-    height:
-      21px;
+    border: 0;
+    border-radius: 0;
 
-    padding:
-      0
-      6px;
+    color: var(--menu-ink);
+    background: transparent;
+    box-shadow: none;
 
-    border:
-      1px solid
-      #3d383e;
+    font-size: 10px;
+    font-weight: 400;
+  }
 
-    border-radius:
-      0;
+  .settings-key::before {
+    content: "[";
+  }
 
-    color:
-      #bfb7bc;
-
-    background:
-      #0c0b0e;
-
-    box-shadow:
-      1px 1px 0
-      #050506;
-
-    font-size:
-      8px;
-
-    font-weight:
-      700;
+  .settings-key::after {
+    content: "]";
   }
 
   .settings-footer-status {
-    color:
-      #9d687c;
-
-    font-size:
-      8px;
-
-    font-weight:
-      700;
-
-    letter-spacing:
-      0.12em;
+    display: none;
   }
 
 
@@ -2824,24 +2473,10 @@
     --rose-primary: #f0aac4;
   }
 
-  html.user-high-contrast
-  .settings-dialog {
-    border-color:
-      #bfb8bc;
-  }
-
-  html.user-high-contrast
-  .settings-option-label,
-  html.user-high-contrast
-  .settings-section-title {
-    color:
-      #ffffff;
-  }
-
-  html.user-high-contrast
-  .settings-option-description {
-    color:
-      #c8c3c6;
+  html.user-high-contrast .settings-dialog {
+    --menu-ink: #ffffff;
+    --menu-dim: #e8e8d2;
+    --menu-line: #ffffff;
   }
 
 
@@ -2849,28 +2484,17 @@
      LARGE TEXT
   ======================================== */
 
-  html.user-large-text
-  .settings-option-label {
-    font-size:
-      16px;
+  html.user-large-text .settings-option-label {
+    font-size: 17px;
   }
 
-  html.user-large-text
-  .settings-option-description {
-    font-size:
-      13px;
+  html.user-large-text .settings-switch-text,
+  html.user-large-text .settings-reset {
+    font-size: 15px;
   }
 
-  html.user-large-text
-  .settings-section-title {
-    font-size:
-      14px;
-  }
-
-  html.user-large-text
-  .settings-footer {
-    font-size:
-      11px;
+  html.user-large-text .settings-slider-value {
+    font-size: 14px;
   }
 
 
@@ -2878,20 +2502,12 @@
      USER REDUCED MOTION
   ======================================== */
 
-  html.user-reduced-motion
-  .settings-overlay,
-  html.user-reduced-motion
-  .settings-dialog,
-  html.user-reduced-motion
-  .settings-close,
-  html.user-reduced-motion
-  .settings-option,
-  html.user-reduced-motion
-  .settings-switch-thumb,
-  html.user-reduced-motion
-  .settings-reset {
-    transition:
-      none !important;
+  html.user-reduced-motion .settings-overlay,
+  html.user-reduced-motion .settings-dialog,
+  html.user-reduced-motion .settings-close,
+  html.user-reduced-motion .settings-option,
+  html.user-reduced-motion .settings-reset {
+    transition: none !important;
   }
 
 
@@ -2900,119 +2516,56 @@
   ======================================== */
 
   @media screen and (max-width: 767px) {
-
     .settings-overlay {
-      place-items:
-        end center;
-
-      padding:
-        10px;
+      padding: 12px;
     }
 
     .settings-dialog {
-      width:
-        100%;
-
-      max-height:
-        calc(100svh - 20px);
-
-      box-shadow:
-        4px 4px 0
-        #08080a;
+      width: 100%;
+      max-height: calc(100svh - 24px);
+      box-shadow: 3px 3px 0 #02090b;
     }
 
     .settings-header {
-      min-height:
-        60px;
-
-      padding:
-        0
-        13px
-        0
-        17px;
+      min-height: 62px;
+      padding: 16px 48px 9px;
     }
 
     .settings-title {
-      font-size:
-        23px;
+      font-size: 21px;
     }
 
     .settings-close {
-      width:
-        34px;
-
-      height:
-        34px;
-
-      flex-basis:
-        34px;
+      top: 16px;
+      right: 16px;
     }
 
     .settings-body {
-      padding:
-        8px
-        10px
-        10px;
+      padding: 2px 24px 12px;
     }
 
-    .settings-section {
-      padding:
-        14px
-        0
-        16px;
-    }
-
-    .settings-option {
-      grid-template-columns:
-        1fr;
-
-      gap:
-        10px;
-
-      min-height:
-        0;
-
-      padding:
-        11px
-        8px;
-    }
-
+    .settings-option,
     .settings-toggle-option {
-      grid-template-columns:
-        minmax(0, 1fr)
-        auto;
+      grid-template-columns: minmax(120px, 0.8fr) minmax(145px, 1fr);
+      gap: 10px;
+    }
 
-      gap:
-        14px;
+    .settings-option-label {
+      font-size: 12px;
     }
 
     .settings-slider-control {
-      grid-template-columns:
-        minmax(0, 1fr)
-        44px;
+      grid-template-columns: minmax(0, 1fr) 34px;
+      gap: 7px;
     }
 
-    .settings-option-description {
-      max-width:
-        none;
-    }
-
-    .settings-system-row {
-      padding:
-        8px
-        8px
-        2px;
-    }
-
-    .settings-profile-subtitle {
-      display:
-        none;
+    .settings-slider-value,
+    .settings-switch-text {
+      font-size: 10px;
     }
 
     .settings-footer {
-      padding:
-        7px
-        12px;
+      padding-bottom: 11px;
     }
   }
 
@@ -3020,17 +2573,13 @@
      REDUCED MOTION
   ======================================== */
 
-  @media (
-    prefers-reduced-motion: reduce
-  ) {
-
+  @media (prefers-reduced-motion: reduce) {
     .page-wrapper::before,
     .console-panel.is-active,
     .game-card-frame::before,
     .music-pixel-icon,
     .settings-screen-scan {
-      animation:
-        none !important;
+      animation: none !important;
     }
 
     .console-nav-button,
@@ -3048,8 +2597,6 @@
     .settings-dialog,
     .settings-close,
     .settings-option,
-    .settings-switch-track,
-    .settings-switch-thumb,
     .settings-reset {
       transition: none;
     }
