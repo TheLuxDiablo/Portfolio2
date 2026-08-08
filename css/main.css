@@ -4607,6 +4607,295 @@ body,
 .game-edge-right .game-edge-arrow::before {
   border-width: 3px 3px 0 0;
   transform: rotate(45deg);
+}
+
+/* ============================================================
+   COMPOSITION PASS 4
+   Lower desktop composition + Safari-safe name + zero-glyph mobile settings.
+   This block intentionally comes last.
+============================================================ */
+
+/* ------------------------------------------------------------
+   NAME RENDERING
+   Put the rose fill on every generated letter. Safari can inherit
+   -webkit-text-fill-color: transparent from the old parent style
+   without inheriting the parent's background clip.
+------------------------------------------------------------ */
+
+.console-name {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: var(--rose-primary);
+}
+
+.console-name-letter {
+  color: var(--rose-primary) !important;
+  background:
+    linear-gradient(
+      180deg,
+      var(--rose-light) 0%,
+      var(--rose-primary) 30%,
+      var(--rose-middle) 64%,
+      var(--rose-dark) 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Keep the tactile desktop reaction while changing brightness/position. */
+.console-name.is-reacting .console-name-letter {
+  filter:
+    brightness(var(--letter-brightness, 1));
+}
+
+/* ------------------------------------------------------------
+   DESKTOP / LAPTOP COMPOSITION
+   Nav and clock stay pinned. Name + shelf move down together.
+   The shelf gets larger while preserving a protected info/footer zone.
+------------------------------------------------------------ */
+
+@media screen and (min-width: 768px) {
+  :root {
+    --console-header-stack: clamp(176px, 24vh, 248px);
+    --console-footer-space: clamp(46px, 6vh, 60px);
+    --console-shelf-top-gap: clamp(18px, 2.3vh, 26px);
+    --game-card-size: clamp(260px, min(30vw, 43vh), 420px);
+    --game-details-space: clamp(98px, 13.5vh, 128px);
+  }
+
+  .name-header {
+    height: var(--console-header-stack);
+    min-height: var(--console-header-stack);
+    padding:
+      var(--console-topbar-height)
+      clamp(24px, 4vw, 52px)
+      clamp(12px, 1.7vh, 18px);
+    align-items: flex-end;
+  }
+
+  .console-name {
+    font-size: clamp(54px, min(6.4vw, 9.8vh), 106px);
+  }
+
+  .console-content {
+    height: calc(
+      var(--console-viewport-height)
+      - var(--console-header-stack)
+      - var(--console-footer-space)
+    );
+  }
+
+  .game-strip {
+    padding-top: var(--console-shelf-top-gap);
+  }
+
+  .game-card.is-pointer-target,
+  .game-card:focus-visible {
+    transform:
+      translateX(var(--shelf-lean))
+      translateY(-5px)
+      scale(1.03);
+  }
+}
+
+/* Typical MacBook browser heights. */
+@media screen and (min-width: 768px) and (max-height: 900px) {
+  :root {
+    --console-header-stack: clamp(164px, 23vh, 214px);
+    --console-footer-space: 46px;
+    --console-shelf-top-gap: clamp(18px, 2.4vh, 23px);
+    --game-card-size: clamp(248px, min(29.5vw, 42vh), 372px);
+    --game-details-space: clamp(90px, 12.5vh, 110px);
+  }
+
+  .console-name {
+    font-size: clamp(50px, min(6.1vw, 9.1vh), 82px);
+  }
+}
+
+/* Short laptop windows still preserve the same rhythm rather than
+   jumping the shelf back toward the top. */
+@media screen and (min-width: 768px) and (max-height: 720px) {
+  :root {
+    --console-header-stack: clamp(142px, 22vh, 162px);
+    --console-footer-space: 40px;
+    --console-shelf-top-gap: 16px;
+    --game-card-size: clamp(214px, min(28vw, 39vh), 278px);
+    --game-details-space: 78px;
+  }
+
+  .console-name {
+    font-size: clamp(42px, min(5.7vw, 8.3vh), 60px);
+  }
+}
+
+/* ------------------------------------------------------------
+   MOBILE NAME
+   Explicit paint and stacking make the split-letter logo reliable
+   in Mobile Safari and Chrome iOS.
+------------------------------------------------------------ */
+
+@media screen and (max-width: 767px) {
+  :root {
+    --console-header-stack: clamp(132px, 19vh, 172px);
+  }
+
+  .name-header {
+    position: relative;
+    z-index: 2;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    height: var(--console-header-stack);
+    min-height: var(--console-header-stack);
+
+    padding:
+      68px
+      14px
+      10px;
+
+    align-items: flex-end;
+    justify-content: center;
+    overflow: visible !important;
+  }
+
+  .console-name {
+    position: relative;
+    z-index: 3;
+
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: auto;
+    max-width: calc(100vw - 20px);
+    min-height: 1.08em;
+
+    font-size: clamp(42px, 13vw, 64px);
+    line-height: 1.04;
+    white-space: nowrap;
+
+    filter:
+      drop-shadow(0 2px 0 rgba(47, 21, 31, 0.92))
+      drop-shadow(0 6px 8px rgba(0, 0, 0, 0.52));
+  }
+
+  .console-name-letter {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    color: var(--rose-primary) !important;
+
+    background:
+      linear-gradient(
+        180deg,
+        var(--rose-light) 0%,
+        var(--rose-primary) 38%,
+        var(--rose-middle) 72%,
+        var(--rose-dark) 100%
+      ) !important;
+
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .console-content {
+    height: calc(
+      var(--console-viewport-height)
+      - var(--console-header-stack)
+      - var(--console-footer-space)
+    );
+  }
+}
+
+/* Very short phones: retain a visible logo, then give space back to shelf. */
+@media screen and (max-width: 767px) and (max-height: 650px) {
+  :root {
+    --console-header-stack: 108px;
+  }
+
+  .name-header {
+    padding-top: 52px;
+    padding-bottom: 5px;
+  }
+
+  .console-name {
+    font-size: clamp(34px, 10.5vw, 46px);
+  }
+}
+
+/* ------------------------------------------------------------
+   MOBILE SETTINGS: NO DECORATIVE GLYPH PATH AT ALL
+   We remove generated decoration and draw only the close mark with
+   background gradients on the button itself.
+------------------------------------------------------------ */
+
+@media screen and (max-width: 767px) {
+  .settings-title::before,
+  .settings-title::after,
+  .settings-option::before,
+  .settings-reset::before,
+  .settings-switch::before,
+  .settings-switch::after,
+  .settings-close > span::before,
+  .settings-close > span::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .settings-title {
+    padding: 0 !important;
+  }
+
+  .settings-option,
+  .settings-toggle-option {
+    padding-left: 4px;
+  }
+
+  .settings-reset {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .settings-switch {
+    gap: 0;
+  }
+
+  .settings-close {
+    display: block;
+    font-size: 0 !important;
+
+    background:
+      linear-gradient(
+        45deg,
+        transparent calc(50% - 1px),
+        currentColor calc(50% - 1px),
+        currentColor calc(50% + 1px),
+        transparent calc(50% + 1px)
+      ),
+      linear-gradient(
+        -45deg,
+        transparent calc(50% - 1px),
+        currentColor calc(50% - 1px),
+        currentColor calc(50% + 1px),
+        transparent calc(50% + 1px)
+      ) !important;
+
+    background-size: 18px 18px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .settings-close > span {
+    display: none !important;
+  }
 }  /* ========================================
      ANIMATABLE QUARTZ ANGLE
   ======================================== */
@@ -9216,4 +9505,293 @@ body,
 .game-edge-right .game-edge-arrow::before {
   border-width: 3px 3px 0 0;
   transform: rotate(45deg);
+}
+
+/* ============================================================
+   COMPOSITION PASS 4
+   Lower desktop composition + Safari-safe name + zero-glyph mobile settings.
+   This block intentionally comes last.
+============================================================ */
+
+/* ------------------------------------------------------------
+   NAME RENDERING
+   Put the rose fill on every generated letter. Safari can inherit
+   -webkit-text-fill-color: transparent from the old parent style
+   without inheriting the parent's background clip.
+------------------------------------------------------------ */
+
+.console-name {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: var(--rose-primary);
+}
+
+.console-name-letter {
+  color: var(--rose-primary) !important;
+  background:
+    linear-gradient(
+      180deg,
+      var(--rose-light) 0%,
+      var(--rose-primary) 30%,
+      var(--rose-middle) 64%,
+      var(--rose-dark) 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Keep the tactile desktop reaction while changing brightness/position. */
+.console-name.is-reacting .console-name-letter {
+  filter:
+    brightness(var(--letter-brightness, 1));
+}
+
+/* ------------------------------------------------------------
+   DESKTOP / LAPTOP COMPOSITION
+   Nav and clock stay pinned. Name + shelf move down together.
+   The shelf gets larger while preserving a protected info/footer zone.
+------------------------------------------------------------ */
+
+@media screen and (min-width: 768px) {
+  :root {
+    --console-header-stack: clamp(176px, 24vh, 248px);
+    --console-footer-space: clamp(46px, 6vh, 60px);
+    --console-shelf-top-gap: clamp(18px, 2.3vh, 26px);
+    --game-card-size: clamp(260px, min(30vw, 43vh), 420px);
+    --game-details-space: clamp(98px, 13.5vh, 128px);
+  }
+
+  .name-header {
+    height: var(--console-header-stack);
+    min-height: var(--console-header-stack);
+    padding:
+      var(--console-topbar-height)
+      clamp(24px, 4vw, 52px)
+      clamp(12px, 1.7vh, 18px);
+    align-items: flex-end;
+  }
+
+  .console-name {
+    font-size: clamp(54px, min(6.4vw, 9.8vh), 106px);
+  }
+
+  .console-content {
+    height: calc(
+      var(--console-viewport-height)
+      - var(--console-header-stack)
+      - var(--console-footer-space)
+    );
+  }
+
+  .game-strip {
+    padding-top: var(--console-shelf-top-gap);
+  }
+
+  .game-card.is-pointer-target,
+  .game-card:focus-visible {
+    transform:
+      translateX(var(--shelf-lean))
+      translateY(-5px)
+      scale(1.03);
+  }
+}
+
+/* Typical MacBook browser heights. */
+@media screen and (min-width: 768px) and (max-height: 900px) {
+  :root {
+    --console-header-stack: clamp(164px, 23vh, 214px);
+    --console-footer-space: 46px;
+    --console-shelf-top-gap: clamp(18px, 2.4vh, 23px);
+    --game-card-size: clamp(248px, min(29.5vw, 42vh), 372px);
+    --game-details-space: clamp(90px, 12.5vh, 110px);
+  }
+
+  .console-name {
+    font-size: clamp(50px, min(6.1vw, 9.1vh), 82px);
+  }
+}
+
+/* Short laptop windows still preserve the same rhythm rather than
+   jumping the shelf back toward the top. */
+@media screen and (min-width: 768px) and (max-height: 720px) {
+  :root {
+    --console-header-stack: clamp(142px, 22vh, 162px);
+    --console-footer-space: 40px;
+    --console-shelf-top-gap: 16px;
+    --game-card-size: clamp(214px, min(28vw, 39vh), 278px);
+    --game-details-space: 78px;
+  }
+
+  .console-name {
+    font-size: clamp(42px, min(5.7vw, 8.3vh), 60px);
+  }
+}
+
+/* ------------------------------------------------------------
+   MOBILE NAME
+   Explicit paint and stacking make the split-letter logo reliable
+   in Mobile Safari and Chrome iOS.
+------------------------------------------------------------ */
+
+@media screen and (max-width: 767px) {
+  :root {
+    --console-header-stack: clamp(132px, 19vh, 172px);
+  }
+
+  .name-header {
+    position: relative;
+    z-index: 2;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    height: var(--console-header-stack);
+    min-height: var(--console-header-stack);
+
+    padding:
+      68px
+      14px
+      10px;
+
+    align-items: flex-end;
+    justify-content: center;
+    overflow: visible !important;
+  }
+
+  .console-name {
+    position: relative;
+    z-index: 3;
+
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    width: auto;
+    max-width: calc(100vw - 20px);
+    min-height: 1.08em;
+
+    font-size: clamp(42px, 13vw, 64px);
+    line-height: 1.04;
+    white-space: nowrap;
+
+    filter:
+      drop-shadow(0 2px 0 rgba(47, 21, 31, 0.92))
+      drop-shadow(0 6px 8px rgba(0, 0, 0, 0.52));
+  }
+
+  .console-name-letter {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    color: var(--rose-primary) !important;
+
+    background:
+      linear-gradient(
+        180deg,
+        var(--rose-light) 0%,
+        var(--rose-primary) 38%,
+        var(--rose-middle) 72%,
+        var(--rose-dark) 100%
+      ) !important;
+
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .console-content {
+    height: calc(
+      var(--console-viewport-height)
+      - var(--console-header-stack)
+      - var(--console-footer-space)
+    );
+  }
+}
+
+/* Very short phones: retain a visible logo, then give space back to shelf. */
+@media screen and (max-width: 767px) and (max-height: 650px) {
+  :root {
+    --console-header-stack: 108px;
+  }
+
+  .name-header {
+    padding-top: 52px;
+    padding-bottom: 5px;
+  }
+
+  .console-name {
+    font-size: clamp(34px, 10.5vw, 46px);
+  }
+}
+
+/* ------------------------------------------------------------
+   MOBILE SETTINGS: NO DECORATIVE GLYPH PATH AT ALL
+   We remove generated decoration and draw only the close mark with
+   background gradients on the button itself.
+------------------------------------------------------------ */
+
+@media screen and (max-width: 767px) {
+  .settings-title::before,
+  .settings-title::after,
+  .settings-option::before,
+  .settings-reset::before,
+  .settings-switch::before,
+  .settings-switch::after,
+  .settings-close > span::before,
+  .settings-close > span::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .settings-title {
+    padding: 0 !important;
+  }
+
+  .settings-option,
+  .settings-toggle-option {
+    padding-left: 4px;
+  }
+
+  .settings-reset {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .settings-switch {
+    gap: 0;
+  }
+
+  .settings-close {
+    display: block;
+    font-size: 0 !important;
+
+    background:
+      linear-gradient(
+        45deg,
+        transparent calc(50% - 1px),
+        currentColor calc(50% - 1px),
+        currentColor calc(50% + 1px),
+        transparent calc(50% + 1px)
+      ),
+      linear-gradient(
+        -45deg,
+        transparent calc(50% - 1px),
+        currentColor calc(50% - 1px),
+        currentColor calc(50% + 1px),
+        transparent calc(50% + 1px)
+      ) !important;
+
+    background-size: 18px 18px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .settings-close > span {
+    display: none !important;
+  }
 }
