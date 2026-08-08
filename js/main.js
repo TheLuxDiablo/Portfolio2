@@ -778,7 +778,7 @@ document.addEventListener("DOMContentLoaded", () => {
             aria-label="Close settings"
             title="Close settings"
           >
-            <span aria-hidden="true">×</span>
+            <span aria-hidden="true"></span>
           </button>
 
         </header>
@@ -2049,57 +2049,18 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   function positionGameDetails(card) {
-    const details = card.querySelector(".game-card-details");
+    const details = card?.querySelector(".game-card-details");
 
     if (!details) {
       return;
     }
 
-    const cardRect = card.getBoundingClientRect();
-
-    const viewportPadding =
-      isMobileInteractionMode() ? 14 : 24;
-
-    const desiredCenter =
-      cardRect.left +
-      cardRect.width / 2;
-
-    const detailsWidth =
-      Math.min(
-        isMobileInteractionMode() ? 360 : 620,
-        window.innerWidth *
-          (isMobileInteractionMode() ? 0.90 : 0.78)
-      );
-
-    const halfWidth =
-      detailsWidth / 2;
-
-    const minCenter =
-      viewportPadding +
-      halfWidth;
-
-    const maxCenter =
-      window.innerWidth -
-      viewportPadding -
-      halfWidth;
-
-    const clampedCenter =
-      Math.max(
-        minCenter,
-        Math.min(
-          maxCenter,
-          desiredCenter
-        )
-      );
-
-    const offset =
-      clampedCenter -
-      desiredCenter;
-
-    details.style.setProperty(
-      "--details-offset-x",
-      `${offset}px`
-    );
+    /*
+      Details are intentionally tile-relative now.
+      CSS owns their width and keeps left: 50% / translateX(-50%),
+      so the visual center can never drift away from the card.
+    */
+    details.style.removeProperty("--details-offset-x");
   }
 
   /* ========================================
