@@ -3337,21 +3337,23 @@
   }
 
 /* ========================================
-   SIDD ANAND — RETRO LOGO INTERACTION
+   SIDD ANAND — CURSOR-REACTIVE LOGO
    Drop this at the END of your existing CSS.
    Assumes your name element is .console-name
 ======================================== */
 
 .console-name {
   position: relative;
+
   display: inline-flex;
   align-items: baseline;
 
   cursor: pointer;
   user-select: none;
 
-  /* Keeps the tiny letter hops from shifting layout */
-  min-height: 1.15em;
+  min-height: 1.2em;
+
+  transform-origin: center bottom;
 }
 
 .console-name-letter {
@@ -3359,260 +3361,119 @@
 
   color: inherit;
 
-  transform: translateY(0);
-  will-change: transform, color, text-shadow;
+  transform:
+    translate(
+      var(--letter-x, 0px),
+      var(--letter-y, 0px)
+    )
+    rotate(
+      var(--letter-rotate, 0deg)
+    )
+    scale(
+      var(--letter-scale, 1)
+    );
+
+  filter:
+    brightness(
+      var(--letter-brightness, 1)
+    );
+
+  text-shadow:
+    0 0 0 transparent;
+
+  transition:
+    transform 90ms steps(2, end),
+    color 90ms steps(2, end),
+    filter 90ms steps(2, end),
+    text-shadow 90ms steps(2, end);
+
+  will-change:
+    transform,
+    color,
+    filter;
 }
 
 
 /* ========================================
-   HOVER — ROSE QUARTZ LETTER WAVE
+   HOVER ACTIVE STATE
 ======================================== */
 
-.console-name.is-hovering .console-name-letter {
+.console-name.is-reacting
+.console-name-letter {
+  color:
+    color-mix(
+      in srgb,
+      var(--rose-light)
+      var(--letter-pink, 0%),
+      var(--rose-primary)
+    );
+
+  text-shadow:
+    0 2px 0
+    rgba(113, 56, 79, 0.38);
+}
+
+
+/* ========================================
+   CLICK — PRESS / REBOUND
+======================================== */
+
+.console-name.is-pressed {
   animation:
-    console-name-wave
-    420ms
+    console-name-press
+    190ms
     steps(1, end)
     both;
-
-  animation-delay:
-    calc(var(--letter-index) * 28ms);
 }
 
-@keyframes console-name-wave {
+@keyframes console-name-press {
   0% {
-    color: inherit;
-    transform: translateY(0);
-    text-shadow: inherit;
+    transform:
+      translateY(0)
+      scaleX(1)
+      scaleY(1);
   }
 
-  20% {
-    color: #d990aa;
-    transform: translateY(-2px);
-    text-shadow:
-      0 2px 0
-      rgba(179, 111, 136, 0.24);
+  24% {
+    transform:
+      translateY(3px)
+      scaleX(1.018)
+      scaleY(0.965);
   }
 
-  40% {
-    color: #f7dce6;
-    transform: translateY(-4px);
-    text-shadow:
-      0 3px 0
-      rgba(217, 144, 170, 0.30);
+  52% {
+    transform:
+      translateY(-1px)
+      scaleX(0.994)
+      scaleY(1.012);
   }
 
-  60% {
-    color: #d990aa;
-    transform: translateY(-2px);
-    text-shadow:
-      0 2px 0
-      rgba(179, 111, 136, 0.24);
+  72% {
+    transform:
+      translateY(1px)
+      scaleX(1.004)
+      scaleY(0.996);
   }
 
-  80%,
   100% {
-    color: inherit;
-    transform: translateY(0);
-    text-shadow: inherit;
+    transform:
+      translateY(0)
+      scaleX(1)
+      scaleY(1);
   }
 }
 
 
 /* ========================================
-   CLICK — LITTLE ROSE QUARTZ BURST
-======================================== */
-
-.console-name.is-clicked {
-  animation:
-    console-name-click
-    260ms
-    steps(1, end);
-}
-
-.console-name.is-clicked .console-name-letter {
-  animation:
-    console-name-letter-pop
-    360ms
-    steps(1, end)
-    both;
-
-  animation-delay:
-    calc(var(--letter-index) * 18ms);
-}
-
-@keyframes console-name-click {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  20% {
-    transform: translate(-2px, 0);
-  }
-
-  40% {
-    transform: translate(2px, -1px);
-  }
-
-  60% {
-    transform: translate(-1px, 1px);
-  }
-
-  80% {
-    transform: translate(1px, 0);
-  }
-
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes console-name-letter-pop {
-  0% {
-    color: inherit;
-    transform: translate(0, 0);
-  }
-
-  20% {
-    color: #f7dce6;
-    transform:
-      translate(
-        var(--burst-x),
-        var(--burst-y)
-      );
-  }
-
-  45% {
-    color: #d990aa;
-    transform:
-      translate(
-        calc(var(--burst-x) * -0.45),
-        calc(var(--burst-y) * -0.45)
-      );
-  }
-
-  70% {
-    color: #b36f88;
-    transform: translate(0, -2px);
-  }
-
-  100% {
-    color: inherit;
-    transform: translate(0, 0);
-  }
-}
-
-
-/* ========================================
-   CLICK SPARKLES
-======================================== */
-
-.console-name-spark {
-  position: absolute;
-  z-index: 10;
-
-  left: 50%;
-  top: 48%;
-
-  width: 5px;
-  height: 5px;
-
-  background: #f7dce6;
-
-  pointer-events: none;
-
-  transform: translate(-50%, -50%);
-
-  animation:
-    console-name-spark
-    430ms
-    steps(1, end)
-    forwards;
-}
-
-.console-name-spark::before,
-.console-name-spark::after {
-  content: "";
-
-  position: absolute;
-
-  background: inherit;
-}
-
-.console-name-spark::before {
-  width: 3px;
-  height: 3px;
-
-  left: -4px;
-  top: 1px;
-}
-
-.console-name-spark::after {
-  width: 3px;
-  height: 3px;
-
-  right: -4px;
-  top: 1px;
-}
-
-@keyframes console-name-spark {
-  0% {
-    opacity: 0;
-    transform:
-      translate(-50%, -50%)
-      translate(0, 0)
-      scale(1);
-  }
-
-  15% {
-    opacity: 1;
-  }
-
-  45% {
-    opacity: 1;
-    transform:
-      translate(-50%, -50%)
-      translate(
-        var(--spark-x),
-        var(--spark-y)
-      )
-      scale(1);
-  }
-
-  75% {
-    opacity: 1;
-    transform:
-      translate(-50%, -50%)
-      translate(
-        calc(var(--spark-x) * 1.35),
-        calc(var(--spark-y) * 1.35)
-      )
-      scale(0.75);
-  }
-
-  100% {
-    opacity: 0;
-    transform:
-      translate(-50%, -50%)
-      translate(
-        calc(var(--spark-x) * 1.55),
-        calc(var(--spark-y) * 1.55)
-      )
-      scale(0);
-  }
-}
-
-
-/* ========================================
-   KEYBOARD FOCUS
+   FOCUS
 ======================================== */
 
 .console-name:focus-visible {
   outline:
     1px dashed
-    #d990aa;
+    var(--rose-primary);
 
-  outline-offset: 5px;
+  outline-offset: 7px;
 }
 
 
@@ -3621,30 +3482,27 @@
 ======================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .console-name.is-hovering .console-name-letter,
-  .console-name.is-clicked,
-  .console-name.is-clicked .console-name-letter,
-  .console-name-spark {
-    animation: none !important;
+
+  .console-name-letter {
+    transition: none;
   }
 
-  .console-name:hover {
-    color: #f7dce6;
+  .console-name.is-pressed {
+    animation: none;
+  }
+
+  .console-name:hover
+  .console-name-letter {
+    color: var(--rose-light);
   }
 }
 
 html.user-reduced-motion
-.console-name.is-hovering
-.console-name-letter,
+.console-name-letter {
+  transition: none !important;
+}
 
 html.user-reduced-motion
-.console-name.is-clicked,
-
-html.user-reduced-motion
-.console-name.is-clicked
-.console-name-letter,
-
-html.user-reduced-motion
-.console-name-spark {
+.console-name.is-pressed {
   animation: none !important;
 }

@@ -3709,292 +3709,475 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ========================================
-   SIDD ANAND — RETRO LOGO INTERACTION
+   SIDD ANAND — CURSOR-REACTIVE LOGO
    Add this to your existing JS.
 
-   Assumes your name element is:
-   .console-name
-
    Hover:
-   - one rose-quartz palette wave
-   - letters hop in sequence
+   - reacts continuously to cursor position
+   - closest letters lift, brighten, scale,
+     and tilt the most
+   - nearby letters follow with falloff
 
    Click:
-   - tiny stepped shake
-   - letters scatter a few pixels
-   - pixel spark burst
+   - quick press-in / rebound
+   - no spark burst or fake scatter
 ======================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const name = document.querySelector(".console-name");
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  if (!name) return;
+    const name =
+      document.querySelector(
+        ".console-name"
+      );
 
-  const originalText = name.textContent;
+    if (!name) {
+      return;
+    }
 
-  const prefersReducedMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
+    const originalText =
+      name.textContent;
 
-  let hoverLocked = false;
-  let clickLocked = false;
+    const prefersReducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+    let pressLocked = false;
 
 
-  /* ========================================
-     PREPARE NAME LETTERS
-  ======================================== */
+    /* ========================================
+       BUILD LETTER SPANS
+    ======================================== */
 
-  function buildNameLetters() {
-    name.textContent = "";
+    function buildNameLetters() {
 
-    Array.from(originalText).forEach(
-      (character, index) => {
-        const letter =
-          document.createElement("span");
+      name.textContent = "";
 
-        letter.className =
-          "console-name-letter";
-
-        letter.style.setProperty(
-          "--letter-index",
+      Array.from(
+        originalText
+      ).forEach(
+        (
+          character,
           index
-        );
+        ) => {
 
-        /*
-          Spaces stay real spaces so the name
-          keeps its natural spacing.
-        */
+          const letter =
+            document.createElement(
+              "span"
+            );
 
-        if (character === " ") {
-          letter.innerHTML = "&nbsp;";
-        } else {
-          letter.textContent = character;
+          letter.className =
+            "console-name-letter";
+
+          letter.dataset.index =
+            String(index);
+
+          if (
+            character === " "
+          ) {
+            letter.innerHTML =
+              "&nbsp;";
+          } else {
+            letter.textContent =
+              character;
+          }
+
+          name.appendChild(
+            letter
+          );
         }
-
-        name.appendChild(letter);
-      }
-    );
-  }
-
-  buildNameLetters();
-
-
-  /* ========================================
-     ACCESSIBILITY
-  ======================================== */
-
-  name.setAttribute("role", "button");
-  name.setAttribute("tabindex", "0");
-  name.setAttribute(
-    "aria-label",
-    originalText
-  );
-
-
-  /* ========================================
-     HOVER WAVE
-  ======================================== */
-
-  function playHoverWave() {
-    if (
-      hoverLocked ||
-      clickLocked ||
-      prefersReducedMotion.matches ||
-      document.documentElement.classList.contains(
-        "user-reduced-motion"
-      )
-    ) {
-      return;
+      );
     }
 
-    hoverLocked = true;
-
-    /*
-      Remove/re-add the class so the animation
-      can replay the next time the cursor enters.
-    */
-
-    name.classList.remove("is-hovering");
-
-    void name.offsetWidth;
-
-    name.classList.add("is-hovering");
-
-    window.setTimeout(() => {
-      name.classList.remove("is-hovering");
-      hoverLocked = false;
-    }, 760);
-  }
-
-  name.addEventListener(
-    "mouseenter",
-    playHoverWave
-  );
+    buildNameLetters();
 
 
-  /* ========================================
-     PIXEL SPARK BURST
-  ======================================== */
+    /* ========================================
+       ACCESSIBILITY
+    ======================================== */
 
-  const sparkDirections = [
-    [-28, -20],
-    [0, -30],
-    [28, -18],
-    [-34, 2],
-    [34, 3],
-    [-23, 22],
-    [2, 28],
-    [25, 21]
-  ];
+    name.setAttribute(
+      "role",
+      "button"
+    );
 
-  function createSparkBurst() {
-    if (
-      prefersReducedMotion.matches ||
-      document.documentElement.classList.contains(
-        "user-reduced-motion"
-      )
-    ) {
-      return;
+    name.setAttribute(
+      "tabindex",
+      "0"
+    );
+
+    name.setAttribute(
+      "aria-label",
+      originalText
+    );
+
+
+    /* ========================================
+       HELPERS
+    ======================================== */
+
+    function isReducedMotion() {
+      return (
+        prefersReducedMotion.matches ||
+        document.documentElement
+          .classList
+          .contains(
+            "user-reduced-motion"
+          )
+      );
     }
 
-    sparkDirections.forEach(
-      ([x, y], index) => {
-        const spark =
-          document.createElement("span");
 
-        spark.className =
-          "console-name-spark";
+    function clamp(
+      value,
+      min,
+      max
+    ) {
+      return Math.min(
+        max,
+        Math.max(
+          min,
+          value
+        )
+      );
+    }
 
-        spark.style.setProperty(
-          "--spark-x",
-          `${x}px`
+
+    function resetLetters() {
+
+      const letters =
+        name.querySelectorAll(
+          ".console-name-letter"
         );
 
-        spark.style.setProperty(
-          "--spark-y",
-          `${y}px`
-        );
+      letters.forEach(
+        letter => {
 
-        /*
-          Alternate two rose-quartz shades.
-        */
+          letter.style.setProperty(
+            "--letter-x",
+            "0px"
+          );
 
-        spark.style.background =
-          index % 2 === 0
-            ? "#f7dce6"
-            : "#d990aa";
+          letter.style.setProperty(
+            "--letter-y",
+            "0px"
+          );
 
-        name.appendChild(spark);
+          letter.style.setProperty(
+            "--letter-rotate",
+            "0deg"
+          );
 
-        window.setTimeout(() => {
-          spark.remove();
-        }, 500);
-      }
-    );
-  }
+          letter.style.setProperty(
+            "--letter-scale",
+            "1"
+          );
 
+          letter.style.setProperty(
+            "--letter-brightness",
+            "1"
+          );
 
-  /* ========================================
-     CLICK LETTER DIRECTIONS
-  ======================================== */
-
-  const burstDirections = [
-    [-3, -4],
-    [1, -5],
-    [3, -3],
-    [-2, -4],
-    [0, 0],
-    [2, -5],
-    [-3, -3],
-    [3, -4],
-    [-1, -5],
-    [2, -3],
-    [-2, -4],
-    [3, -5]
-  ];
-
-  function setLetterBurstDirections() {
-    const letters =
-      name.querySelectorAll(
-        ".console-name-letter"
+          letter.style.setProperty(
+            "--letter-pink",
+            "0%"
+          );
+        }
       );
-
-    letters.forEach((letter, index) => {
-      const direction =
-        burstDirections[
-          index % burstDirections.length
-        ];
-
-      letter.style.setProperty(
-        "--burst-x",
-        `${direction[0]}px`
-      );
-
-      letter.style.setProperty(
-        "--burst-y",
-        `${direction[1]}px`
-      );
-    });
-  }
-
-  setLetterBurstDirections();
+    }
 
 
-  /* ========================================
-     CLICK EASTER EGG
-  ======================================== */
+    /* ========================================
+       CURSOR REACTION
+    ======================================== */
 
-  function playClickAnimation() {
-    if (clickLocked) return;
+    function updateLetterReaction(
+      event
+    ) {
 
-    clickLocked = true;
-
-    name.classList.remove("is-hovering");
-    name.classList.remove("is-clicked");
-
-    void name.offsetWidth;
-
-    name.classList.add("is-clicked");
-
-    createSparkBurst();
-
-    /*
-      If your main UI already has a click SFX,
-      you can call it here instead of adding
-      another audio file.
-    */
-
-    window.setTimeout(() => {
-      name.classList.remove("is-clicked");
-      clickLocked = false;
-      hoverLocked = false;
-    }, 650);
-  }
-
-  name.addEventListener(
-    "click",
-    playClickAnimation
-  );
-
-
-  /* ========================================
-     KEYBOARD SUPPORT
-  ======================================== */
-
-  name.addEventListener(
-    "keydown",
-    (event) => {
       if (
-        event.key !== "Enter" &&
-        event.key !== " "
+        isReducedMotion()
       ) {
         return;
       }
 
-      event.preventDefault();
+      const letters =
+        Array.from(
+          name.querySelectorAll(
+            ".console-name-letter"
+          )
+        );
 
-      playClickAnimation();
+      if (
+        !letters.length
+      ) {
+        return;
+      }
+
+      const nameRect =
+        name.getBoundingClientRect();
+
+      const cursorX =
+        event.clientX -
+        nameRect.left;
+
+      /*
+        Radius controls how many letters
+        react around the cursor.
+      */
+
+      const influenceRadius =
+        112;
+
+      letters.forEach(
+        (
+          letter,
+          index
+        ) => {
+
+          const rect =
+            letter.getBoundingClientRect();
+
+          const centerX =
+            (
+              rect.left -
+              nameRect.left
+            ) +
+            rect.width / 2;
+
+          const distance =
+            Math.abs(
+              cursorX -
+              centerX
+            );
+
+          const strength =
+            clamp(
+              1 -
+              distance /
+              influenceRadius,
+              0,
+              1
+            );
+
+          /*
+            Nonlinear falloff makes the
+            nearest letter feel much more
+            tactile than distant ones.
+          */
+
+          const punch =
+            strength *
+            strength;
+
+          const direction =
+            cursorX >=
+            centerX
+              ? -1
+              : 1;
+
+          const lift =
+            -Math.round(
+              punch * 11
+            );
+
+          const push =
+            Math.round(
+              punch *
+              3 *
+              direction
+            );
+
+          const rotation =
+            (
+              punch *
+              2.6 *
+              direction
+            ).toFixed(2);
+
+          const scale =
+            (
+              1 +
+              punch * 0.095
+            ).toFixed(3);
+
+          const brightness =
+            (
+              1 +
+              punch * 0.28
+            ).toFixed(3);
+
+          const pink =
+            Math.round(
+              punch * 100
+            );
+
+          letter.style.setProperty(
+            "--letter-x",
+            `${push}px`
+          );
+
+          letter.style.setProperty(
+            "--letter-y",
+            `${lift}px`
+          );
+
+          letter.style.setProperty(
+            "--letter-rotate",
+            `${rotation}deg`
+          );
+
+          letter.style.setProperty(
+            "--letter-scale",
+            scale
+          );
+
+          letter.style.setProperty(
+            "--letter-brightness",
+            brightness
+          );
+
+          letter.style.setProperty(
+            "--letter-pink",
+            `${pink}%`
+          );
+        }
+      );
     }
-  );
-});
+
+
+    name.addEventListener(
+      "pointerenter",
+      event => {
+
+        if (
+          event.pointerType ===
+          "touch"
+        ) {
+          return;
+        }
+
+        name.classList.add(
+          "is-reacting"
+        );
+
+        updateLetterReaction(
+          event
+        );
+      }
+    );
+
+
+    name.addEventListener(
+      "pointermove",
+      event => {
+
+        if (
+          event.pointerType ===
+          "touch"
+        ) {
+          return;
+        }
+
+        name.classList.add(
+          "is-reacting"
+        );
+
+        updateLetterReaction(
+          event
+        );
+      }
+    );
+
+
+    name.addEventListener(
+      "pointerleave",
+      () => {
+
+        name.classList.remove(
+          "is-reacting"
+        );
+
+        resetLetters();
+      }
+    );
+
+
+    /* ========================================
+       CLICK PRESS
+    ======================================== */
+
+    function playPress() {
+
+      if (
+        pressLocked ||
+        isReducedMotion()
+      ) {
+        return;
+      }
+
+      pressLocked = true;
+
+      name.classList.remove(
+        "is-pressed"
+      );
+
+      void name.offsetWidth;
+
+      name.classList.add(
+        "is-pressed"
+      );
+
+      window.setTimeout(
+        () => {
+
+          name.classList.remove(
+            "is-pressed"
+          );
+
+          pressLocked = false;
+        },
+        220
+      );
+    }
+
+
+    name.addEventListener(
+      "click",
+      playPress
+    );
+
+
+    /* ========================================
+       KEYBOARD SUPPORT
+    ======================================== */
+
+    name.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key !==
+            "Enter" &&
+          event.key !==
+            " "
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+
+        playPress();
+      }
+    );
+
+
+    /* ========================================
+       INITIAL STATE
+    ======================================== */
+
+    resetLetters();
+  }
+);
