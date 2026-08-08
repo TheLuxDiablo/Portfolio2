@@ -661,7 +661,6 @@ document.addEventListener("DOMContentLoaded", () => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="settings-title"
-        aria-describedby="settings-description"
         tabindex="-1"
       >
 
@@ -672,42 +671,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <header class="settings-header">
 
-          <div
-            class="settings-header-mark"
-            aria-hidden="true"
+          <h2
+            class="settings-title"
+            id="settings-title"
           >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="settings-header-copy">
-
-            <div class="settings-system-label">
-              <span
-                class="settings-system-light"
-                aria-hidden="true"
-              ></span>
-
-              ROSE QUARTZ CONSOLE
-            </div>
-
-            <h2
-              class="settings-title"
-              id="settings-title"
-            >
-              Settings
-            </h2>
-
-            <p
-              class="settings-description"
-              id="settings-description"
-            >
-              Tune the console to your liking.
-              Changes are saved on this device.
-            </p>
-
-          </div>
+            Settings
+          </h2>
 
           <button
             class="settings-close"
@@ -719,7 +688,6 @@ document.addEventListener("DOMContentLoaded", () => {
           </button>
 
         </header>
-
 
         <div class="settings-body">
 
