@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const GAME_HOVER_SFX_COOLDOWN = 45;
   const NAV_HOVER_SFX_COOLDOWN = 45;
 
+  const GAME_PRESS_DELAY = 85;
+  const GAME_LAUNCH_DURATION = 390;
+
 
   /* ========================================
      HELPERS
@@ -478,6 +481,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  function playGameLaunchSfx() {
+    playTone({
+      frequency: 360,
+      endFrequency: 720,
+      duration: 0.14,
+      volume: 0.72,
+      type: "square"
+    });
+
+    window.setTimeout(() => {
+      playTone({
+        frequency: 690,
+        endFrequency: 920,
+        duration: 0.09,
+        volume: 0.42,
+        type: "sine"
+      });
+    }, 75);
+  }
+
+
   function playBackSfx() {
     playTone({
       frequency: 430,
@@ -537,6 +561,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   createMusicToggle();
+
+
+  /* ========================================
+     BOTTOM-LEFT CONSOLE FOOTER
+  ======================================== */
+
+  let consoleFooter = null;
+
+
+  function createConsoleFooter() {
+    if (!pageWrapper) {
+      return;
+    }
+
+    if (pageWrapper.querySelector(".console-footer")) {
+      return;
+    }
+
+    consoleFooter = document.createElement("div");
+    consoleFooter.className = "console-footer";
+    consoleFooter.setAttribute("aria-hidden", "true");
+
+    const year = new Date().getFullYear();
+
+    consoleFooter.innerHTML = `
+      <span class="console-footer-owner">
+        © ${year} Sidd Anand
+      </span>
+
+      <span class="console-footer-divider"></span>
+
+      <span class="console-footer-hint">
+        <span class="console-footer-key">← →</span>
+        <span class="console-footer-label">Browse</span>
+      </span>
+
+      <span class="console-footer-hint">
+        <span class="console-footer-key">↵</span>
+        <span class="console-footer-label">Open</span>
+      </span>
+    `;
+
+    pageWrapper.appendChild(consoleFooter);
+  }
+
+
+  createConsoleFooter();
 
 
   /* ========================================
@@ -891,12 +962,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    /*
-      Append directly to body so Webflow
-      containers cannot interfere with the
-      fullscreen fixed-position modal.
-    */
-
     document.body.appendChild(
       settingsOverlay
     );
@@ -1213,12 +1278,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "--slider-fill",
       `${percent}%`
     );
-
-    /*
-      Also set the older variable name so
-      this remains compatible if any cached
-      version of the CSS is still around.
-    */
 
     slider.style.setProperty(
       "--range-value",
@@ -1795,6 +1854,133 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* ========================================
+     GAME CARD LAUNCH
+  ======================================== */
+
+  let gameLaunchInProgress = false;
+
+
+  function isModifiedLinkClick(event) {
+    return (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    );
+  }
+
+
+  function getGameDestination(card) {
+    if (!card) {
+      return "";
+    }
+
+    const href =
+      card.getAttribute("href")?.trim();
+
+    if (
+      !href ||
+      href === "#" ||
+      href.toLowerCase().startsWith(
+        "javascript:"
+      )
+    ) {
+      return "";
+    }
+
+    return href;
+  }
+
+
+  function launchGameCard(card) {
+    if (
+      !card ||
+      gameLaunchInProgress ||
+      settingsOpen
+    ) {
+      return;
+    }
+
+    const destination =
+      getGameDestination(card);
+
+    if (!destination) {
+      return;
+    }
+
+    gameLaunchInProgress = true;
+
+    targetPanVelocity = 0;
+    currentPanVelocity = 0;
+
+    setEdgeStrength(0, 0);
+
+    ensureUiAudio();
+    playGameLaunchSfx();
+
+    card.classList.add("is-pressing");
+
+    if (isReducedMotion()) {
+      window.location.href = destination;
+      return;
+    }
+
+    window.setTimeout(() => {
+      card.classList.remove("is-pressing");
+      card.classList.add("is-launching");
+
+      pageWrapper?.classList.add(
+        "is-game-launching"
+      );
+
+      fadeMusicTo(
+        0,
+        GAME_LAUNCH_DURATION
+      );
+    }, GAME_PRESS_DELAY);
+
+    window.setTimeout(() => {
+      window.location.href = destination;
+    }, GAME_PRESS_DELAY + GAME_LAUNCH_DURATION);
+  }
+
+
+  gameCards.forEach(card => {
+    card.addEventListener(
+      "click",
+      event => {
+        if (
+          settingsOpen ||
+          gameLaunchInProgress ||
+          isModifiedLinkClick(event)
+        ) {
+          return;
+        }
+
+        if (
+          card.target === "_blank" ||
+          card.getAttribute("download") !== null
+        ) {
+          return;
+        }
+
+        const destination =
+          getGameDestination(card);
+
+        if (!destination) {
+          return;
+        }
+
+        event.preventDefault();
+
+        launchGameCard(card);
+      }
+    );
+  });
+
+
+  /* ========================================
      NAV HOVER SFX
   ======================================== */
 
@@ -1884,7 +2070,8 @@ document.addEventListener("DOMContentLoaded", () => {
     rightEdge.disabled = atEnd;
   }
 
-    /* ========================================
+
+  /* ========================================
      POINTER PAN
   ======================================== */
 
@@ -1892,7 +2079,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (
       !gameLibrary ||
       !gameStrip ||
-      settingsOpen
+      settingsOpen ||
+      gameLaunchInProgress
     ) {
       return;
     }
@@ -2170,7 +2358,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function scrollShelfBy(direction) {
     if (
       !gameStrip ||
-      settingsOpen
+      settingsOpen ||
+      gameLaunchInProgress
     ) {
       return;
     }
@@ -2321,7 +2510,6 @@ document.addEventListener("DOMContentLoaded", () => {
       updateEdgeAvailability
     );
   }
-
 
   /* ========================================
      MUSIC HELPERS
