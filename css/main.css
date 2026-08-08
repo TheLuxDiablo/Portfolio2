@@ -3045,151 +3045,179 @@
 
 
   /* ========================================
-     BOTTOM-LEFT CONSOLE FOOTER
+    CONSOLE FOOTER
   ======================================== */
 
   .console-footer {
     position: fixed;
 
     left: 28px;
-    bottom: 24px;
+    bottom: 27px;
 
     z-index: 20;
 
     display: flex;
     align-items: center;
 
-    gap: 12px;
+    gap: 14px;
 
-    min-height: 28px;
-
-    color:
-      rgba(
-        236,
-        232,
-        234,
-        0.42
-      );
+    color: rgba(236, 232, 234, 0.42);
 
     font-family:
-      "Ubuntu",
-      sans-serif;
+      "Littleguy",
+      monospace;
 
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 400;
+
     line-height: 1;
 
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
+
+    text-transform: uppercase;
 
     user-select: none;
-
     pointer-events: none;
+
+    text-shadow:
+      2px 2px 0
+      rgba(0, 0, 0, 0.55);
   }
+
+
+  /* ========================================
+    COPYRIGHT
+  ======================================== */
 
   .console-footer-owner {
-    color:
-      rgba(
-        236,
-        232,
-        234,
-        0.50
-      );
+    color: rgba(236, 232, 234, 0.34);
 
     white-space: nowrap;
   }
+
+
+  /* ========================================
+    DIVIDER
+  ======================================== */
 
   .console-footer-divider {
-    width: 1px;
-    height: 14px;
+    display: block;
 
-    background:
-      rgba(
-        236,
-        232,
-        234,
-        0.13
-      );
+    width: 3px;
+    height: 3px;
+
+    flex: 0 0 3px;
+
+    background: var(--rose-middle);
+
+    opacity: 0.55;
+
+    box-shadow:
+      3px 0 0 rgba(189, 111, 139, 0.22);
   }
 
+
+  /* ========================================
+    CONTROL HINT
+  ======================================== */
+
   .console-footer-hint {
-    display: inline-flex;
+    display: flex;
     align-items: center;
 
-    gap: 6px;
+    gap: 7px;
 
     white-space: nowrap;
   }
+
+
+  /* ========================================
+    PIXEL KEY
+  ======================================== */
 
   .console-footer-key {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    min-width: 24px;
-    height: 20px;
+    min-width: 25px;
+    height: 22px;
 
     padding:
-      0
-      5px;
+      1px
+      6px
+      0;
 
     border:
-      1px solid
-      rgba(
-        236,
-        232,
-        234,
-        0.16
-      );
+      2px solid
+      rgba(217, 144, 170, 0.46);
 
-    border-radius: 3px;
+    border-radius: 0;
 
     color:
-      rgba(
-        244,
-        197,
-        213,
-        0.66
-      );
+      rgba(244, 197, 213, 0.78);
 
     background:
-      rgba(
-        12,
-        12,
-        15,
-        0.58
-      );
+      rgba(20, 17, 20, 0.72);
 
     box-shadow:
-      0 2px 0
-      rgba(
-        0,
-        0,
-        0,
-        0.35
-      );
+      2px 2px 0
+      rgba(0, 0, 0, 0.7);
 
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 13px;
+
     line-height: 1;
   }
 
+
+  /* ========================================
+    CONTROL LABEL
+  ======================================== */
+
   .console-footer-label {
     color:
-      rgba(
-        236,
-        232,
-        234,
-        0.38
-      );
+      rgba(236, 232, 234, 0.46);
 
-    text-transform: uppercase;
-
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 13px;
   }
 
 
+  /* ========================================
+    MOBILE
+  ======================================== */
+
+  @media screen and (max-width: 767px) {
+
+    .console-footer {
+      left: 16px;
+      bottom: 20px;
+
+      gap: 9px;
+
+      font-size: 11px;
+    }
+
+    .console-footer-owner,
+    .console-footer-divider {
+      display: none;
+    }
+
+    .console-footer-key {
+      min-width: 22px;
+      height: 19px;
+
+      padding:
+        1px
+        5px
+        0;
+
+      font-size: 10px;
+    }
+
+    .console-footer-label {
+      font-size: 10px;
+    }
+  }
   /* ========================================
      GAME CARD PRESS / LAUNCH
   ======================================== */
