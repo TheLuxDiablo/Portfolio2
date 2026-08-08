@@ -1,0 +1,247 @@
+/* ========================================
+   WIP PAGE
+   Sidd Anand Portfolio
+======================================== */
+
+.wip-page {
+  --wip-text: #f5f2ff;
+  --wip-muted: rgba(245, 242, 255, 0.62);
+  --wip-accent: #f0a8c6;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100svh;
+  padding: 48px 24px 90px;
+  overflow: hidden;
+  color: var(--wip-text);
+  box-sizing: border-box;
+}
+
+/* CONTENT */
+
+.wip-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(620px, 100%);
+  text-align: center;
+}
+
+/* PIXEL GIF */
+
+.wip-gif-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 128px;
+  margin-bottom: 28px;
+}
+
+.wip-gif {
+  display: block;
+  width: auto;
+  max-width: 128px;
+  max-height: 128px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transform-origin: bottom center;
+  animation: wip-gif-float 2.4s steps(4, end) infinite;
+}
+
+@keyframes wip-gif-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* EYEBROW */
+
+.wip-eyebrow {
+  margin-bottom: 12px;
+  font-family: "Littleguy", monospace;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: var(--wip-accent);
+}
+
+/* TITLE */
+
+.wip-title {
+  max-width: 580px;
+  margin: 0;
+  font-family: "Littleguy", monospace;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  text-wrap: balance;
+  animation: wip-title-in 500ms steps(6, end) both;
+}
+
+@keyframes wip-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* BODY COPY */
+
+.wip-copy {
+  max-width: 470px;
+  margin: 20px 0 0;
+  font-family: "Ubuntu", sans-serif;
+  font-size: clamp(14px, 2vw, 17px);
+  line-height: 1.6;
+  color: var(--wip-muted);
+  opacity: 0;
+  animation: wip-copy-in 450ms ease 300ms forwards;
+}
+
+@keyframes wip-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PIXEL LOADING DOTS */
+
+.wip-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.wip-dots span {
+  width: 6px;
+  height: 6px;
+  background: var(--wip-text);
+  opacity: 0.22;
+  animation: wip-dot 1.2s steps(2, end) infinite;
+}
+
+.wip-dots span:nth-child(2) { animation-delay: 0.2s; }
+.wip-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes wip-dot {
+  0%, 60%, 100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+/* MUSIC TOGGLE */
+
+.wip-music-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 22px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 11px;
+  appearance: none;
+  border: 0;
+  background: transparent;
+
+  font-family: "Littleguy", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+
+  cursor: pointer;
+  transition:
+    color 120ms steps(2, end),
+    transform 120ms steps(2, end);
+}
+
+.wip-music-toggle:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.wip-music-toggle:active {
+  transform: translateY(2px);
+}
+
+.wip-music-toggle.is-playing {
+  color: var(--wip-accent);
+}
+
+.wip-music-icon {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.wip-music-toggle.is-playing .wip-music-icon {
+  animation: wip-note 700ms steps(2, end) infinite;
+}
+
+@keyframes wip-note {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .wip-page {
+    padding: 36px 20px 80px;
+  }
+
+  .wip-gif-wrap {
+    height: 104px;
+    margin-bottom: 22px;
+  }
+
+  .wip-gif {
+    max-width: 104px;
+    max-height: 104px;
+  }
+
+  .wip-copy br {
+    display: none;
+  }
+
+  .wip-music-toggle {
+    right: 14px;
+    bottom: 14px;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .wip-gif,
+  .wip-title,
+  .wip-copy,
+  .wip-dots span,
+  .wip-music-icon {
+    animation: none !important;
+  }
+
+  .wip-copy {
+    opacity: 1;
+  }
+}
