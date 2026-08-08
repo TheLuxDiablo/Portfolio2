@@ -592,14 +592,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <span class="console-footer-divider"></span>
 
-      <span class="console-footer-hint">
-        <span class="console-footer-key">← →</span>
-        <span class="console-footer-label">Browse</span>
-      </span>
-
-      <span class="console-footer-hint">
-        <span class="console-footer-key">↵</span>
-        <span class="console-footer-label">Open</span>
+      <span class="console-footer-status">
+        Game Design + Development
       </span>
     `;
 

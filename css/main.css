@@ -3084,6 +3084,21 @@
       rgba(0, 0, 0, 0.55);
   }
 
+  .console-footer-status {
+    color: rgba(236, 232, 234, 0.46);
+
+    font-family:
+      "Littleguy",
+      monospace;
+
+    font-size: 13px;
+
+    letter-spacing: 0.04em;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+  }
 
   /* ========================================
     COPYRIGHT
