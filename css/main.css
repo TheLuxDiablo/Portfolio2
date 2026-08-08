@@ -984,7 +984,12 @@
     visibility: hidden;
 
     transform:
-      translateX(-50%)
+      translateX(
+        calc(
+          -50% +
+          var(--details-offset-x, 0px)
+        )
+      )
       translateY(-6px);
 
     transition:
@@ -1169,7 +1174,12 @@
     visibility: visible;
 
     transform:
-      translateX(-50%)
+      translateX(
+        calc(
+          -50% +
+          var(--details-offset-x, 0px)
+        )
+      )
       translateY(0);
   }
 

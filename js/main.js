@@ -1723,6 +1723,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     });
 
+     positionGameDetails(card);
     playGameHoverSfx();
   }
 
@@ -1967,6 +1968,57 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
+  function positionGameDetails(card) {
+    const details = card.querySelector(".game-card-details");
+
+    if (!details) {
+      return;
+    }
+
+    const cardRect = card.getBoundingClientRect();
+
+    const viewportPadding = 24;
+
+    const desiredCenter =
+      cardRect.left +
+      cardRect.width / 2;
+
+    const detailsWidth =
+      Math.min(
+        620,
+        window.innerWidth * 0.78
+      );
+
+    const halfWidth =
+      detailsWidth / 2;
+
+    const minCenter =
+      viewportPadding +
+      halfWidth;
+
+    const maxCenter =
+      window.innerWidth -
+      viewportPadding -
+      halfWidth;
+
+    const clampedCenter =
+      Math.max(
+        minCenter,
+        Math.min(
+          maxCenter,
+          desiredCenter
+        )
+      );
+
+    const offset =
+      clampedCenter -
+      desiredCenter;
+
+    details.style.setProperty(
+      "--details-offset-x",
+      `${offset}px`
+    );
+  }
 
   /* ========================================
      NAV HOVER SFX
