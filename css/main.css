@@ -974,8 +974,8 @@
 
     width:
       min(
-        620px,
-        78vw
+        115%,
+        460px
       );
 
     pointer-events: none;
@@ -1009,6 +1009,8 @@
   ======================================== */
 
   .game-card-one-liner {
+    width: 100%
+    max-width: 440px;
     margin: 0;
 
     color:
