@@ -1761,20 +1761,17 @@
 
 
   /* ========================================
-    SETTINGS BUTTON STATE
+     SETTINGS BUTTON STATE
   ======================================== */
 
   .console-nav-button.is-settings-open::after {
     opacity: 1;
-
-    transform:
-      translateX(-50%)
-      scaleX(1);
+    transform: translateX(-50%) scaleX(1);
   }
 
 
   /* ========================================
-    SETTINGS OVERLAY
+     SETTINGS — RETRO CONSOLE SHELL
   ======================================== */
 
   body.settings-open {
@@ -1782,28 +1779,44 @@
   }
 
   .settings-overlay {
+    --settings-bg: #111014;
+    --settings-panel: #19161b;
+    --settings-panel-2: #211b22;
+    --settings-line: #45313b;
+    --settings-line-bright: #87566a;
+    --settings-pink: #d990aa;
+    --settings-pink-light: #f0b8cc;
+    --settings-pink-dark: #6f3c50;
+    --settings-text: #eee8eb;
+    --settings-muted: #8c858a;
+    --settings-green: #82cf7e;
+
     position: fixed;
     inset: 0;
-
     z-index: 1000;
 
     display: grid;
     place-items: center;
 
-    padding: 32px;
+    padding: 28px;
 
     background:
-      rgba(4, 4, 6, 0);
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.012) 0,
+        rgba(255, 255, 255, 0.012) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      rgba(5, 4, 7, 0.86);
 
     opacity: 0;
     visibility: hidden;
-
     pointer-events: none;
 
     transition:
-      opacity 100ms steps(3, end),
-      background 100ms steps(3, end),
-      visibility 100ms;
+      opacity 90ms steps(3, end),
+      visibility 90ms;
   }
 
   .settings-overlay.is-open,
@@ -1814,15 +1827,7 @@
 
   .settings-overlay.is-open {
     opacity: 1;
-
-    background:
-      rgba(3, 3, 5, 0.82);
   }
-
-
-  /* ========================================
-    SETTINGS BACKDROP
-  ======================================== */
 
   .settings-backdrop {
     position: absolute;
@@ -1830,9 +1835,9 @@
 
     background:
       radial-gradient(
-        circle at 50% 45%,
-        rgba(126, 65, 88, 0.09),
-        transparent 42%
+        ellipse at 50% 50%,
+        rgba(189, 111, 139, 0.09) 0%,
+        transparent 48%
       );
 
     pointer-events: auto;
@@ -1840,89 +1845,48 @@
 
 
   /* ========================================
-    SETTINGS WINDOW
+     SETTINGS DIALOG
   ======================================== */
 
   .settings-dialog {
-    --settings-edge: #493841;
-    --settings-inner: #262227;
-    --settings-pink: #d990aa;
-
     position: relative;
-
     z-index: 1;
 
     display: flex;
     flex-direction: column;
 
-    width:
-      min(
-        760px,
-        calc(100vw - 48px)
-      );
-
-    max-height:
-      min(
-        760px,
-        calc(100svh - 48px)
-      );
+    width: min(820px, calc(100vw - 48px));
+    max-height: min(780px, calc(100svh - 48px));
 
     overflow: hidden;
 
-    border:
-      2px solid
-      #58434d;
-
-    border-radius: 8px;
-
-    outline:
-      1px solid
-      #171519;
-
-    outline-offset:
-      -5px;
+    border: 0;
+    border-radius: 0;
 
     background:
       linear-gradient(
         180deg,
-        #211e22 0%,
-        #17161a 100%
+        #201a20 0%,
+        #141216 100%
       );
 
     box-shadow:
-      0 6px 0
-      #08080a,
-
-      0 9px 0
-      rgba(0, 0, 0, 0.6),
-
-      0 18px 48px
-      rgba(0, 0, 0, 0.68);
+      0 0 0 2px #08070a,
+      0 0 0 4px #4b3640,
+      0 0 0 5px #171218,
+      9px 9px 0 #070608,
+      18px 20px 42px rgba(0, 0, 0, 0.62);
 
     opacity: 0;
 
     transform:
-      translateY(12px)
-      scale(0.985);
+      translateY(10px)
+      scale(0.992);
 
     transition:
-      opacity 100ms steps(3, end),
-      transform 100ms steps(3, end);
+      opacity 90ms steps(3, end),
+      transform 90ms steps(3, end);
   }
-
-  .settings-overlay.is-open
-  .settings-dialog {
-    opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-
-
-  /* ========================================
-    SUBTLE CRT LINES
-  ======================================== */
 
   .settings-dialog::before {
     content: "";
@@ -1930,37 +1894,70 @@
     position: absolute;
     inset: 0;
 
-    z-index: 5;
+    z-index: 8;
 
     pointer-events: none;
 
     background:
       repeating-linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.012) 0,
+        rgba(255, 255, 255, 0.012) 0px,
         rgba(255, 255, 255, 0.012) 1px,
         transparent 1px,
         transparent 4px
       );
 
-    opacity: 0.34;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+  }
+
+  .settings-dialog::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    z-index: 7;
+
+    width: 7px;
+
+    pointer-events: none;
+
+    background:
+      repeating-linear-gradient(
+        180deg,
+        #d990aa 0 11px,
+        #6f3c50 11px 17px,
+        #22161c 17px 24px
+      );
+
+    box-shadow:
+      2px 0 0 #08070a;
+  }
+
+  .settings-overlay.is-open .settings-dialog {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
 
   /* ========================================
-    SCREEN SCAN
+     SETTINGS SCAN
   ======================================== */
 
   .settings-screen-scan {
     position: absolute;
 
-    left: 0;
+    left: 8px;
     right: 0;
-    top: -20%;
+    top: -14%;
 
-    z-index: 4;
+    z-index: 6;
 
-    height: 14%;
+    height: 10%;
 
     pointer-events: none;
 
@@ -1968,195 +1965,203 @@
       linear-gradient(
         180deg,
         transparent,
-        rgba(217, 144, 170, 0.035),
+        rgba(240, 184, 204, 0.045),
         transparent
       );
 
     animation:
       settings-screen-scan
-      6s
-      steps(18, end)
+      5.8s
+      steps(16, end)
       infinite;
   }
 
   @keyframes settings-screen-scan {
     0%,
-    70% {
-      transform:
-        translateY(0);
-
+    72% {
+      transform: translateY(0);
       opacity: 0;
     }
 
-    72% {
-      opacity: 1;
+    74% {
+      opacity: 0.9;
     }
 
     98% {
-      transform:
-        translateY(850%);
-
-      opacity: 0.5;
+      transform: translateY(1050%);
+      opacity: 0.35;
     }
 
     100% {
-      transform:
-        translateY(850%);
-
+      transform: translateY(1050%);
       opacity: 0;
     }
   }
 
 
   /* ========================================
-    SETTINGS HEADER
+     SETTINGS HEADER
   ======================================== */
 
   .settings-header {
     position: relative;
-
-    z-index: 6;
+    z-index: 9;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: 20px;
-
-    min-height: 78px;
+    min-height: 72px;
 
     padding:
+      0
       18px
-      20px;
+      0
+      30px;
 
-    border-bottom:
-      2px solid
-      #111014;
-
-    box-shadow:
-      inset
-      0 -1px 0
-      rgba(255, 255, 255, 0.045);
+    border-bottom: 2px solid #08070a;
 
     background:
       linear-gradient(
         180deg,
-        #29242a 0%,
-        #211e23 100%
+        #33242c 0%,
+        #241a20 48%,
+        #1b161a 49%,
+        #181419 100%
       );
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      inset 0 -1px 0 #4b303c;
+  }
+
+  .settings-header::before {
+    content: "SYSTEM CONFIG";
+
+    position: absolute;
+
+    left: 30px;
+    bottom: 7px;
+
+    color: #8f6575;
+
+    font-family: "Ubuntu", sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.22em;
+
+    text-transform: uppercase;
   }
 
   .settings-title {
-    margin: 0;
+    margin: 0 0 10px;
 
-    color:
-      #f4edf0;
+    color: #f5edf1;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size:
-      28px;
-
-    font-weight: 600;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 30px;
+    font-weight: 700;
     line-height: 1;
 
-    letter-spacing:
-      -0.02em;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
 
     text-shadow:
-      2px 2px 0
-      #08080a;
+      2px 2px 0 #09070a;
   }
 
 
   /* ========================================
-    CLOSE BUTTON
+     CLOSE BUTTON
   ======================================== */
 
   .settings-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
 
-    width: 40px;
-    height: 40px;
+    display: grid;
+    place-items: center;
 
-    flex: 0 0 40px;
+    width: 42px;
+    height: 34px;
+
+    flex: 0 0 42px;
 
     padding: 0;
 
-    border:
-      2px solid
-      #3a343b;
+    border: 0;
+    border-radius: 0;
 
-    border-radius: 4px;
-
-    color:
-      #aaa4aa;
+    color: #b8adb2;
 
     background:
-      #121115;
+      linear-gradient(
+        180deg,
+        #2d282d 0%,
+        #151317 100%
+      );
 
     box-shadow:
-      inset
-      0 1px 0
-      rgba(255, 255, 255, 0.04),
+      0 0 0 1px #08070a,
+      0 0 0 2px #57434d,
+      3px 3px 0 #08070a;
 
-      0 3px 0
-      #08080a;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size: 26px;
-    font-weight: 400;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 24px;
+    font-weight: 500;
     line-height: 1;
 
     cursor: pointer;
 
     transition:
       color 70ms linear,
-      border-color 70ms linear,
       background 70ms linear,
       transform 70ms steps(2, end);
   }
 
+  .settings-close::after {
+    content: "BACK";
+
+    position: absolute;
+
+    right: calc(100% + 10px);
+
+    color: #766d72;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+  }
+
   .settings-close:hover,
   .settings-close:focus-visible {
-    color:
-      #f7e6ed;
-
-    border-color:
-      #9d6177;
+    color: #fff4f8;
 
     background:
-      #2b1c23;
-
-    transform:
-      translateY(-1px);
+      linear-gradient(
+        180deg,
+        #7a465b 0%,
+        #402430 100%
+      );
   }
 
   .settings-close:active {
-    transform:
-      translateY(2px);
+    transform: translate(2px, 2px);
 
     box-shadow:
-      inset
-      0 1px 0
-      rgba(255, 255, 255, 0.02);
+      0 0 0 1px #08070a,
+      0 0 0 2px #57434d,
+      1px 1px 0 #08070a;
   }
 
 
   /* ========================================
-    SETTINGS BODY
+     SETTINGS BODY
   ======================================== */
 
   .settings-body {
     position: relative;
-
     z-index: 2;
 
     flex: 1;
@@ -2165,56 +2170,60 @@
     overscroll-behavior: contain;
 
     padding:
-      0
-      22px
-      8px;
+      12px
+      18px
+      14px
+      28px;
 
-    scrollbar-width:
-      thin;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(217, 144, 170, 0.025),
+        transparent 28%
+      ),
+      var(--settings-bg);
 
-    scrollbar-color:
-      #89566a
-      #111014;
+    scrollbar-width: thin;
+    scrollbar-color: #8c576b #0b090c;
   }
 
   .settings-body::-webkit-scrollbar {
-    width: 10px;
+    width: 11px;
   }
 
   .settings-body::-webkit-scrollbar-track {
-    background:
-      #111014;
+    background: #0a090b;
 
-    border-left:
-      1px solid
-      #29242a;
+    border-left: 2px solid #20191e;
   }
 
   .settings-body::-webkit-scrollbar-thumb {
-    border:
-      2px solid
-      #111014;
-
+    border: 2px solid #0a090b;
     border-radius: 0;
 
     background:
-      #89566a;
+      repeating-linear-gradient(
+        180deg,
+        #a86680 0 5px,
+        #7c465c 5px 9px
+      );
   }
 
 
   /* ========================================
-    SETTINGS SECTIONS
+     SETTINGS SECTIONS
   ======================================== */
 
   .settings-section {
+    position: relative;
+
     padding:
-      20px
+      18px
       0
-      22px;
+      20px;
 
     border-bottom:
-      1px solid
-      #302b31;
+      1px solid #33272e;
   }
 
   .settings-section:last-child {
@@ -2222,86 +2231,85 @@
   }
 
   .settings-section-heading {
+    position: relative;
+
     display: flex;
     align-items: center;
 
-    gap: 10px;
+    min-height: 28px;
 
-    margin-bottom:
-      8px;
+    gap: 0;
+
+    margin-bottom: 7px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #2b1d24 0%,
+        #1b1519 65%,
+        transparent 100%
+      );
+
+    border-left: 3px solid var(--settings-pink);
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.025);
   }
 
   .settings-section-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
 
-    min-width: 32px;
-    height: 22px;
+    width: 36px;
+    height: 28px;
 
-    padding:
-      0 7px;
+    flex: 0 0 36px;
 
-    border:
-      1px solid
-      #553846;
+    color: #130d10;
 
-    border-radius: 2px;
+    background: var(--settings-pink);
 
-    color:
-      #e39ab5;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 10px;
+    font-weight: 800;
 
-    background:
-      #251820;
+    letter-spacing: 0.04em;
 
-    box-shadow:
-      inset
-      0 1px 0
-      rgba(255, 255, 255, 0.025);
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
-
-    font-size: 11px;
-    font-weight: 700;
-
-    line-height: 1;
-
-    letter-spacing:
-      0.05em;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.16);
   }
 
   .settings-section-title {
-    color:
-      #ddd7da;
+    display: flex;
+    align-items: center;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    min-height: 28px;
 
-    font-size: 14px;
+    padding:
+      0
+      12px;
+
+    color: #eee5e9;
+
+    font-family: "Ubuntu", sans-serif;
+    font-size: 12px;
     font-weight: 700;
 
     line-height: 1;
 
-    letter-spacing:
-      0.05em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 
-    text-transform:
-      uppercase;
-
-    text-shadow:
-      1px 1px 0
-      #08080a;
+    text-shadow: 1px 1px 0 #08070a;
   }
 
 
   /* ========================================
-    SETTINGS OPTIONS
+     SETTINGS OPTIONS
   ======================================== */
 
   .settings-option {
+    position: relative;
+
     display: grid;
 
     grid-template-columns:
@@ -2312,40 +2320,71 @@
 
     align-items: center;
 
-    min-height: 76px;
+    min-height: 72px;
+
+    margin-top: 4px;
 
     padding:
-      12px
-      14px;
+      11px
+      14px
+      11px
+      18px;
 
-    border:
-      1px solid
-      transparent;
+    border: 1px solid transparent;
+    border-radius: 0;
 
-    border-radius: 3px;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,0.016),
+        transparent 62%
+      );
 
     transition:
-      border-color 70ms linear,
-      background 70ms linear;
+      background 60ms linear,
+      border-color 60ms linear;
   }
 
-  .settings-option +
-  .settings-option {
-    margin-top: 2px;
+  .settings-option::before {
+    content: "";
+
+    position: absolute;
+
+    left: 6px;
+    top: 50%;
+
+    width: 4px;
+    height: 4px;
+
+    background: #57404a;
+
+    transform: translateY(-50%);
   }
 
   .settings-option:hover,
   .settings-option:focus-within {
-    border-color:
-      #3f3239;
+    border-color: #4b3741;
 
     background:
-      #1d1a1e;
+      linear-gradient(
+        90deg,
+        #24191f 0%,
+        #191419 70%,
+        #141216 100%
+      );
+  }
+
+  .settings-option:hover::before,
+  .settings-option:focus-within::before {
+    background: var(--settings-pink-light);
+
+    box-shadow:
+      0 0 0 1px #5e3848;
   }
 
 
   /* ========================================
-    OPTION TEXT
+     OPTION TEXT
   ======================================== */
 
   .settings-option-copy {
@@ -2354,40 +2393,36 @@
     display: flex;
     flex-direction: column;
 
-    gap: 6px;
+    gap: 5px;
   }
 
   .settings-option-label {
-    color:
-      #eee7ea;
+    color: var(--settings-text);
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
 
-    font-size: 15px;
-    font-weight: 500;
+    line-height: 1.15;
 
-    line-height: 1.2;
+    letter-spacing: 0.01em;
   }
 
   .settings-option-description {
-    color:
-      #8f888e;
+    max-width: 430px;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    color: var(--settings-muted);
 
-    font-size: 12px;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 11px;
     font-weight: 400;
 
-    line-height: 1.45;
+    line-height: 1.4;
   }
 
 
   /* ========================================
-    SETTINGS SLIDERS
+     SETTINGS SLIDERS
   ======================================== */
 
   .settings-slider-control {
@@ -2395,7 +2430,7 @@
 
     grid-template-columns:
       minmax(0, 1fr)
-      52px;
+      50px;
 
     gap: 12px;
 
@@ -2406,134 +2441,142 @@
     --slider-fill: 100%;
 
     width: 100%;
-    height: 26px;
+    height: 28px;
 
     margin: 0;
 
     appearance: none;
     -webkit-appearance: none;
 
-    background:
-      transparent;
+    background: transparent;
 
     cursor: pointer;
   }
 
   .settings-slider::-webkit-slider-runnable-track {
     width: 100%;
-    height: 8px;
+    height: 10px;
 
-    border:
-      1px solid
-      #09090b;
-
+    border: 0;
     border-radius: 0;
 
     background:
       linear-gradient(
         90deg,
-        #b86c88 0%,
-        #b86c88 var(--slider-fill),
-        #28252a var(--slider-fill),
-        #28252a 100%
+        #c77e99 0%,
+        #c77e99 var(--slider-fill),
+        #2d282d var(--slider-fill),
+        #2d282d 100%
       );
 
     box-shadow:
-      inset
-      0 2px 0
-      rgba(0, 0, 0, 0.42);
+      0 0 0 1px #09080a,
+      0 0 0 2px #493640,
+      inset 0 2px 0 rgba(255,255,255,0.055),
+      inset 0 -2px 0 rgba(0,0,0,0.48);
   }
 
   .settings-slider::-moz-range-track {
-    height: 8px;
+    height: 10px;
 
-    border:
-      1px solid
-      #09090b;
-
+    border: 0;
     border-radius: 0;
 
     background:
       linear-gradient(
         90deg,
-        #b86c88 0%,
-        #b86c88 var(--slider-fill),
-        #28252a var(--slider-fill),
-        #28252a 100%
+        #c77e99 0%,
+        #c77e99 var(--slider-fill),
+        #2d282d var(--slider-fill),
+        #2d282d 100%
       );
+
+    box-shadow:
+      0 0 0 1px #09080a,
+      0 0 0 2px #493640;
   }
 
   .settings-slider::-webkit-slider-thumb {
-    width: 16px;
-    height: 22px;
+    width: 15px;
+    height: 24px;
 
-    margin-top:
-      -8px;
+    margin-top: -7px;
 
     appearance: none;
     -webkit-appearance: none;
 
-    border:
-      2px solid
-      #f2c2d3;
-
-    border-radius: 1px;
+    border: 0;
+    border-radius: 0;
 
     background:
-      #9e5872;
+      linear-gradient(
+        90deg,
+        #f0b8cc 0 3px,
+        #b76583 3px 11px,
+        #6c394e 11px 15px
+      );
 
     box-shadow:
-      2px 2px 0
-      #09090b;
+      0 0 0 1px #09080a,
+      0 0 0 2px #d69ab0,
+      3px 3px 0 #08070a;
   }
 
   .settings-slider::-moz-range-thumb {
-    width: 16px;
-    height: 22px;
+    width: 15px;
+    height: 24px;
 
-    border:
-      2px solid
-      #f2c2d3;
-
-    border-radius: 1px;
+    border: 0;
+    border-radius: 0;
 
     background:
-      #9e5872;
+      linear-gradient(
+        90deg,
+        #f0b8cc 0 3px,
+        #b76583 3px 11px,
+        #6c394e 11px 15px
+      );
 
     box-shadow:
-      2px 2px 0
-      #09090b;
+      0 0 0 1px #09080a,
+      0 0 0 2px #d69ab0,
+      3px 3px 0 #08070a;
   }
 
   .settings-slider:focus-visible {
-    outline:
-      2px solid
-      #d990aa;
-
-    outline-offset:
-      3px;
+    outline: 1px dashed var(--settings-pink-light);
+    outline-offset: 5px;
   }
 
   .settings-slider-value {
-    color:
-      #dca1b6;
+    display: grid;
+    place-items: center;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    min-width: 50px;
+    height: 24px;
 
-    font-size: 12px;
+    color: #efbfd0;
+
+    background: #120e12;
+
+    border: 1px solid #41313a;
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.025),
+      2px 2px 0 #08070a;
+
+    font-family: "Ubuntu", sans-serif;
+    font-size: 10px;
     font-weight: 700;
 
-    text-align: right;
+    text-align: center;
 
-    font-variant-numeric:
-      tabular-nums;
+    font-variant-numeric: tabular-nums;
   }
 
 
   /* ========================================
-    SETTINGS SWITCHES
+     SETTINGS SWITCHES
   ======================================== */
 
   .settings-toggle-option {
@@ -2546,8 +2589,8 @@
     display: grid;
 
     grid-template-columns:
-      58px
-      32px;
+      54px
+      30px;
 
     gap: 10px;
 
@@ -2557,15 +2600,10 @@
 
     border: 0;
 
-    color:
-      #736d73;
+    color: #746b70;
+    background: transparent;
 
-    background:
-      transparent;
-
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    font-family: "Ubuntu", sans-serif;
 
     cursor: pointer;
   }
@@ -2575,22 +2613,50 @@
 
     display: block;
 
-    width: 58px;
-    height: 30px;
+    width: 54px;
+    height: 28px;
 
-    border:
-      2px solid
-      #353138;
-
-    border-radius: 2px;
+    border: 0;
+    border-radius: 0;
 
     background:
-      #0d0d10;
+      linear-gradient(
+        180deg,
+        #18151a 0%,
+        #0c0b0e 100%
+      );
 
     box-shadow:
-      inset
-      0 2px 0
-      rgba(0, 0, 0, 0.55);
+      0 0 0 1px #070608,
+      0 0 0 2px #42343b,
+      inset 0 2px 0 rgba(0,0,0,0.48);
+  }
+
+  .settings-switch-track::before,
+  .settings-switch-track::after {
+    position: absolute;
+
+    top: 7px;
+
+    font-family: "Ubuntu", sans-serif;
+    font-size: 7px;
+    font-weight: 800;
+  }
+
+  .settings-switch-track::before {
+    content: "I";
+
+    left: 10px;
+
+    color: #6f4d5b;
+  }
+
+  .settings-switch-track::after {
+    content: "O";
+
+    right: 9px;
+
+    color: #615c60;
   }
 
   .settings-switch-thumb {
@@ -2599,69 +2665,77 @@
     left: 4px;
     top: 4px;
 
-    width: 18px;
-    height: 18px;
+    z-index: 2;
 
-    border-radius: 1px;
+    width: 20px;
+    height: 20px;
+
+    border-radius: 0;
 
     background:
-      #716d73;
+      linear-gradient(
+        180deg,
+        #8a8489 0%,
+        #5e595e 100%
+      );
 
     box-shadow:
-      2px 2px 0
-      #060608;
+      0 0 0 1px #08070a,
+      2px 2px 0 #050405;
 
-    transform:
-      translateX(0);
+    transform: translateX(0);
 
     transition:
-      transform 80ms steps(3, end),
-      background 80ms linear;
+      transform 70ms steps(2, end),
+      background 70ms linear;
   }
 
-  .settings-switch.is-on
-  .settings-switch-track {
-    border-color:
-      #704358;
-
+  .settings-switch.is-on .settings-switch-track {
     background:
-      #25151d;
+      linear-gradient(
+        180deg,
+        #39212b 0%,
+        #21131a 100%
+      );
+
+    box-shadow:
+      0 0 0 1px #070608,
+      0 0 0 2px #71485a,
+      inset 0 2px 0 rgba(0,0,0,0.48);
   }
 
-  .settings-switch.is-on
-  .settings-switch-thumb {
+  .settings-switch.is-on .settings-switch-thumb {
     background:
-      #d990aa;
+      linear-gradient(
+        180deg,
+        #efb6ca 0%,
+        #b86784 100%
+      );
 
-    transform:
-      translateX(28px);
+    transform: translateX(26px);
   }
 
   .settings-switch-text {
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
 
     text-align: left;
   }
 
-  .settings-switch.is-on
-  .settings-switch-text {
-    color:
-      #e4a5bc;
+  .settings-switch.is-on .settings-switch-text {
+    color: var(--settings-pink-light);
   }
 
   .settings-switch:focus-visible {
-    outline:
-      2px solid
-      #d990aa;
-
-    outline-offset:
-      4px;
+    outline: 1px dashed var(--settings-pink-light);
+    outline-offset: 5px;
   }
 
 
   /* ========================================
-    SYSTEM ROW
+     SYSTEM ROW
   ======================================== */
 
   .settings-system-row {
@@ -2672,18 +2746,20 @@
 
     gap: 18px;
 
+    min-height: 56px;
+
     padding:
-      10px
+      8px
       14px
-      4px;
+      2px
+      18px;
   }
 
   .settings-profile-status {
     display: flex;
-
     align-items: center;
 
-    gap: 10px;
+    gap: 11px;
   }
 
   .settings-profile-dot {
@@ -2694,199 +2770,243 @@
 
     flex: 0 0 8px;
 
-    border-radius: 1px;
+    border-radius: 0;
 
-    background:
-      #73bd75;
+    background: var(--settings-green);
 
     box-shadow:
-      0 0 7px
-      rgba(115, 189, 117, 0.3);
+      0 0 0 1px #162115,
+      0 0 6px rgba(130, 207, 126, 0.34);
+
+    animation:
+      settings-status-blink
+      2.2s
+      steps(2, end)
+      infinite;
+  }
+
+  @keyframes settings-status-blink {
+    0%,
+    88%,
+    100% {
+      opacity: 1;
+    }
+
+    90%,
+    96% {
+      opacity: 0.35;
+    }
   }
 
   .settings-profile-title {
-    color:
-      #c8c1c5;
+    color: #cbc3c7;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
 
-    font-size: 12px;
-    font-weight: 600;
+    letter-spacing: 0.03em;
   }
 
   .settings-profile-subtitle {
     margin-top: 3px;
 
-    color:
-      #777278;
+    color: #706a6e;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 9px;
 
-    font-size: 11px;
+    letter-spacing: 0.04em;
   }
 
 
   /* ========================================
-    RESET BUTTON
+     RESET BUTTON
   ======================================== */
 
   .settings-reset {
-    min-height: 36px;
+    min-height: 34px;
 
     padding:
-      0 13px;
+      0
+      13px;
 
-    border:
-      2px solid
-      #353138;
+    border: 0;
+    border-radius: 0;
 
-    border-radius: 3px;
-
-    color:
-      #a09aa0;
+    color: #aaa1a6;
 
     background:
-      #121115;
+      linear-gradient(
+        180deg,
+        #262126 0%,
+        #121014 100%
+      );
 
     box-shadow:
-      0 3px 0
-      #08080a;
+      0 0 0 1px #08070a,
+      0 0 0 2px #483a41,
+      3px 3px 0 #08070a;
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
 
-    font-size: 11px;
-    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
 
     cursor: pointer;
 
     transition:
-      color 70ms linear,
-      border-color 70ms linear,
-      background 70ms linear,
-      transform 70ms steps(2, end);
+      color 60ms linear,
+      background 60ms linear,
+      transform 60ms steps(2, end);
   }
 
   .settings-reset:hover,
   .settings-reset:focus-visible {
-    color:
-      #f1c1d2;
-
-    border-color:
-      #704358;
+    color: #ffe7f0;
 
     background:
-      #25171e;
+      linear-gradient(
+        180deg,
+        #6e4052 0%,
+        #34202a 100%
+      );
   }
 
   .settings-reset:active {
-    transform:
-      translateY(2px);
+    transform: translate(2px, 2px);
 
     box-shadow:
-      0 1px 0
-      #08080a;
+      0 0 0 1px #08070a,
+      0 0 0 2px #483a41,
+      1px 1px 0 #08070a;
   }
 
 
   /* ========================================
-    SETTINGS FOOTER
+     SETTINGS FOOTER
   ======================================== */
 
   .settings-footer {
     position: relative;
-
-    z-index: 6;
+    z-index: 9;
 
     display: flex;
-
     align-items: center;
     justify-content: space-between;
 
     gap: 16px;
 
-    min-height: 50px;
+    min-height: 44px;
 
     padding:
-      8px
-      20px;
+      7px
+      18px
+      7px
+      28px;
 
-    border-top:
-      2px solid
-      #09090b;
+    border-top: 2px solid #08070a;
 
     background:
-      #111014;
+      linear-gradient(
+        180deg,
+        #18151a 0%,
+        #0f0d10 100%
+      );
 
-    font-family:
-      "Ubuntu",
-      sans-serif;
+    box-shadow:
+      inset 0 1px 0 #382b32;
 
-    font-size: 11px;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 9px;
+  }
+
+  .settings-footer::before {
+    content: "RQ-OS 02.06";
+
+    position: absolute;
+
+    left: 50%;
+
+    color: #4f454b;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    transform: translateX(-50%);
   }
 
   .settings-footer-hint {
     display: flex;
-
     align-items: center;
 
-    gap: 9px;
+    gap: 8px;
 
-    color:
-      #787279;
+    color: #716a6f;
   }
 
   .settings-key {
-    display: inline-flex;
+    display: grid;
+    place-items: center;
 
-    align-items: center;
-    justify-content: center;
-
-    min-width: 34px;
-    height: 25px;
+    min-width: 32px;
+    height: 22px;
 
     padding:
-      0 7px;
+      0
+      6px;
 
-    border:
-      1px solid
-      #39343a;
+    border: 0;
+    border-radius: 0;
 
-    border-radius: 2px;
+    color: #c9c0c5;
 
-    color:
-      #c7c0c4;
-
-    background:
-      #0c0c0f;
+    background: #0a090b;
 
     box-shadow:
-      0 2px 0
-      #050506;
+      0 0 0 1px #08070a,
+      0 0 0 2px #393038,
+      2px 2px 0 #050405;
 
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 8px;
+    font-weight: 800;
   }
 
   .settings-footer-status {
-    color:
-      #aa6d83;
+    color: #a86780;
 
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 8px;
+    font-weight: 800;
 
-    letter-spacing:
-      0.1em;
+    letter-spacing: 0.16em;
+
+    animation:
+      settings-ready-pulse
+      2.6s
+      steps(2, end)
+      infinite;
+  }
+
+  @keyframes settings-ready-pulse {
+    0%,
+    78%,
+    100% {
+      opacity: 0.95;
+    }
+
+    80%,
+    88% {
+      opacity: 0.45;
+    }
   }
 
 
   /* ========================================
-    HIGH CONTRAST
+     SETTINGS HIGH CONTRAST
   ======================================== */
 
   html.user-high-contrast {
@@ -2894,81 +3014,67 @@
     --rose-primary: #f0aac4;
   }
 
-  html.user-high-contrast
-  .settings-dialog {
-    border-color:
-      #bcb6bb;
+  html.user-high-contrast .settings-dialog {
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px #6f5360,
+      9px 9px 0 #000000,
+      18px 20px 42px rgba(0,0,0,0.7);
   }
 
-  html.user-high-contrast
-  .settings-option-label,
-  html.user-high-contrast
-  .settings-section-title {
-    color:
-      #ffffff;
+  html.user-high-contrast .settings-option-label,
+  html.user-high-contrast .settings-section-title {
+    color: #ffffff;
   }
 
-  html.user-high-contrast
-  .settings-option-description {
-    color:
-      #cac5c8;
+  html.user-high-contrast .settings-option-description {
+    color: #cbc6c9;
   }
 
 
   /* ========================================
-    LARGE TEXT
+     SETTINGS LARGE TEXT
   ======================================== */
 
-  html.user-large-text
-  .settings-option-label {
-    font-size: 17px;
-  }
-
-  html.user-large-text
-  .settings-option-description {
-    font-size: 14px;
-  }
-
-  html.user-large-text
-  .settings-section-title {
+  html.user-large-text .settings-option-label {
     font-size: 16px;
   }
 
-  html.user-large-text
-  .settings-footer {
+  html.user-large-text .settings-option-description {
     font-size: 13px;
   }
 
+  html.user-large-text .settings-section-title {
+    font-size: 14px;
+  }
+
+  html.user-large-text .settings-footer {
+    font-size: 11px;
+  }
+
 
   /* ========================================
-    USER REDUCED MOTION
+     SETTINGS USER REDUCED MOTION
   ======================================== */
 
-  html.user-reduced-motion
-  .settings-overlay,
-  html.user-reduced-motion
-  .settings-dialog,
-  html.user-reduced-motion
-  .settings-close,
-  html.user-reduced-motion
-  .settings-option,
-  html.user-reduced-motion
-  .settings-switch-thumb,
-  html.user-reduced-motion
-  .settings-reset {
-    transition:
-      none !important;
+  html.user-reduced-motion .settings-overlay,
+  html.user-reduced-motion .settings-dialog,
+  html.user-reduced-motion .settings-close,
+  html.user-reduced-motion .settings-option,
+  html.user-reduced-motion .settings-switch-thumb,
+  html.user-reduced-motion .settings-reset {
+    transition: none !important;
   }
 
-  html.user-reduced-motion
-  .settings-screen-scan {
-    animation:
-      none !important;
+  html.user-reduced-motion .settings-screen-scan,
+  html.user-reduced-motion .settings-profile-dot,
+  html.user-reduced-motion .settings-footer-status {
+    animation: none !important;
   }
 
 
   /* ========================================
-    SETTINGS MOBILE
+     SETTINGS MOBILE
   ======================================== */
 
   @media screen and (max-width: 767px) {
@@ -2976,59 +3082,87 @@
     .settings-overlay {
       place-items: end center;
 
-      padding: 10px;
+      padding: 9px;
     }
 
     .settings-dialog {
       width: 100%;
+      max-height: calc(100svh - 18px);
 
-      max-height:
-        calc(100svh - 20px);
-
-      border-radius: 5px;
+      box-shadow:
+        0 0 0 2px #08070a,
+        0 0 0 4px #4b3640,
+        0 0 0 5px #171218,
+        5px 5px 0 #070608;
     }
 
     .settings-header {
       min-height: 64px;
 
       padding:
-        14px
-        15px;
+        0
+        13px
+        0
+        22px;
+    }
+
+    .settings-header::before {
+      left: 22px;
+      bottom: 6px;
     }
 
     .settings-title {
-      font-size: 24px;
+      margin-bottom: 9px;
+
+      font-size: 23px;
     }
 
     .settings-close {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 31px;
 
-      flex-basis: 36px;
+      flex-basis: 38px;
+    }
+
+    .settings-close::after {
+      display: none;
     }
 
     .settings-body {
       padding:
+        8px
+        10px
+        10px
+        20px;
+    }
+
+    .settings-section {
+      padding:
+        14px
         0
-        12px
-        8px;
+        16px;
     }
 
     .settings-option {
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
 
-      gap: 12px;
+      gap: 10px;
+
+      min-height: 0;
 
       padding:
-        13px
-        8px;
+        11px
+        8px
+        11px
+        14px;
     }
 
     .settings-toggle-option {
       grid-template-columns:
         minmax(0, 1fr)
         auto;
+
+      gap: 14px;
     }
 
     .settings-slider-control {
@@ -3037,9 +3171,16 @@
         48px;
     }
 
+    .settings-option-description {
+      max-width: none;
+    }
+
     .settings-system-row {
       padding:
-        8px;
+        8px
+        8px
+        3px
+        14px;
     }
 
     .settings-profile-subtitle {
@@ -3048,8 +3189,14 @@
 
     .settings-footer {
       padding:
-        8px
-        14px;
+        7px
+        12px
+        7px
+        20px;
+    }
+
+    .settings-footer::before {
+      display: none;
     }
   }
 
