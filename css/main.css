@@ -3,57 +3,47 @@
    PIXEL CURSOR
    ========================================================= */
 
+
+/* ---------------------------------------------------------
+   HIDE DEFAULT BROWSER CURSOR
+   --------------------------------------------------------- */
+
 html,
 body,
-a,
-button,
-input,
-textarea,
-select,
-label,
-summary,
-[role="button"],
-.w-button,
-.w-dropdown-toggle,
-.w-nav-button {
+body * {
   cursor: none !important;
 }
 
 
 /* ---------------------------------------------------------
-   CUSTOM PIXEL CURSOR
+   PIXEL CURSOR
    --------------------------------------------------------- */
 
-.pixel-cursor {
+#rq-pixel-cursor {
   position: fixed;
 
   top: 0;
   left: 0;
 
-  width: 36px;
-  height: 51px;
+  width: 24px;
+  height: 34px;
 
-  background-image: url("https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png");
-  background-repeat: no-repeat;
-  background-position: top left;
-  background-size: 36px 51px;
+  display: block;
 
   pointer-events: none;
+  user-select: none;
 
   z-index: 2147483647;
 
-  transform: translate3d(-100px, -100px, 0);
-
+  /* Keep the source artwork crisp */
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 
+  /* Start offscreen until the mouse moves */
+  transform: translate3d(-100px, -100px, 0);
+
+  /* Helps keep cursor movement responsive */
   will-change: transform;
-}
-
-
-/* Hide cursor when JS hasn't initialized yet */
-.pixel-cursor:not(.is-visible) {
-  opacity: 0;
 }
 
 
@@ -64,21 +54,11 @@ summary,
 @media (hover: none), (pointer: coarse) {
   html,
   body,
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  label,
-  summary,
-  [role="button"],
-  .w-button,
-  .w-dropdown-toggle,
-  .w-nav-button {
+  body * {
     cursor: auto !important;
   }
 
-  .pixel-cursor {
+  #rq-pixel-cursor {
     display: none !important;
   }
 }

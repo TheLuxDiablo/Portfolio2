@@ -1,16 +1,82 @@
-/* =========================================================
-   ROSE QUARTZ PORTFOLIO
-   Custom Cursor
-   ========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
-/*
- * The pixel cursor is handled natively by CSS.
- *
- * We're intentionally not creating a custom HTML cursor
- * that follows the mouse. Native CSS cursors have no
- * visible tracking delay and feel much more responsive.
- */
+  /* =======================================================
+     ROSE QUARTZ PORTFOLIO
+     PIXEL CURSOR
+     ======================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.documentElement.classList.add("cursor-ready");
+  const isTouchDevice = window.matchMedia(
+    "(hover: none), (pointer: coarse)"
+  ).matches;
+
+  if (isTouchDevice) return;
+
+
+  /* -------------------------------------------------------
+     CREATE CURSOR
+     ------------------------------------------------------- */
+
+  const cursor = document.createElement("img");
+
+  cursor.id = "rq-pixel-cursor";
+
+  cursor.src =
+    "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
+
+  cursor.alt = "";
+
+  cursor.setAttribute("aria-hidden", "true");
+  cursor.setAttribute("draggable", "false");
+
+  document.body.appendChild(cursor);
+
+
+  /* -------------------------------------------------------
+     MOVE CURSOR
+     ------------------------------------------------------- */
+
+  document.addEventListener("mousemove", function (event) {
+    cursor.style.transform =
+      "translate3d(" +
+      event.clientX +
+      "px, " +
+      event.clientY +
+      "px, 0)";
+  });
+
+
+  /* -------------------------------------------------------
+     ENTER / LEAVE WINDOW
+     ------------------------------------------------------- */
+
+  document.documentElement.addEventListener(
+    "mouseleave",
+    function () {
+      cursor.style.visibility = "hidden";
+    }
+  );
+
+  document.documentElement.addEventListener(
+    "mouseenter",
+    function () {
+      cursor.style.visibility = "visible";
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     TAB VISIBILITY
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "visibilitychange",
+    function () {
+      if (document.hidden) {
+        cursor.style.visibility = "hidden";
+      } else {
+        cursor.style.visibility = "visible";
+      }
+    }
+  );
+
 });
