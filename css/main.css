@@ -397,16 +397,7 @@ body * {
    --------------------------------------------------------- */
 
 .rq-name-letter.is-shining {
-  color: #ffffff;
-
-  text-shadow:
-    1px 0 #f0b6db,
-    -1px 0 #f0b6db,
-    0 1px #f0b6db,
-    0 -1px #f0b6db,
-
-    2px 0 rgba(255, 255, 255, 0.55),
-    -2px 0 rgba(255, 255, 255, 0.55);
+  color: #F2B8D7;
 }
 
 
