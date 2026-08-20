@@ -4,59 +4,99 @@ document.addEventListener("DOMContentLoaded", function () {
      LOOPING HEXAGON BACKGROUND
      ======================================================= */
 
-  if (!document.getElementById("rq-hex-background")) {
-    const SVG_NS = "http://www.w3.org/2000/svg";
+  const SVG_NS = "http://www.w3.org/2000/svg";
 
-    const svg = document.createElementNS(SVG_NS, "svg");
-    svg.id = "rq-hex-background";
-    svg.setAttribute("aria-hidden", "true");
+  let hexBackground = document.getElementById("rq-hex-background");
 
-    const defs = document.createElementNS(SVG_NS, "defs");
+  if (!hexBackground) {
+    hexBackground = document.createElementNS(SVG_NS, "svg");
+    hexBackground.id = "rq-hex-background";
+    hexBackground.setAttribute("aria-hidden", "true");
+    hexBackground.setAttribute("preserveAspectRatio", "none");
 
-    const pattern = document.createElementNS(SVG_NS, "pattern");
-    pattern.id = "rq-hex-pattern";
-    pattern.setAttribute("patternUnits", "userSpaceOnUse");
-    pattern.setAttribute("width", "156");
-    pattern.setAttribute("height", "90");
+    document.body.prepend(hexBackground);
+  }
 
-    /*
-     * Flat-top honeycomb.
-     *
-     * One complete hex sits on the left.
-     * The partial hexes on the right complete the staggered
-     * neighboring column when the SVG pattern repeats.
-     */
-    const path = document.createElementNS(SVG_NS, "path");
-    path.setAttribute(
-      "d",
-      [
-        "M26 0 L78 0 L104 45 L78 90 L26 90 L0 45 Z",
-        "M104 -45 L156 -45 L182 0 L156 45 L104 45 L78 0 Z",
-        "M104 45 L156 45 L182 90 L156 135 L104 135 L78 90 Z"
-      ].join(" ")
+  let hexGrid = document.getElementById("rq-hex-grid");
+
+  if (!hexGrid) {
+    hexGrid = document.createElementNS(SVG_NS, "g");
+    hexGrid.id = "rq-hex-grid";
+    hexBackground.appendChild(hexGrid);
+  }
+
+  function buildHexGrid() {
+    while (hexGrid.firstChild) {
+      hexGrid.removeChild(hexGrid.firstChild);
+    }
+
+    const side = 52;
+    const hexWidth = side * 2;
+    const hexHeight = Math.sqrt(3) * side;
+
+    const horizontalStep = side * 1.5;
+    const verticalStep = hexHeight;
+
+    const padding = 180;
+
+    const width = window.innerWidth + padding * 2;
+    const height = window.innerHeight + padding * 2;
+
+    hexBackground.setAttribute(
+      "viewBox",
+      `0 0 ${window.innerWidth} ${window.innerHeight}`
     );
 
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#b983a9");
-    path.setAttribute("stroke-opacity", "0.34");
-    path.setAttribute("stroke-width", "1.5");
-    path.setAttribute("vector-effect", "non-scaling-stroke");
+    const startX = -padding;
+    const startY = -padding;
 
-    pattern.appendChild(path);
-    defs.appendChild(pattern);
-    svg.appendChild(defs);
+    const columns = Math.ceil(width / horizontalStep) + 3;
+    const rows = Math.ceil(height / verticalStep) + 3;
 
-    const rect = document.createElementNS(SVG_NS, "rect");
-    rect.setAttribute("x", "0");
-    rect.setAttribute("y", "0");
-    rect.setAttribute("width", "100%");
-    rect.setAttribute("height", "100%");
-    rect.setAttribute("fill", "url(#rq-hex-pattern)");
+    for (let col = 0; col < columns; col++) {
+      const centerX = startX + col * horizontalStep;
+      const offsetY = col % 2 === 0 ? 0 : verticalStep / 2;
 
-    svg.appendChild(rect);
+      for (let row = 0; row < rows; row++) {
+        const centerY =
+          startY +
+          row * verticalStep +
+          offsetY;
 
-    document.body.prepend(svg);
+        const points = [
+          [centerX - side / 2, centerY - hexHeight / 2],
+          [centerX + side / 2, centerY - hexHeight / 2],
+          [centerX + side, centerY],
+          [centerX + side / 2, centerY + hexHeight / 2],
+          [centerX - side / 2, centerY + hexHeight / 2],
+          [centerX - side, centerY]
+        ]
+          .map(function (point) {
+            return point[0] + "," + point[1];
+          })
+          .join(" ");
+
+        const hex = document.createElementNS(SVG_NS, "polygon");
+
+        hex.setAttribute("points", points);
+        hex.setAttribute("class", "rq-hex");
+
+        hexGrid.appendChild(hex);
+      }
+    }
   }
+
+  buildHexGrid();
+
+  let resizeTimer = null;
+
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(function () {
+      buildHexGrid();
+    }, 120);
+  });
 
 
   /* =======================================================

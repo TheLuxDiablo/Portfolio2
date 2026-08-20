@@ -57,37 +57,37 @@ body {
    HEXAGON BACKGROUND
    ========================================================= */
 
-/*
- * This is a real SVG element created by main.js.
- * No CSS gradients and no data-URI parsing.
- */
 #rq-hex-background {
   position: fixed;
+  inset: 0;
 
-  top: -120px;
-  right: -120px;
-  bottom: -120px;
-  left: -120px;
-
-  width: calc(100vw + 240px);
-  height: calc(100vh + 240px);
+  width: 100vw;
+  height: 100vh;
 
   pointer-events: none;
   user-select: none;
 
   z-index: 0;
 
-  overflow: visible;
+  overflow: hidden;
+}
 
-  animation: rq-hex-scroll 5s linear infinite;
-
+#rq-hex-grid {
+  transform: translate3d(-78px, -45px, 0);
+  animation: rq-hex-scroll 6s linear infinite;
   will-change: transform;
 }
 
-/*
- * Keep normal Webflow content above the grid.
- * The cursor stays above everything via its own z-index.
- */
+.rq-hex {
+  fill: none;
+  stroke: #b983a9;
+  stroke-opacity: 0.30;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+
+/* Keep Webflow content above the background */
 body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
   position: relative;
   z-index: 1;
@@ -100,11 +100,11 @@ body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
 
 @keyframes rq-hex-scroll {
   from {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(-78px, -45px, 0);
   }
 
   to {
-    transform: translate3d(156px, 90px, 0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -126,7 +126,7 @@ body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #rq-hex-background {
+  #rq-hex-grid {
     animation: none;
   }
 }
