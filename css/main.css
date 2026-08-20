@@ -332,15 +332,15 @@ body * {
    * This is the resting state.
    */
   text-shadow:
-    3px 0 #B983A9,
-    -3px 0 #B983A9,
-    0 3px #B983A9,
-    0 -3px #B983A9,
+    3px 0 #9c357d,
+    -3px 0 #9c357d,
+    0 3px #9c357d,
+    0 -3px #9c357d,
 
-    3px 3px #B983A9,
-    -3px 3px #B983A9,
-    3px -3px #B983A9,
-    -3px -3px #B983A9;
+    3px 3px #9c357d,
+    -3px 3px #9c357d,
+    3px -3px #9c357d,
+    -3px -3px #9c357d;
 
   transition:
     transform 90ms steps(2),
