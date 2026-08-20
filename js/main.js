@@ -384,3 +384,181 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
 });
+
+/* =========================================================
+   RQ NAME JUICE
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const name = document.querySelector(".rq-name");
+
+  if (!name) return;
+
+
+  /* -------------------------------------------------------
+     SPLIT NAME INTO LETTERS
+     ------------------------------------------------------- */
+
+  const originalText = name.textContent;
+
+  name.textContent = "";
+
+  const letters = [];
+
+  for (let i = 0; i < originalText.length; i++) {
+    const char = originalText[i];
+
+    const span = document.createElement("span");
+
+    span.className = "rq-name-letter";
+
+    if (char === " ") {
+      span.innerHTML = "&nbsp;";
+    } else {
+      span.textContent = char;
+    }
+
+    name.appendChild(span);
+
+    letters.push(span);
+  }
+
+
+  /* -------------------------------------------------------
+     HOVER LETTER CASCADE
+     ------------------------------------------------------- */
+
+  function playLetterCascade() {
+    letters.forEach(function (letter, index) {
+      setTimeout(function () {
+        letter.classList.remove("is-bouncing");
+
+        void letter.offsetWidth;
+
+        letter.classList.add("is-bouncing");
+
+        setTimeout(function () {
+          letter.classList.remove("is-bouncing");
+        }, 240);
+      }, index * 32);
+    });
+  }
+
+
+  /* -------------------------------------------------------
+     HOVER FLASH
+     ------------------------------------------------------- */
+
+  function playFlash() {
+    name.classList.remove("is-flashing");
+
+    void name.offsetWidth;
+
+    name.classList.add("is-flashing");
+
+    setTimeout(function () {
+      name.classList.remove("is-flashing");
+    }, 280);
+  }
+
+
+  /* -------------------------------------------------------
+     SCORE POP
+     ------------------------------------------------------- */
+
+  function spawnScore() {
+    const score = document.createElement("span");
+
+    score.className = "rq-score-pop";
+    score.textContent = "+100";
+
+    name.appendChild(score);
+
+    setTimeout(function () {
+      score.remove();
+    }, 700);
+  }
+
+
+  /* -------------------------------------------------------
+     PIXEL PARTICLES
+     ------------------------------------------------------- */
+
+  function spawnParticles() {
+    const count = 10;
+
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement("span");
+
+      particle.className = "rq-name-particle";
+
+      const angle =
+        (Math.PI * 2 * i) / count;
+
+      const distance =
+        22 + Math.random() * 26;
+
+      const x =
+        Math.cos(angle) * distance;
+
+      const y =
+        Math.sin(angle) * distance;
+
+      particle.style.setProperty(
+        "--particle-x",
+        x + "px"
+      );
+
+      particle.style.setProperty(
+        "--particle-y",
+        y + "px"
+      );
+
+      if (Math.random() > 0.5) {
+        particle.style.background =
+          "#f0b6db";
+      }
+
+      name.appendChild(particle);
+
+      setTimeout(function () {
+        particle.remove();
+      }, 600);
+    }
+  }
+
+
+  /* -------------------------------------------------------
+     EVENTS
+     ------------------------------------------------------- */
+
+  name.addEventListener("mouseenter", function () {
+    name.classList.add("is-hovering");
+
+    playFlash();
+    playLetterCascade();
+  });
+
+
+  name.addEventListener("mouseleave", function () {
+    name.classList.remove("is-hovering");
+    name.classList.remove("is-pressed");
+  });
+
+
+  name.addEventListener("mousedown", function () {
+    name.classList.add("is-pressed");
+  });
+
+
+  name.addEventListener("mouseup", function () {
+    name.classList.remove("is-pressed");
+  });
+
+
+  name.addEventListener("click", function () {
+    spawnScore();
+    spawnParticles();
+    playFlash();
+  });
+});

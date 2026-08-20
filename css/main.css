@@ -45,7 +45,7 @@ body {
 
   background: var(--rq-bg);
 
-  opacity: 0.45;
+  opacity: 0.35
 }
 
 
@@ -300,5 +300,256 @@ body * {
   #rq-hex-grid,
   #rq-dither-background {
     animation: none;
+  }
+}
+
+/* =========================================================
+   RQ NAME JUICE
+   ========================================================= */
+
+.rq-name {
+  position: relative;
+  display: inline-block;
+
+  margin: 0;
+
+  color: #f5f5f5;
+
+  cursor: none !important;
+
+  transform-origin: center;
+
+  transition:
+    transform 90ms steps(2),
+    color 90ms steps(2),
+    text-shadow 90ms steps(2);
+
+  user-select: none;
+  overflow: visible;
+}
+
+
+/* ---------------------------------------------------------
+   LETTER WRAPPERS
+   --------------------------------------------------------- */
+
+.rq-name-letter {
+  display: inline-block;
+
+  transform: translateY(0);
+
+  transition:
+    transform 90ms steps(2),
+    color 90ms steps(2),
+    text-shadow 90ms steps(2);
+}
+
+
+/* ---------------------------------------------------------
+   HOVER
+   --------------------------------------------------------- */
+
+.rq-name.is-hovering {
+  transform: translate3d(2px, -2px, 0);
+
+  color: #ffffff;
+
+  text-shadow:
+    2px 0 #b983a9,
+    -2px 0 #b983a9,
+    0 2px #b983a9,
+    0 -2px #b983a9;
+}
+
+
+/* ---------------------------------------------------------
+   CLICK / PRESS
+   --------------------------------------------------------- */
+
+.rq-name.is-pressed {
+  transform:
+    translate3d(2px, 2px, 0)
+    scaleX(1.04)
+    scaleY(0.90);
+}
+
+
+/* ---------------------------------------------------------
+   HOVER FLASH
+   --------------------------------------------------------- */
+
+.rq-name.is-flashing {
+  animation: rq-name-flash 260ms steps(2);
+}
+
+@keyframes rq-name-flash {
+  0% {
+    color: #ffffff;
+    text-shadow:
+      2px 0 #b983a9,
+      -2px 0 #b983a9,
+      0 2px #b983a9,
+      0 -2px #b983a9;
+  }
+
+  50% {
+    color: #f0b6db;
+    text-shadow:
+      3px 0 #ffffff,
+      -3px 0 #ffffff,
+      0 3px #ffffff,
+      0 -3px #ffffff;
+  }
+
+  100% {
+    color: #ffffff;
+    text-shadow:
+      2px 0 #b983a9,
+      -2px 0 #b983a9,
+      0 2px #b983a9,
+      0 -2px #b983a9;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   LETTER BOUNCE
+   --------------------------------------------------------- */
+
+.rq-name-letter.is-bouncing {
+  animation: rq-letter-bounce 220ms steps(3);
+}
+
+@keyframes rq-letter-bounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  33% {
+    transform: translateY(-4px);
+  }
+
+  66% {
+    transform: translateY(1px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   +100 POPUP
+   --------------------------------------------------------- */
+
+.rq-score-pop {
+  position: absolute;
+
+  left: 50%;
+  top: 0;
+
+  pointer-events: none;
+
+  color: #f0b6db;
+
+  font: inherit;
+
+  white-space: nowrap;
+
+  z-index: 20;
+
+  transform:
+    translate(-50%, -8px);
+
+  animation:
+    rq-score-pop 600ms steps(6) forwards;
+}
+
+@keyframes rq-score-pop {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, 0)
+      scale(0.8);
+  }
+
+  15% {
+    opacity: 1;
+    transform:
+      translate(-50%, -8px)
+      scale(1.1);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -38px)
+      scale(1);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   PIXEL PARTICLES
+   --------------------------------------------------------- */
+
+.rq-name-particle {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 4px;
+  height: 4px;
+
+  background: #b983a9;
+
+  pointer-events: none;
+
+  z-index: 15;
+
+  image-rendering: pixelated;
+
+  animation:
+    rq-name-particle 520ms steps(6) forwards;
+}
+
+@keyframes rq-name-particle {
+  from {
+    opacity: 1;
+
+    transform:
+      translate(0, 0)
+      scale(1);
+  }
+
+  to {
+    opacity: 0;
+
+    transform:
+      translate(
+        var(--particle-x),
+        var(--particle-y)
+      )
+      scale(0.5);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rq-name,
+  .rq-name-letter {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .rq-score-pop,
+  .rq-name-particle {
+    display: none !important;
   }
 }
