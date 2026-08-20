@@ -312,7 +312,7 @@ body * {
   width: fit-content;
 
   /* Layout */
-  margin-top: 32px;
+  margin-top: 84px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
@@ -330,15 +330,15 @@ body * {
    * This is the resting state.
    */
   text-shadow:
-    3px 0 #7f4f70,
-    -3px 0 #7f4f70,
-    0 3px #7f4f70,
-    0 -3px #7f4f70,
+    3px 0 #B983A9,
+    -3px 0 #B983A9,
+    0 3px #B983A9,
+    0 -3px #B983A9,
 
-    3px 3px #7f4f70,
-    -3px 3px #7f4f70,
-    3px -3px #7f4f70,
-    -3px -3px #7f4f70;
+    3px 3px #B983A9,
+    -3px 3px #B983A9,
+    3px -3px #B983A9,
+    -3px -3px #B983A9;
 
   transition:
     transform 90ms steps(2),
@@ -374,15 +374,15 @@ body * {
   transform: translate3d(2px, -3px, 0);
 
   text-shadow:
-    4px 0 #b983a9,
-    -4px 0 #b983a9,
-    0 4px #b983a9,
-    0 -4px #b983a9,
+    4px 0 #F2B8D7,
+    -4px 0 #F2B8D7,
+    0 4px #F2B8D7,
+    0 -4px #F2B8D7,
 
-    4px 4px #b983a9,
-    -4px 4px #b983a9,
-    4px -4px #b983a9,
-    -4px -4px #b983a9;
+    4px 4px #F2B8D7,
+    -4px 4px #F2B8D7,
+    4px -4px #F2B8D7,
+    -4px -4px #F2B8D7;
 }
 
 
