@@ -1,5 +1,10 @@
 /* =========================================================
    ROSE QUARTZ PORTFOLIO
+   DROP-IN STYLES
+   ========================================================= */
+
+
+/* =========================================================
    PIXEL CURSOR
    ========================================================= */
 
@@ -32,68 +37,57 @@ body * {
   will-change: transform;
 }
 
-@media (hover: none), (pointer: coarse) {
-  html,
-  body,
-  body * {
-    cursor: auto !important;
-  }
-
-  #rq-pixel-cursor {
-    display: none !important;
-  }
-}
 
 /* =========================================================
    PAGE BASE
    ========================================================= */
 
-html {
+html,
+body {
   min-height: 100%;
-  background: #09090b;
+  background-color: #09090b;
 }
 
 body {
-  min-height: 100vh;
-  background: transparent;
+  margin: 0;
 }
 
 
 /* =========================================================
-   LOOPING HEXAGON BACKGROUND
+   HEXAGON BACKGROUND
    ========================================================= */
 
+/*
+ * This is a real SVG element created by main.js.
+ * No CSS gradients and no data-URI parsing.
+ */
 #rq-hex-background {
   position: fixed;
 
   top: -120px;
-  left: -120px;
   right: -120px;
   bottom: -120px;
+  left: -120px;
+
+  width: calc(100vw + 240px);
+  height: calc(100vh + 240px);
 
   pointer-events: none;
+  user-select: none;
 
-  /*
-   * Keep this ABOVE the root background.
-   * -1 was causing it to disappear behind the page.
-   */
   z-index: 0;
 
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90' viewBox='0 0 104 90'%3E%3Cg fill='none' stroke='%23b983a9' stroke-opacity='0.32' stroke-width='1.5'%3E%3Cpath d='M26 0 L78 0 L104 45 L78 90 L26 90 L0 45 Z'/%3E%3Cpath d='M-26 0 L26 0 L52 45 L26 90 L-26 90 L-52 45 Z'/%3E%3Cpath d='M78 0 L130 0 L156 45 L130 90 L78 90 L52 45 Z'/%3E%3C/g%3E%3C/svg%3E");
-
-  background-repeat: repeat;
-  background-size: 104px 90px;
+  overflow: visible;
 
   animation: rq-hex-scroll 5s linear infinite;
 
-  will-change: background-position;
+  will-change: transform;
 }
 
-
-/* =========================================================
-   KEEP WEBFLOW CONTENT ABOVE BACKGROUND
-   ========================================================= */
-
+/*
+ * Keep normal Webflow content above the grid.
+ * The cursor stays above everything via its own z-index.
+ */
 body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
   position: relative;
   z-index: 1;
@@ -106,18 +100,30 @@ body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
 
 @keyframes rq-hex-scroll {
   from {
-    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    background-position: 104px 90px;
+    transform: translate3d(156px, 90px, 0);
   }
 }
 
 
 /* =========================================================
-   REDUCED MOTION
+   TOUCH / REDUCED MOTION
    ========================================================= */
+
+@media (hover: none), (pointer: coarse) {
+  html,
+  body,
+  body * {
+    cursor: auto !important;
+  }
+
+  #rq-pixel-cursor {
+    display: none !important;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   #rq-hex-background {
