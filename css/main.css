@@ -309,10 +309,7 @@ body * {
 
 .rq-name {
   position: relative;
-  display: inline-block;
-
-  margin: 0;
-  margin-top: 32px;
+  display: block;
 
   color: #f5f5f5;
 
@@ -327,6 +324,11 @@ body * {
 
   user-select: none;
   overflow: visible;
+
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 46px;
 }
 
 
