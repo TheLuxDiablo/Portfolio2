@@ -1,90 +1,102 @@
 /* =========================================================
-   PIXEL CURSOR
+   ROSE QUARTZ PORTFOLIO
+   Custom Cursor
    ========================================================= */
 
+:root {
+  --pixel-cursor: url("https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png");
+}
+
+
+/* ---------------------------------------------------------
+   BASE CURSOR
+   --------------------------------------------------------- */
+
 html,
-body,
+body {
+  cursor: var(--pixel-cursor) 0 0, auto;
+}
+
+
+/* ---------------------------------------------------------
+   INTERACTIVE ELEMENTS
+
+   Webflow/browser defaults normally change these to a hand,
+   text cursor, etc. We keep our pixel cursor everywhere.
+   --------------------------------------------------------- */
+
 a,
 button,
+.w-button,
 [role="button"],
+[onclick],
+label,
+summary,
+select,
+option,
 input,
 textarea,
-select {
-  cursor: none !important;
+.w-dropdown-toggle,
+.w-nav-button,
+.w-slider-arrow-left,
+.w-slider-arrow-right,
+[data-cursor] {
+  cursor: var(--pixel-cursor) 0 0, pointer !important;
 }
 
-/* Main cursor */
-.pixel-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
 
-  width: 16px;
-  height: 16px;
+/* ---------------------------------------------------------
+   TEXT
 
-  pointer-events: none;
-  z-index: 999999;
+   Prevent the browser's I-beam from replacing our cursor.
+   --------------------------------------------------------- */
 
-  transform: translate(-2px, -2px);
-
-  image-rendering: pixelated;
-
-  transition:
-    width 0.08s steps(2),
-    height 0.08s steps(2),
-    transform 0.08s steps(2);
-
-  /* Pixel arrow */
-  clip-path: polygon(
-    0% 0%,
-    0% 81%,
-    19% 63%,
-    31% 94%,
-    44% 88%,
-    31% 56%,
-    56% 56%
-  );
-
-  background: white;
-
-  filter:
-    drop-shadow(2px 0 0 #000)
-    drop-shadow(-2px 0 0 #000)
-    drop-shadow(0 2px 0 #000)
-    drop-shadow(0 -2px 0 #000);
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+blockquote {
+  cursor: var(--pixel-cursor) 0 0, auto;
 }
 
-/* Hovering a clickable element */
-.pixel-cursor.is-hovering {
-  width: 20px;
-  height: 20px;
 
-  transform:
-    translate(-3px, -3px)
-    rotate(-8deg);
+/* ---------------------------------------------------------
+   DISABLED ELEMENTS
+   --------------------------------------------------------- */
+
+button:disabled,
+input:disabled,
+select:disabled,
+[aria-disabled="true"] {
+  cursor: var(--pixel-cursor) 0 0, not-allowed !important;
 }
 
-/* Mouse click */
-.pixel-cursor.is-clicking {
-  transform:
-    translate(-2px, -2px)
-    scale(0.8);
-}
 
-/* Don't use custom cursor on touchscreens */
+/* ---------------------------------------------------------
+   TOUCH DEVICES
+
+   Don't interfere with phones/tablets.
+   --------------------------------------------------------- */
+
 @media (hover: none), (pointer: coarse) {
   html,
   body,
   a,
   button,
+  .w-button,
   [role="button"],
+  [onclick],
+  label,
+  summary,
+  select,
   input,
   textarea,
-  select {
+  [data-cursor] {
     cursor: auto !important;
-  }
-
-  .pixel-cursor {
-    display: none;
   }
 }
