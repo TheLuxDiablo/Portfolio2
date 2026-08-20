@@ -80,3 +80,19 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
 });
+
+/* =========================================================
+   HEX BACKGROUND
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (document.getElementById("rq-hex-background")) {
+    return;
+  }
+
+  const background = document.createElement("div");
+
+  background.id = "rq-hex-background";
+
+  document.body.prepend(background);
+});
