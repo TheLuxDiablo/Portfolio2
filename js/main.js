@@ -384,7 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
 });
-
 /* =========================================================
    RQ NAME JUICE
    ========================================================= */
@@ -425,58 +424,82 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
-     HOVER LETTER CASCADE
+     CLEAN LEFT-TO-RIGHT SHINE
      ------------------------------------------------------- */
 
-  function playLetterCascade() {
+  let shineTimers = [];
+
+  function clearShine() {
+    shineTimers.forEach(function (timer) {
+      clearTimeout(timer);
+    });
+
+    shineTimers = [];
+
+    letters.forEach(function (letter) {
+      letter.classList.remove("is-shining");
+    });
+  }
+
+
+  function playShine() {
+    clearShine();
+
     letters.forEach(function (letter, index) {
-      setTimeout(function () {
-        letter.classList.remove("is-bouncing");
+      /*
+       * Turn this letter on.
+       */
+      const startTimer = setTimeout(function () {
+        letter.classList.add("is-shining");
+      }, index * 55);
 
-        void letter.offsetWidth;
+      /*
+       * Turn it back off shortly afterward.
+       */
+      const endTimer = setTimeout(function () {
+        letter.classList.remove("is-shining");
+      }, index * 55 + 110);
 
-        letter.classList.add("is-bouncing");
-
-        setTimeout(function () {
-          letter.classList.remove("is-bouncing");
-        }, 240);
-      }, index * 32);
+      shineTimers.push(startTimer);
+      shineTimers.push(endTimer);
     });
   }
 
 
   /* -------------------------------------------------------
-     HOVER FLASH
-     ------------------------------------------------------- */
-
-  function playFlash() {
-    name.classList.remove("is-flashing");
-
-    void name.offsetWidth;
-
-    name.classList.add("is-flashing");
-
-    setTimeout(function () {
-      name.classList.remove("is-flashing");
-    }, 280);
-  }
-
-
-  /* -------------------------------------------------------
-     SCORE POP
+     RANDOM SCORE POP
      ------------------------------------------------------- */
 
   function spawnScore() {
     const score = document.createElement("span");
 
     score.className = "rq-score-pop";
-    score.textContent = "+100";
+
+    /*
+     * Arcade-y randomized score.
+     * Always multiples of 10.
+     */
+    const amount =
+      (Math.floor(Math.random() * 90) + 1) * 10;
+
+    score.textContent = "+" + amount;
+
+    /*
+     * Don't make every score appear in exactly the same spot.
+     */
+    const horizontalOffset =
+      Math.floor(Math.random() * 41) - 20;
+
+    score.style.left =
+      "calc(50% + " +
+      horizontalOffset +
+      "px)";
 
     name.appendChild(score);
 
     setTimeout(function () {
       score.remove();
-    }, 700);
+    }, 600);
   }
 
 
@@ -485,7 +508,7 @@ document.addEventListener("DOMContentLoaded", function () {
      ------------------------------------------------------- */
 
   function spawnParticles() {
-    const count = 10;
+    const count = 8;
 
     for (let i = 0; i < count; i++) {
       const particle = document.createElement("span");
@@ -496,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function () {
         (Math.PI * 2 * i) / count;
 
       const distance =
-        22 + Math.random() * 26;
+        18 + Math.random() * 24;
 
       const x =
         Math.cos(angle) * distance;
@@ -523,28 +546,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
       setTimeout(function () {
         particle.remove();
-      }, 600);
+      }, 550);
     }
   }
 
 
   /* -------------------------------------------------------
-     EVENTS
+     HOVER
      ------------------------------------------------------- */
 
   name.addEventListener("mouseenter", function () {
     name.classList.add("is-hovering");
 
-    playFlash();
-    playLetterCascade();
+    playShine();
   });
 
 
   name.addEventListener("mouseleave", function () {
     name.classList.remove("is-hovering");
     name.classList.remove("is-pressed");
+
+    clearShine();
   });
 
+
+  /* -------------------------------------------------------
+     PRESS
+     ------------------------------------------------------- */
 
   name.addEventListener("mousedown", function () {
     name.classList.add("is-pressed");
@@ -556,9 +584,17 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
+  /* -------------------------------------------------------
+     CLICK
+     ------------------------------------------------------- */
+
   name.addEventListener("click", function () {
+    /*
+     * No flash or color change here.
+     * The press/release handles the squeeze.
+     */
+
     spawnScore();
     spawnParticles();
-    playFlash();
   });
 });

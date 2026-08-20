@@ -302,16 +302,20 @@ body * {
     animation: none;
   }
 }
-
 /* =========================================================
    RQ NAME JUICE
    ========================================================= */
 
 .rq-name {
   position: relative;
-  display: block;
+  display: inline-block;
+
+  margin: 0;
 
   color: #f5f5f5;
+
+  /* Slightly more breathing room between letters */
+  letter-spacing: 0.08em;
 
   cursor: none !important;
 
@@ -319,32 +323,25 @@ body * {
 
   transition:
     transform 90ms steps(2),
-    color 90ms steps(2),
     text-shadow 90ms steps(2);
 
   user-select: none;
   overflow: visible;
-
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 84px;
 }
 
 
 /* ---------------------------------------------------------
-   LETTER WRAPPERS
+   LETTERS
    --------------------------------------------------------- */
 
 .rq-name-letter {
   display: inline-block;
 
-  transform: translateY(0);
+  color: inherit;
 
   transition:
-    transform 90ms steps(2),
-    color 90ms steps(2),
-    text-shadow 90ms steps(2);
+    color 70ms steps(2),
+    text-shadow 70ms steps(2);
 }
 
 
@@ -355,13 +352,12 @@ body * {
 .rq-name.is-hovering {
   transform: translate3d(2px, -2px, 0);
 
-  color: #ffffff;
-
   text-shadow:
     4px 0 #b983a9,
     -4px 0 #b983a9,
     0 4px #b983a9,
     0 -4px #b983a9,
+
     4px 4px #b983a9,
     -4px 4px #b983a9,
     4px -4px #b983a9,
@@ -370,112 +366,69 @@ body * {
 
 
 /* ---------------------------------------------------------
+   CLEAN LETTER SHINE
+
+   No bouncing or movement.
+   Each letter briefly flashes as the shine passes over it.
+   --------------------------------------------------------- */
+
+.rq-name-letter.is-shining {
+  color: #f0b6db;
+
+  text-shadow:
+    1px 0 #ffffff,
+    -1px 0 #ffffff,
+    0 1px #ffffff,
+    0 -1px #ffffff;
+}
+
+
+/* ---------------------------------------------------------
    CLICK / PRESS
+
+   Only squeeze. No color flash.
    --------------------------------------------------------- */
 
 .rq-name.is-pressed {
   transform:
     translate3d(2px, 2px, 0)
-    scaleX(1.04)
-    scaleY(0.90);
+    scaleX(1.05)
+    scaleY(0.88);
 }
 
 
 /* ---------------------------------------------------------
-   HOVER FLASH
-   --------------------------------------------------------- */
-
-.rq-name.is-flashing {
-  animation: rq-name-flash 260ms steps(2);
-}
-
-@keyframes rq-name-flash {
-  0% {
-    color: #ffffff;
-    text-shadow:
-      2px 0 #b983a9,
-      -2px 0 #b983a9,
-      0 2px #b983a9,
-      0 -2px #b983a9;
-  }
-
-  50% {
-    color: #f0b6db;
-    text-shadow:
-      3px 0 #ffffff,
-      -3px 0 #ffffff,
-      0 3px #ffffff,
-      0 -3px #ffffff;
-  }
-
-  100% {
-    color: #ffffff;
-    text-shadow:
-      2px 0 #b983a9,
-      -2px 0 #b983a9,
-      0 2px #b983a9,
-      0 -2px #b983a9;
-  }
-}
-
-
-/* ---------------------------------------------------------
-   LETTER BOUNCE
-   --------------------------------------------------------- */
-
-.rq-name-letter.is-bouncing {
-  animation: rq-letter-bounce 220ms steps(3);
-}
-
-@keyframes rq-letter-bounce {
-  0% {
-    transform: translateY(0);
-  }
-
-  33% {
-    transform: translateY(-4px);
-  }
-
-  66% {
-    transform: translateY(1px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-
-/* ---------------------------------------------------------
-   +100 POPUP
+   RANDOM SCORE POP
    --------------------------------------------------------- */
 
 .rq-score-pop {
   position: absolute;
 
   left: 50%;
-  top: 0;
+  top: 5%;
 
   pointer-events: none;
 
   color: #f0b6db;
 
-  font: inherit;
+  /* Much smaller than the name */
+  font-size: 0.28em;
+  line-height: 1;
 
   white-space: nowrap;
 
   z-index: 20;
 
-  transform:
-    translate(-50%, -8px);
+  transform: translate(-50%, 0);
 
   animation:
-    rq-score-pop 600ms steps(6) forwards;
+    rq-score-pop 520ms steps(6) forwards;
 }
 
 @keyframes rq-score-pop {
   0% {
     opacity: 0;
+
     transform:
       translate(-50%, 0)
       scale(0.8);
@@ -483,15 +436,17 @@ body * {
 
   15% {
     opacity: 1;
+
     transform:
-      translate(-50%, -8px)
-      scale(1.1);
+      translate(-50%, -4px)
+      scale(1);
   }
 
   100% {
     opacity: 0;
+
     transform:
-      translate(-50%, -38px)
+      translate(-50%, -24px)
       scale(1);
   }
 }
@@ -519,7 +474,7 @@ body * {
   image-rendering: pixelated;
 
   animation:
-    rq-name-particle 520ms steps(6) forwards;
+    rq-name-particle 480ms steps(6) forwards;
 }
 
 @keyframes rq-name-particle {
