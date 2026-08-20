@@ -1,134 +1,107 @@
-/* =========================================================
-   ROSE QUARTZ PORTFOLIO
-   DROP-IN STYLES
-   ========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
+  /* =======================================================
+     LOOPING HEXAGON BACKGROUND
+     ======================================================= */
 
-/* =========================================================
-   PIXEL CURSOR
-   ========================================================= */
+  if (!document.getElementById("rq-hex-background")) {
+    const SVG_NS = "http://www.w3.org/2000/svg";
 
-html,
-body,
-body * {
-  cursor: none !important;
-}
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.id = "rq-hex-background";
+    svg.setAttribute("aria-hidden", "true");
 
-#rq-pixel-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
+    const defs = document.createElementNS(SVG_NS, "defs");
 
-  width: 16px;
-  height: 23px;
+    const pattern = document.createElementNS(SVG_NS, "pattern");
+    pattern.id = "rq-hex-pattern";
+    pattern.setAttribute("patternUnits", "userSpaceOnUse");
+    pattern.setAttribute("width", "156");
+    pattern.setAttribute("height", "90");
 
-  display: block;
+    /*
+     * Flat-top honeycomb.
+     *
+     * One complete hex sits on the left.
+     * The partial hexes on the right complete the staggered
+     * neighboring column when the SVG pattern repeats.
+     */
+    const path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute(
+      "d",
+      [
+        "M26 0 L78 0 L104 45 L78 90 L26 90 L0 45 Z",
+        "M104 -45 L156 -45 L182 0 L156 45 L104 45 L78 0 Z",
+        "M104 45 L156 45 L182 90 L156 135 L104 135 L78 90 Z"
+      ].join(" ")
+    );
 
-  pointer-events: none;
-  user-select: none;
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "#b983a9");
+    path.setAttribute("stroke-opacity", "0.34");
+    path.setAttribute("stroke-width", "1.5");
+    path.setAttribute("vector-effect", "non-scaling-stroke");
 
-  z-index: 2147483647;
+    pattern.appendChild(path);
+    defs.appendChild(pattern);
+    svg.appendChild(defs);
 
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+    const rect = document.createElementNS(SVG_NS, "rect");
+    rect.setAttribute("x", "0");
+    rect.setAttribute("y", "0");
+    rect.setAttribute("width", "100%");
+    rect.setAttribute("height", "100%");
+    rect.setAttribute("fill", "url(#rq-hex-pattern)");
 
-  transform: translate3d(-100px, -100px, 0);
+    svg.appendChild(rect);
 
-  will-change: transform;
-}
-
-
-/* =========================================================
-   PAGE BASE
-   ========================================================= */
-
-html,
-body {
-  min-height: 100%;
-  background-color: #09090b;
-}
-
-body {
-  margin: 0;
-}
-
-
-/* =========================================================
-   HEXAGON BACKGROUND
-   ========================================================= */
-
-#rq-hex-background {
-  position: fixed;
-  inset: 0;
-
-  width: 100vw;
-  height: 100vh;
-
-  pointer-events: none;
-  user-select: none;
-
-  z-index: 0;
-
-  overflow: hidden;
-}
-
-#rq-hex-grid {
-  transform: translate3d(-42px, -24.25px, 0);
-  animation: rq-hex-scroll 6s linear infinite;
-  will-change: transform;
-}
-
-.rq-hex {
-  fill: none;
-  stroke: #b983a9;
-  stroke-opacity: 0.38;
-  stroke-width: 2;
-  vector-effect: non-scaling-stroke;
-
-  shape-rendering: crispEdges;
-}
-
-
-/* Keep Webflow content above the background */
-body > *:not(#rq-hex-background):not(#rq-pixel-cursor) {
-  position: relative;
-  z-index: 1;
-}
-
-
-/* =========================================================
-   HEXAGON MOVEMENT
-   ========================================================= */
-
-@keyframes rq-hex-scroll {
-  from {
-    transform: translate3d(-78px, -45px, 0);
+    document.body.prepend(svg);
   }
 
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
 
+  /* =======================================================
+     PIXEL CURSOR
+     ======================================================= */
 
-/* =========================================================
-   TOUCH / REDUCED MOTION
-   ========================================================= */
+  const isTouchDevice = window.matchMedia(
+    "(hover: none), (pointer: coarse)"
+  ).matches;
 
-@media (hover: none), (pointer: coarse) {
-  html,
-  body,
-  body * {
-    cursor: auto !important;
-  }
+  if (isTouchDevice) return;
 
-  #rq-pixel-cursor {
-    display: none !important;
-  }
-}
+  if (document.getElementById("rq-pixel-cursor")) return;
 
-@media (prefers-reduced-motion: reduce) {
-  #rq-hex-grid {
-    animation: none;
-  }
-}
+  const cursor = document.createElement("img");
+
+  cursor.id = "rq-pixel-cursor";
+  cursor.src =
+    "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
+
+  cursor.alt = "";
+  cursor.setAttribute("aria-hidden", "true");
+  cursor.setAttribute("draggable", "false");
+
+  document.body.appendChild(cursor);
+
+  document.addEventListener("mousemove", function (event) {
+    cursor.style.transform =
+      "translate3d(" +
+      event.clientX +
+      "px, " +
+      event.clientY +
+      "px, 0)";
+  });
+
+  document.documentElement.addEventListener("mouseleave", function () {
+    cursor.style.visibility = "hidden";
+  });
+
+  document.documentElement.addEventListener("mouseenter", function () {
+    cursor.style.visibility = "visible";
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    cursor.style.visibility = document.hidden ? "hidden" : "visible";
+  });
+
+});
