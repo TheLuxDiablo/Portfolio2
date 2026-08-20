@@ -598,3 +598,399 @@ document.addEventListener("DOMContentLoaded", function () {
     spawnParticles();
   });
 });
+
+/* =========================================================
+   RQ PIXEL NAV
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* -------------------------------------------------------
+     NAV ITEMS
+
+     Change href values here whenever your final Webflow
+     URLs are ready.
+     ------------------------------------------------------- */
+
+  const navItems = [
+    {
+      id: "profile",
+      label: "Profile",
+      color: "#ff5a5f",
+      href: "/profile"
+    },
+    {
+      id: "home",
+      label: "Home",
+      color: "#ff9f43",
+      href: "/"
+    },
+    {
+      id: "experience",
+      label: "Experience",
+      color: "#ffd93d",
+      href: "/experience"
+    },
+    {
+      id: "projects",
+      label: "Projects",
+      color: "#5fd068",
+      href: "/projects"
+    },
+    {
+      id: "resume",
+      label: "Resume",
+      color: "#54a0ff",
+      href: "/resume"
+    },
+    {
+      id: "contact",
+      label: "Contact",
+      color: "#a66cff",
+      href: "/contact"
+    }
+  ];
+
+
+  /* -------------------------------------------------------
+     PIXEL ICON DATA
+
+     1 = colored icon pixel
+     0 = transparent
+
+     These are deliberately tiny. They get rendered at
+     larger size without smoothing.
+     ------------------------------------------------------- */
+
+  const icons = {
+
+    /* Person */
+    profile: [
+      "0001111000",
+      "0011111100",
+      "0011111100",
+      "0011111100",
+      "0001111000",
+      "0000110000",
+      "0011111100",
+      "0111111110",
+      "1111111111",
+      "1111111111"
+    ],
+
+
+    /* House */
+    home: [
+      "0000110000",
+      "0001111000",
+      "0011111100",
+      "0111111110",
+      "1111111111",
+      "0111111110",
+      "0110000110",
+      "0110110110",
+      "0110110110",
+      "0110110110"
+    ],
+
+
+    /* Briefcase */
+    experience: [
+      "0001111000",
+      "0011111100",
+      "0011001100",
+      "1111111111",
+      "1111111111",
+      "1111111111",
+      "1111001111",
+      "1111111111",
+      "1111111111",
+      "0111111110"
+    ],
+
+
+    /* Gamepad */
+    projects: [
+      "0000000000",
+      "0011111100",
+      "0111111110",
+      "1111111111",
+      "1110110111",
+      "1101111011",
+      "1110110111",
+      "1111111111",
+      "1100000011",
+      "1000000001"
+    ],
+
+
+    /* Document */
+    resume: [
+      "0011111000",
+      "0011111100",
+      "0011001110",
+      "0011000110",
+      "0011111110",
+      "0011000110",
+      "0011111110",
+      "0011000110",
+      "0011111110",
+      "0011111110"
+    ],
+
+
+    /* Envelope */
+    contact: [
+      "0000000000",
+      "1111111111",
+      "1111111111",
+      "1100000011",
+      "1010000101",
+      "1001001001",
+      "1000110001",
+      "1000000001",
+      "1111111111",
+      "1111111111"
+    ]
+  };
+
+
+  /* -------------------------------------------------------
+     CREATE NAV
+     ------------------------------------------------------- */
+
+  let nav = document.getElementById("rq-top-nav");
+
+  if (!nav) {
+    nav = document.createElement("nav");
+
+    nav.id = "rq-top-nav";
+    nav.setAttribute("aria-label", "Portfolio navigation");
+
+    document.body.appendChild(nav);
+  }
+
+
+  /* -------------------------------------------------------
+     DRAW PIXEL ICON
+
+     We render into a tiny logical canvas first.
+
+     White pixels are drawn around the icon silhouette,
+     then the colored pixels are drawn over them.
+     ------------------------------------------------------- */
+
+  function drawPixelIcon(canvas, pattern, color) {
+
+    const pixelScale = 3;
+
+    const rows = pattern.length;
+    const cols = pattern[0].length;
+
+    canvas.width = cols * pixelScale;
+    canvas.height = rows * pixelScale;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.imageSmoothingEnabled = false;
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+    /* Build lookup */
+
+    function isPixel(x, y) {
+
+      if (
+        y < 0 ||
+        y >= rows ||
+        x < 0 ||
+        x >= cols
+      ) {
+        return false;
+      }
+
+      return pattern[y][x] === "1";
+    }
+
+
+    /* -----------------------------------------------------
+       WHITE OUTLINE
+
+       Every transparent pixel touching a colored pixel
+       becomes part of the outline.
+       ----------------------------------------------------- */
+
+    ctx.fillStyle = "#ffffff";
+
+    for (let y = -1; y <= rows; y++) {
+
+      for (let x = -1; x <= cols; x++) {
+
+        if (isPixel(x, y)) {
+          continue;
+        }
+
+        let touchesIcon = false;
+
+        for (let offsetY = -1; offsetY <= 1; offsetY++) {
+
+          for (
+            let offsetX = -1;
+            offsetX <= 1;
+            offsetX++
+          ) {
+
+            if (
+              offsetX === 0 &&
+              offsetY === 0
+            ) {
+              continue;
+            }
+
+            if (
+              isPixel(
+                x + offsetX,
+                y + offsetY
+              )
+            ) {
+              touchesIcon = true;
+            }
+          }
+        }
+
+        if (touchesIcon) {
+
+          ctx.fillRect(
+            x * pixelScale,
+            y * pixelScale,
+            pixelScale,
+            pixelScale
+          );
+        }
+      }
+    }
+
+
+    /* -----------------------------------------------------
+       COLORED ICON
+       ----------------------------------------------------- */
+
+    ctx.fillStyle = color;
+
+    for (let y = 0; y < rows; y++) {
+
+      for (let x = 0; x < cols; x++) {
+
+        if (!isPixel(x, y)) {
+          continue;
+        }
+
+        ctx.fillRect(
+          x * pixelScale,
+          y * pixelScale,
+          pixelScale,
+          pixelScale
+        );
+      }
+    }
+  }
+
+
+  /* -------------------------------------------------------
+     BUILD BUTTONS
+     ------------------------------------------------------- */
+
+  navItems.forEach(function (item) {
+
+    const button =
+      document.createElement("a");
+
+    button.className =
+      "rq-nav-button rq-nav-" + item.id;
+
+    button.href = item.href;
+
+    button.setAttribute(
+      "aria-label",
+      item.label
+    );
+
+    button.style.setProperty(
+      "--nav-color",
+      item.color
+    );
+
+
+    /* Icon */
+
+    const canvas =
+      document.createElement("canvas");
+
+    canvas.className = "rq-nav-icon";
+
+    canvas.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    drawPixelIcon(
+      canvas,
+      icons[item.id],
+      item.color
+    );
+
+    button.appendChild(canvas);
+
+
+    /* Label */
+
+    const label =
+      document.createElement("span");
+
+    label.className = "rq-nav-label";
+    label.textContent = item.label;
+
+    button.appendChild(label);
+
+
+    /* Add */
+
+    nav.appendChild(button);
+  });
+
+
+  /* -------------------------------------------------------
+     ACTIVE PAGE
+
+     Handles both normal Webflow paths and homepage.
+     ------------------------------------------------------- */
+
+  const currentPath =
+    window.location.pathname
+      .replace(/\/+$/, "") || "/";
+
+  const buttons =
+    nav.querySelectorAll(".rq-nav-button");
+
+  buttons.forEach(function (button) {
+
+    const href =
+      button.getAttribute("href");
+
+    if (!href) return;
+
+    const normalizedHref =
+      href.replace(/\/+$/, "") || "/";
+
+    if (normalizedHref === currentPath) {
+      button.classList.add("is-active");
+    }
+  });
+
+});

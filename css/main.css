@@ -539,3 +539,215 @@ body * {
     display: none !important;
   }
 }
+
+/* =========================================================
+   RQ TOP NAV
+   ========================================================= */
+
+#rq-top-nav {
+  position: fixed;
+
+  top: 22px;
+  right: 28px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  z-index: 1000;
+
+  user-select: none;
+}
+
+
+/* =========================================================
+   NAV BUTTON
+   ========================================================= */
+
+.rq-nav-button {
+  position: relative;
+
+  width: 42px;
+  height: 50px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  text-decoration: none;
+
+  cursor: none !important;
+
+  transform:
+    translate3d(0, 0, 0)
+    scale(1);
+
+  transform-origin: center 18px;
+
+  transition:
+    transform 120ms steps(4);
+}
+
+
+/* =========================================================
+   PIXEL ICON
+   ========================================================= */
+
+.rq-nav-icon {
+  width: 36px;
+  height: 36px;
+
+  display: block;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.rq-nav-button:hover {
+  transform:
+    translate3d(0, -3px, 0)
+    scale(1.22);
+
+  z-index: 5;
+}
+
+
+/* Slight press-down feedback */
+
+.rq-nav-button:active {
+  transform:
+    translate3d(0, 1px, 0)
+    scale(1.12);
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.rq-nav-label {
+  position: absolute;
+
+  top: 42px;
+  left: 50%;
+
+  transform:
+    translateX(-50%)
+    translateY(-3px);
+
+  opacity: 0;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1;
+
+  letter-spacing: 0.04em;
+
+  white-space: nowrap;
+
+  pointer-events: none;
+
+  text-shadow:
+    1px 0 #09090b,
+    -1px 0 #09090b,
+    0 1px #09090b,
+    0 -1px #09090b;
+
+  transition:
+    opacity 80ms steps(2),
+    transform 80ms steps(2);
+}
+
+
+.rq-nav-button:hover .rq-nav-label {
+  opacity: 1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+
+
+/* =========================================================
+   ACTIVE PAGE DOT
+   ========================================================= */
+
+.rq-nav-button::after {
+  content: "";
+
+  position: absolute;
+
+  top: -8px;
+  left: 50%;
+
+  width: 4px;
+  height: 4px;
+
+  background: var(--nav-color);
+
+  opacity: 0;
+
+  transform: translateX(-50%);
+
+  image-rendering: pixelated;
+}
+
+
+.rq-nav-button.is-active::after {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  #rq-top-nav {
+    top: 14px;
+    right: 14px;
+
+    gap: 6px;
+  }
+
+  .rq-nav-button {
+    width: 34px;
+  }
+
+  .rq-nav-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .rq-nav-label {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .rq-nav-button,
+  .rq-nav-label {
+    transition: none !important;
+  }
+}
