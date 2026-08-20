@@ -301,8 +301,7 @@ body * {
   #rq-dither-background {
     animation: none;
   }
-}
-/* =========================================================
+}/* =========================================================
    RQ NAME JUICE
    ========================================================= */
 
@@ -312,7 +311,8 @@ body * {
   display: block;
   width: fit-content;
 
-  margin-top: 84px;
+  /* Layout */
+  margin-top: 32px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
@@ -324,6 +324,21 @@ body * {
   cursor: none !important;
 
   transform-origin: center;
+
+  /*
+   * Permanent darker rose outline.
+   * This is the resting state.
+   */
+  text-shadow:
+    3px 0 #7f4f70,
+    -3px 0 #7f4f70,
+    0 3px #7f4f70,
+    0 -3px #7f4f70,
+
+    3px 3px #7f4f70,
+    -3px 3px #7f4f70,
+    3px -3px #7f4f70,
+    -3px -3px #7f4f70;
 
   transition:
     transform 90ms steps(2),
@@ -351,10 +366,12 @@ body * {
 
 /* ---------------------------------------------------------
    HOVER
+
+   Lift the whole title and brighten the outline.
    --------------------------------------------------------- */
 
 .rq-name.is-hovering {
-  transform: translate3d(2px, -2px, 0);
+  transform: translate3d(2px, -3px, 0);
 
   text-shadow:
     4px 0 #b983a9,
@@ -372,25 +389,30 @@ body * {
 /* ---------------------------------------------------------
    CLEAN LETTER SHINE
 
-   No bouncing or movement.
-   Each letter briefly flashes as the shine passes over it.
+   No bouncing.
+   No movement.
+   The shine travels letter-by-letter.
    --------------------------------------------------------- */
 
 .rq-name-letter.is-shining {
-  color: #f0b6db;
+  color: #ffffff;
 
   text-shadow:
-    1px 0 #ffffff,
-    -1px 0 #ffffff,
-    0 1px #ffffff,
-    0 -1px #ffffff;
+    1px 0 #f0b6db,
+    -1px 0 #f0b6db,
+    0 1px #f0b6db,
+    0 -1px #f0b6db,
+
+    2px 0 rgba(255, 255, 255, 0.55),
+    -2px 0 rgba(255, 255, 255, 0.55);
 }
 
 
 /* ---------------------------------------------------------
    CLICK / PRESS
 
-   Only squeeze. No color flash.
+   Only squeeze.
+   No color or outline change.
    --------------------------------------------------------- */
 
 .rq-name.is-pressed {
@@ -415,13 +437,18 @@ body * {
 
   color: #f0b6db;
 
-  /* Much smaller than the name */
   font-size: 0.28em;
   line-height: 1;
 
   white-space: nowrap;
 
   z-index: 20;
+
+  text-shadow:
+    1px 0 #7f4f70,
+    -1px 0 #7f4f70,
+    0 1px #7f4f70,
+    0 -1px #7f4f70;
 
   transform: translate(-50%, 0);
 
