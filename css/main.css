@@ -55,77 +55,48 @@ body {
   background: #09090b;
 }
 
-
 /* =========================================================
-   HEX BACKGROUND ELEMENT
+   LOOPING HEXAGON BACKGROUND
    ========================================================= */
 
 #rq-hex-background {
   position: fixed;
-
-  inset: -120px;
+  inset: -100px;
 
   z-index: -1;
-
   pointer-events: none;
 
   background-color: #09090b;
 
-  background-image:
-    linear-gradient(
-      30deg,
-      rgba(185, 131, 169, 0.28) 12%,
-      transparent 12.5%,
-      transparent 87%,
-      rgba(185, 131, 169, 0.28) 87.5%
-    ),
-    linear-gradient(
-      150deg,
-      rgba(185, 131, 169, 0.28) 12%,
-      transparent 12.5%,
-      transparent 87%,
-      rgba(185, 131, 169, 0.28) 87.5%
-    ),
-    linear-gradient(
-      30deg,
-      rgba(185, 131, 169, 0.28) 12%,
-      transparent 12.5%,
-      transparent 87%,
-      rgba(185, 131, 169, 0.28) 87.5%
-    ),
-    linear-gradient(
-      150deg,
-      rgba(185, 131, 169, 0.28) 12%,
-      transparent 12.5%,
-      transparent 87%,
-      rgba(185, 131, 169, 0.28) 87.5%
-    );
+  background-repeat: repeat;
+  background-size: 104px 90px;
 
-  background-size: 72px 124px;
+  opacity: 1;
 
-  background-position:
-    0 0,
-    0 0,
-    36px 62px,
-    36px 62px;
+  animation: rq-hex-scroll 7s linear infinite;
 
-  animation: rq-hex-move 5s linear infinite;
-
-  will-change: transform;
+  will-change: background-position;
 }
 
 
 /* =========================================================
-   HEX MOVEMENT
+   HEXAGON MOVEMENT
    ========================================================= */
 
-@keyframes rq-hex-move {
+@keyframes rq-hex-scroll {
   from {
-    transform: translate3d(0, 0, 0);
+    background-position: 0 0;
   }
 
   to {
-    transform: translate3d(72px, 124px, 0);
+    background-position: 104px 90px;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  #rq-hex-background {
+    animation: none;
   }
 }
 
