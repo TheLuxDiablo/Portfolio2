@@ -81,9 +81,11 @@ body {
 .rq-hex {
   fill: none;
   stroke: #b983a9;
-  stroke-opacity: 0.30;
-  stroke-width: 1.5;
+  stroke-opacity: 0.38;
+  stroke-width: 2;
   vector-effect: non-scaling-stroke;
+
+  shape-rendering: crispEdges;
 }
 
 

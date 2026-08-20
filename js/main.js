@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
       hexGrid.removeChild(hexGrid.firstChild);
     }
 
-    const side = 52;
+    const side = 28;
     const hexWidth = side * 2;
     const hexHeight = Math.sqrt(3) * side;
 
