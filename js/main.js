@@ -1,107 +1,92 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const SVG_NS = "http://www.w3.org/2000/svg";
 
-  /* =======================================================
-     LOOPING HEXAGON BACKGROUND
-     ======================================================= */
-
-  if (!document.getElementById("rq-hex-background")) {
-    const SVG_NS = "http://www.w3.org/2000/svg";
-
-    const svg = document.createElementNS(SVG_NS, "svg");
-    svg.id = "rq-hex-background";
-    svg.setAttribute("aria-hidden", "true");
-
-    const defs = document.createElementNS(SVG_NS, "defs");
-
-    const pattern = document.createElementNS(SVG_NS, "pattern");
-    pattern.id = "rq-hex-pattern";
-    pattern.setAttribute("patternUnits", "userSpaceOnUse");
-    pattern.setAttribute("width", "156");
-    pattern.setAttribute("height", "90");
-
-    /*
-     * Flat-top honeycomb.
-     *
-     * One complete hex sits on the left.
-     * The partial hexes on the right complete the staggered
-     * neighboring column when the SVG pattern repeats.
-     */
-    const path = document.createElementNS(SVG_NS, "path");
-    path.setAttribute(
-      "d",
-      [
-        "M26 0 L78 0 L104 45 L78 90 L26 90 L0 45 Z",
-        "M104 -45 L156 -45 L182 0 L156 45 L104 45 L78 0 Z",
-        "M104 45 L156 45 L182 90 L156 135 L104 135 L78 90 Z"
-      ].join(" ")
-    );
-
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#b983a9");
-    path.setAttribute("stroke-opacity", "0.34");
-    path.setAttribute("stroke-width", "1.5");
-    path.setAttribute("vector-effect", "non-scaling-stroke");
-
-    pattern.appendChild(path);
-    defs.appendChild(pattern);
-    svg.appendChild(defs);
-
-    const rect = document.createElementNS(SVG_NS, "rect");
-    rect.setAttribute("x", "0");
-    rect.setAttribute("y", "0");
-    rect.setAttribute("width", "100%");
-    rect.setAttribute("height", "100%");
-    rect.setAttribute("fill", "url(#rq-hex-pattern)");
-
-    svg.appendChild(rect);
-
-    document.body.prepend(svg);
+  let bg = document.getElementById("rq-hex-background");
+  if (!bg) {
+    bg = document.createElementNS(SVG_NS, "svg");
+    bg.id = "rq-hex-background";
+    bg.setAttribute("aria-hidden", "true");
+    document.body.prepend(bg);
   }
 
+  let grid = document.getElementById("rq-hex-grid");
+  if (!grid) {
+    grid = document.createElementNS(SVG_NS, "g");
+    grid.id = "rq-hex-grid";
+    bg.appendChild(grid);
+  }
 
-  /* =======================================================
-     PIXEL CURSOR
-     ======================================================= */
+  if (!document.getElementById("rq-dither-background")) {
+    const dither = document.createElement("div");
+    dither.id = "rq-dither-background";
+    bg.insertAdjacentElement("afterend", dither);
+  }
 
-  const isTouchDevice = window.matchMedia(
-    "(hover: none), (pointer: coarse)"
-  ).matches;
+  function buildHexGrid() {
+    while (grid.firstChild) grid.removeChild(grid.firstChild);
 
-  if (isTouchDevice) return;
+    const side = 28;
+    const hexHeight = Math.sqrt(3) * side;
+    const horizontalStep = side * 1.5;
+    const verticalStep = hexHeight;
+    const pixelStep = 2;
+    const snap = value => Math.round(value / pixelStep) * pixelStep;
+    const padding = 180;
+    const width = window.innerWidth + padding * 2;
+    const height = window.innerHeight + padding * 2;
 
-  if (document.getElementById("rq-pixel-cursor")) return;
+    bg.setAttribute("viewBox", "0 0 " + window.innerWidth + " " + window.innerHeight);
+
+    const columns = Math.ceil(width / horizontalStep) + 4;
+    const rows = Math.ceil(height / verticalStep) + 4;
+
+    for (let col = 0; col < columns; col++) {
+      const cx = -padding + col * horizontalStep;
+      const offsetY = col % 2 === 0 ? 0 : verticalStep / 2;
+
+      for (let row = 0; row < rows; row++) {
+        const cy = -padding + row * verticalStep + offsetY;
+
+        const points = [
+          [cx-side/2, cy-hexHeight/2],
+          [cx+side/2, cy-hexHeight/2],
+          [cx+side, cy],
+          [cx+side/2, cy+hexHeight/2],
+          [cx-side/2, cy+hexHeight/2],
+          [cx-side, cy]
+        ].map(p => snap(p[0]) + "," + snap(p[1])).join(" ");
+
+        const hex = document.createElementNS(SVG_NS, "polygon");
+        hex.setAttribute("points", points);
+        hex.setAttribute("class", "rq-hex");
+        grid.appendChild(hex);
+      }
+    }
+  }
+
+  buildHexGrid();
+
+  let resizeTimer;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(buildHexGrid, 120);
+  });
+
+  const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  if (isTouch || document.getElementById("rq-pixel-cursor")) return;
 
   const cursor = document.createElement("img");
-
   cursor.id = "rq-pixel-cursor";
-  cursor.src =
-    "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
-
+  cursor.src = "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
   cursor.alt = "";
-  cursor.setAttribute("aria-hidden", "true");
-  cursor.setAttribute("draggable", "false");
-
+  cursor.setAttribute("aria-hidden","true");
+  cursor.setAttribute("draggable","false");
   document.body.appendChild(cursor);
 
-  document.addEventListener("mousemove", function (event) {
-    cursor.style.transform =
-      "translate3d(" +
-      event.clientX +
-      "px, " +
-      event.clientY +
-      "px, 0)";
+  document.addEventListener("mousemove", e => {
+    cursor.style.transform = "translate3d(" + e.clientX + "px," + e.clientY + "px,0)";
   });
-
-  document.documentElement.addEventListener("mouseleave", function () {
-    cursor.style.visibility = "hidden";
-  });
-
-  document.documentElement.addEventListener("mouseenter", function () {
-    cursor.style.visibility = "visible";
-  });
-
-  document.addEventListener("visibilitychange", function () {
-    cursor.style.visibility = document.hidden ? "hidden" : "visible";
-  });
-
+  document.documentElement.addEventListener("mouseleave", () => cursor.style.visibility = "hidden");
+  document.documentElement.addEventListener("mouseenter", () => cursor.style.visibility = "visible");
+  document.addEventListener("visibilitychange", () => cursor.style.visibility = document.hidden ? "hidden" : "visible");
 });
