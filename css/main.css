@@ -44,6 +44,8 @@ body {
   z-index: 0;
 
   background: var(--rq-bg);
+
+  opacity: 0.45;
 }
 
 
