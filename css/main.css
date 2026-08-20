@@ -62,3 +62,209 @@ body * {
     display: none !important;
   }
 }
+
+/* =========================================================
+   ROSE QUARTZ PORTFOLIO
+   HEX GRID BACKGROUND
+   ========================================================= */
+
+:root {
+  --rq-black: #09090b;
+  --rq-dark: #111116;
+
+  --rq-rose: #b983a9;
+  --rq-rose-soft: rgba(185, 131, 169, 0.11);
+  --rq-rose-faint: rgba(185, 131, 169, 0.055);
+
+  --rq-grid: rgba(185, 131, 169, 0.085);
+}
+
+
+/* ---------------------------------------------------------
+   PAGE BASE
+   --------------------------------------------------------- */
+
+html,
+body {
+  min-height: 100%;
+  background: var(--rq-black);
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(185, 131, 169, 0.10) 0%,
+      rgba(185, 131, 169, 0.035) 28%,
+      rgba(0, 0, 0, 0) 58%
+    ),
+    linear-gradient(
+      180deg,
+      #111116 0%,
+      #0c0c10 45%,
+      #08080a 100%
+    );
+}
+
+
+/* ---------------------------------------------------------
+   HEX GRID LAYER
+   --------------------------------------------------------- */
+
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+  z-index: -2;
+
+  opacity: 0.7;
+
+  background-image:
+    linear-gradient(
+      30deg,
+      transparent 24%,
+      var(--rq-grid) 25%,
+      var(--rq-grid) 26%,
+      transparent 27%,
+      transparent 74%,
+      var(--rq-grid) 75%,
+      var(--rq-grid) 76%,
+      transparent 77%
+    ),
+
+    linear-gradient(
+      -30deg,
+      transparent 24%,
+      var(--rq-grid) 25%,
+      var(--rq-grid) 26%,
+      transparent 27%,
+      transparent 74%,
+      var(--rq-grid) 75%,
+      var(--rq-grid) 76%,
+      transparent 77%
+    ),
+
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      var(--rq-grid) 25%,
+      var(--rq-grid) 26%,
+      transparent 27%,
+      transparent 74%,
+      var(--rq-grid) 75%,
+      var(--rq-grid) 76%,
+      transparent 77%
+    );
+
+  background-size:
+    48px 84px,
+    48px 84px,
+    48px 84px;
+
+  background-position:
+    0 0,
+    0 0,
+    24px 42px;
+
+  animation: rq-grid-drift 28s linear infinite;
+}
+
+
+/* ---------------------------------------------------------
+   DITHERED ROSE GLOW
+   --------------------------------------------------------- */
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  width: 720px;
+  height: 720px;
+
+  left: 50%;
+  top: 34%;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+  z-index: -1;
+
+  opacity: 0.32;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(185, 131, 169, 0.15) 0 1px,
+      transparent 1px
+    );
+
+  background-size: 5px 5px;
+
+  mask-image:
+    radial-gradient(
+      circle,
+      black 0%,
+      rgba(0, 0, 0, 0.9) 22%,
+      rgba(0, 0, 0, 0.45) 50%,
+      transparent 72%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      circle,
+      black 0%,
+      rgba(0, 0, 0, 0.9) 22%,
+      rgba(0, 0, 0, 0.45) 50%,
+      transparent 72%
+    );
+}
+
+
+/* ---------------------------------------------------------
+   VERY SUBTLE VIGNETTE
+   --------------------------------------------------------- */
+
+body {
+  box-shadow:
+    inset 0 0 160px rgba(0, 0, 0, 0.58);
+}
+
+
+/* ---------------------------------------------------------
+   GRID MOTION
+   --------------------------------------------------------- */
+
+@keyframes rq-grid-drift {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      24px 42px;
+  }
+
+  to {
+    background-position:
+      48px 84px,
+      48px 84px,
+      72px 126px;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+}
