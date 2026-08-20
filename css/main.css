@@ -308,13 +308,17 @@ body * {
 
 .rq-name {
   position: relative;
-  display: inline-block;
 
-  margin: 0;
+  display: block;
+  width: fit-content;
+
+  margin-top: 84px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
 
   color: #f5f5f5;
 
-  /* Slightly more breathing room between letters */
   letter-spacing: 0.08em;
 
   cursor: none !important;
