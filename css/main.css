@@ -73,7 +73,7 @@ body {
 }
 
 #rq-hex-grid {
-  transform: translate3d(-78px, -45px, 0);
+  transform: translate3d(-42px, -24.25px, 0);
   animation: rq-hex-scroll 6s linear infinite;
   will-change: transform;
 }
