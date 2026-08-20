@@ -1,67 +1,302 @@
-html, body, body * { cursor: none !important; }
+/* =========================================================
+   ROSE QUARTZ PORTFOLIO
+   PIXEL CURSOR + FINAL HEX BACKGROUND
+   ========================================================= */
 
-#rq-pixel-cursor {
-  position: fixed; top: 0; left: 0;
-  width: 16px; height: 23px;
-  display: block; pointer-events: none; user-select: none;
-  z-index: 2147483647;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  transform: translate3d(-100px,-100px,0);
-  will-change: transform;
+
+/* =========================================================
+   PAGE BASE
+   ========================================================= */
+
+:root {
+  --rq-bg: #09090b;
+  --rq-rose: #b983a9;
+  --rq-rose-bright: #f0b6db;
 }
 
-html, body { min-height: 100%; background-color: #09090b; }
-body { margin: 0; }
+html,
+body {
+  min-height: 100%;
+  background: var(--rq-bg);
+}
+
+body {
+  margin: 0;
+}
+
+
+/* =========================================================
+   BACKGROUND ROOT
+   ========================================================= */
+
+#rq-background {
+  position: fixed;
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+
+  pointer-events: none;
+  user-select: none;
+
+  z-index: 0;
+
+  background: var(--rq-bg);
+}
+
+
+/* =========================================================
+   HEXAGON LAYER
+   ========================================================= */
 
 #rq-hex-background {
-  position: fixed; inset: 0;
-  width: 100vw; height: 100vh;
-  pointer-events: none; user-select: none;
-  z-index: 0; overflow: hidden;
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
 }
 
 #rq-hex-grid {
-  transform: translate3d(-42px,-24px,0);
+  transform: translate3d(-42px, -24px, 0);
   animation: rq-hex-scroll 6s linear infinite;
   will-change: transform;
 }
 
 .rq-hex {
   fill: none;
-  stroke: #b983a9;
-  stroke-opacity: 0.34;
+
+  stroke: var(--rq-rose);
+  stroke-opacity: 0.30;
   stroke-width: 2.5;
+
   vector-effect: non-scaling-stroke;
   shape-rendering: crispEdges;
+
+  transition:
+    stroke-opacity 90ms steps(2),
+    stroke-width 90ms steps(2);
 }
+
+
+/* Hexes close to the cursor */
+.rq-hex.is-near {
+  stroke-opacity: 0.52;
+}
+
+
+/* Hex directly under / closest to the cursor */
+.rq-hex.is-hot {
+  stroke: var(--rq-rose-bright);
+  stroke-opacity: 0.95;
+  stroke-width: 3.5;
+}
+
+
+/* =========================================================
+   DITHERED ROSE GRADIENT
+   ========================================================= */
 
 #rq-dither-background {
-  position: fixed; inset: 0;
-  pointer-events: none; user-select: none;
-  z-index: 0;
-  opacity: 0.34;
-  background-image: radial-gradient(circle, rgba(185,131,169,.24) 0 1px, transparent 1px);
-  background-size: 4px 4px;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.95) 0%, rgba(0,0,0,.72) 20%, rgba(0,0,0,.42) 42%, transparent 72%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.95) 0%, rgba(0,0,0,.72) 20%, rgba(0,0,0,.42) 42%, transparent 72%);
+  position: absolute;
+  inset: 0;
+
+  z-index: 2;
+
+  /*
+   * Two offset dot fields make the dither much more obvious
+   * than the previous version.
+   */
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(185, 131, 169, 0.48) 0 1px,
+      transparent 1.25px
+    ),
+    radial-gradient(
+      circle,
+      rgba(185, 131, 169, 0.22) 0 1px,
+      transparent 1.25px
+    );
+
+  background-size:
+    6px 6px,
+    6px 6px;
+
+  background-position:
+    0 0,
+    3px 3px;
+
+  /*
+   * The dots are dense at the top and fade out toward the
+   * lower half of the page.
+   */
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0%,
+      rgba(0, 0, 0, 0.92) 15%,
+      rgba(0, 0, 0, 0.64) 32%,
+      rgba(0, 0, 0, 0.28) 50%,
+      transparent 72%
+    );
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      #000 0%,
+      rgba(0, 0, 0, 0.92) 15%,
+      rgba(0, 0, 0, 0.64) 32%,
+      rgba(0, 0, 0, 0.28) 50%,
+      transparent 72%
+    );
+
+  opacity: 0.68;
+
+  animation: rq-dither-drift 10s steps(20) infinite;
 }
 
-body > *:not(#rq-hex-background):not(#rq-dither-background):not(#rq-pixel-cursor) {
+
+/* =========================================================
+   PIXEL CURSOR GLOW
+   ========================================================= */
+
+#rq-cursor-glow {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  left: 0;
+  top: 0;
+
+  z-index: 1;
+
+  pointer-events: none;
+
+  /*
+   * This is deliberately quantized with hard stops rather
+   * than a soft modern blur.
+   */
+  background:
+    radial-gradient(
+      circle,
+      rgba(185, 131, 169, 0.14) 0 18%,
+      rgba(185, 131, 169, 0.08) 18% 32%,
+      rgba(185, 131, 169, 0.035) 32% 48%,
+      transparent 48%
+    );
+
+  opacity: 0;
+
+  transform: translate3d(-999px, -999px, 0);
+
+  transition: opacity 100ms steps(2);
+
+  image-rendering: pixelated;
+}
+
+
+/* =========================================================
+   KEEP WEBFLOW CONTENT ABOVE BACKGROUND
+   ========================================================= */
+
+body > *:not(#rq-background):not(#rq-pixel-cursor) {
   position: relative;
   z-index: 1;
 }
 
+
+/* =========================================================
+   BACKGROUND ANIMATIONS
+   ========================================================= */
+
 @keyframes rq-hex-scroll {
-  from { transform: translate3d(-42px,-24px,0); }
-  to { transform: translate3d(0,0,0); }
+  from {
+    transform: translate3d(-42px, -24px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
+@keyframes rq-dither-drift {
+  from {
+    background-position:
+      0 0,
+      3px 3px;
+  }
+
+  to {
+    background-position:
+      12px 6px,
+      15px 9px;
+  }
+}
+
+
+/* =========================================================
+   PIXEL CURSOR
+   ========================================================= */
+
+html,
+body,
+body * {
+  cursor: none !important;
+}
+
+#rq-pixel-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 16px;
+  height: 23px;
+
+  display: block;
+
+  pointer-events: none;
+  user-select: none;
+
+  z-index: 2147483647;
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  transform: translate3d(-100px, -100px, 0);
+
+  will-change: transform;
+}
+
+
+/* =========================================================
+   TOUCH / REDUCED MOTION
+   ========================================================= */
+
 @media (hover: none), (pointer: coarse) {
-  html, body, body * { cursor: auto !important; }
-  #rq-pixel-cursor { display: none !important; }
+  html,
+  body,
+  body * {
+    cursor: auto !important;
+  }
+
+  #rq-pixel-cursor {
+    display: none !important;
+  }
+
+  #rq-cursor-glow {
+    display: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #rq-hex-grid { animation: none; }
+  #rq-hex-grid,
+  #rq-dither-background {
+    animation: none;
+  }
 }

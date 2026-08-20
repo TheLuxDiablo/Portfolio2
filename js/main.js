@@ -1,92 +1,386 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  /* =======================================================
+     BACKGROUND ROOT
+     ======================================================= */
+
   const SVG_NS = "http://www.w3.org/2000/svg";
 
-  let bg = document.getElementById("rq-hex-background");
-  if (!bg) {
-    bg = document.createElementNS(SVG_NS, "svg");
-    bg.id = "rq-hex-background";
-    bg.setAttribute("aria-hidden", "true");
-    document.body.prepend(bg);
+  let backgroundRoot = document.getElementById("rq-background");
+
+  if (!backgroundRoot) {
+    backgroundRoot = document.createElement("div");
+    backgroundRoot.id = "rq-background";
+    backgroundRoot.setAttribute("aria-hidden", "true");
+    document.body.prepend(backgroundRoot);
   }
 
-  let grid = document.getElementById("rq-hex-grid");
-  if (!grid) {
-    grid = document.createElementNS(SVG_NS, "g");
-    grid.id = "rq-hex-grid";
-    bg.appendChild(grid);
+
+  /* =======================================================
+     HEXAGON SVG
+     ======================================================= */
+
+  let hexBackground = document.getElementById("rq-hex-background");
+
+  if (!hexBackground) {
+    hexBackground = document.createElementNS(SVG_NS, "svg");
+    hexBackground.id = "rq-hex-background";
+    hexBackground.setAttribute("aria-hidden", "true");
+    backgroundRoot.appendChild(hexBackground);
   }
 
-  if (!document.getElementById("rq-dither-background")) {
-    const dither = document.createElement("div");
+  let hexGrid = document.getElementById("rq-hex-grid");
+
+  if (!hexGrid) {
+    hexGrid = document.createElementNS(SVG_NS, "g");
+    hexGrid.id = "rq-hex-grid";
+    hexBackground.appendChild(hexGrid);
+  }
+
+
+  /* =======================================================
+     CURSOR-REACTIVE BACKGROUND GLOW
+     ======================================================= */
+
+  let cursorGlow = document.getElementById("rq-cursor-glow");
+
+  if (!cursorGlow) {
+    cursorGlow = document.createElement("div");
+    cursorGlow.id = "rq-cursor-glow";
+    backgroundRoot.appendChild(cursorGlow);
+  }
+
+
+  /* =======================================================
+     DITHER OVERLAY
+     ======================================================= */
+
+  let dither = document.getElementById("rq-dither-background");
+
+  if (!dither) {
+    dither = document.createElement("div");
     dither.id = "rq-dither-background";
-    bg.insertAdjacentElement("afterend", dither);
+    backgroundRoot.appendChild(dither);
+  }
+
+
+  /* =======================================================
+     BUILD HEX GRID
+     ======================================================= */
+
+  const HEX_SIDE = 28;
+  const PIXEL_STEP = 2;
+
+  let hexData = [];
+
+  function snap(value) {
+    return Math.round(value / PIXEL_STEP) * PIXEL_STEP;
   }
 
   function buildHexGrid() {
-    while (grid.firstChild) grid.removeChild(grid.firstChild);
+    while (hexGrid.firstChild) {
+      hexGrid.removeChild(hexGrid.firstChild);
+    }
 
-    const side = 28;
+    hexData = [];
+
+    const side = HEX_SIDE;
     const hexHeight = Math.sqrt(3) * side;
+
     const horizontalStep = side * 1.5;
     const verticalStep = hexHeight;
-    const pixelStep = 2;
-    const snap = value => Math.round(value / pixelStep) * pixelStep;
+
     const padding = 180;
+
     const width = window.innerWidth + padding * 2;
     const height = window.innerHeight + padding * 2;
 
-    bg.setAttribute("viewBox", "0 0 " + window.innerWidth + " " + window.innerHeight);
+    hexBackground.setAttribute(
+      "viewBox",
+      "0 0 " + window.innerWidth + " " + window.innerHeight
+    );
 
-    const columns = Math.ceil(width / horizontalStep) + 4;
-    const rows = Math.ceil(height / verticalStep) + 4;
+    const startX = -padding;
+    const startY = -padding;
+
+    const columns =
+      Math.ceil(width / horizontalStep) + 5;
+
+    const rows =
+      Math.ceil(height / verticalStep) + 5;
 
     for (let col = 0; col < columns; col++) {
-      const cx = -padding + col * horizontalStep;
-      const offsetY = col % 2 === 0 ? 0 : verticalStep / 2;
+      const centerX =
+        startX +
+        col * horizontalStep;
+
+      const offsetY =
+        col % 2 === 0
+          ? 0
+          : verticalStep / 2;
 
       for (let row = 0; row < rows; row++) {
-        const cy = -padding + row * verticalStep + offsetY;
+        const centerY =
+          startY +
+          row * verticalStep +
+          offsetY;
 
         const points = [
-          [cx-side/2, cy-hexHeight/2],
-          [cx+side/2, cy-hexHeight/2],
-          [cx+side, cy],
-          [cx+side/2, cy+hexHeight/2],
-          [cx-side/2, cy+hexHeight/2],
-          [cx-side, cy]
-        ].map(p => snap(p[0]) + "," + snap(p[1])).join(" ");
+          [
+            centerX - side / 2,
+            centerY - hexHeight / 2
+          ],
+          [
+            centerX + side / 2,
+            centerY - hexHeight / 2
+          ],
+          [
+            centerX + side,
+            centerY
+          ],
+          [
+            centerX + side / 2,
+            centerY + hexHeight / 2
+          ],
+          [
+            centerX - side / 2,
+            centerY + hexHeight / 2
+          ],
+          [
+            centerX - side,
+            centerY
+          ]
+        ]
+          .map(function (point) {
+            return (
+              snap(point[0]) +
+              "," +
+              snap(point[1])
+            );
+          })
+          .join(" ");
 
-        const hex = document.createElementNS(SVG_NS, "polygon");
+        const hex =
+          document.createElementNS(
+            SVG_NS,
+            "polygon"
+          );
+
         hex.setAttribute("points", points);
         hex.setAttribute("class", "rq-hex");
-        grid.appendChild(hex);
+
+        hexGrid.appendChild(hex);
+
+        hexData.push({
+          element: hex,
+          x: centerX,
+          y: centerY
+        });
       }
     }
   }
 
   buildHexGrid();
 
-  let resizeTimer;
+
+  /* =======================================================
+     CURSOR REACTION
+     ======================================================= */
+
+  let lastHotHex = null;
+  let nearbyHexes = [];
+
+  function clearHexHighlights() {
+    if (lastHotHex) {
+      lastHotHex.classList.remove("is-hot");
+      lastHotHex = null;
+    }
+
+    nearbyHexes.forEach(function (hex) {
+      hex.classList.remove("is-near");
+    });
+
+    nearbyHexes = [];
+  }
+
+  function updateHexHover(mouseX, mouseY) {
+    /*
+     * The SVG grid itself is translated by the CSS animation.
+     * A small radius still produces a convincing reactive
+     * highlight without needing to reverse the animation math.
+     */
+    let closest = null;
+    let closestDistance = Infinity;
+
+    nearbyHexes.forEach(function (hex) {
+      hex.classList.remove("is-near");
+    });
+
+    nearbyHexes = [];
+
+    for (let i = 0; i < hexData.length; i++) {
+      const item = hexData[i];
+
+      const dx = item.x - mouseX;
+      const dy = item.y - mouseY;
+
+      const distanceSquared =
+        dx * dx +
+        dy * dy;
+
+      if (distanceSquared < 7200) {
+        item.element.classList.add("is-near");
+        nearbyHexes.push(item.element);
+      }
+
+      if (distanceSquared < closestDistance) {
+        closestDistance = distanceSquared;
+        closest = item.element;
+      }
+    }
+
+    if (lastHotHex && lastHotHex !== closest) {
+      lastHotHex.classList.remove("is-hot");
+    }
+
+    if (closest && closestDistance < 3000) {
+      closest.classList.add("is-hot");
+      lastHotHex = closest;
+    }
+  }
+
+
+  /* =======================================================
+     RESIZE
+     ======================================================= */
+
+  let resizeTimer = null;
+
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(buildHexGrid, 120);
+
+    resizeTimer = setTimeout(function () {
+      clearHexHighlights();
+      buildHexGrid();
+    }, 120);
   });
 
-  const isTouch = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-  if (isTouch || document.getElementById("rq-pixel-cursor")) return;
 
-  const cursor = document.createElement("img");
-  cursor.id = "rq-pixel-cursor";
-  cursor.src = "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
-  cursor.alt = "";
-  cursor.setAttribute("aria-hidden","true");
-  cursor.setAttribute("draggable","false");
-  document.body.appendChild(cursor);
+  /* =======================================================
+     PIXEL CURSOR
+     ======================================================= */
 
-  document.addEventListener("mousemove", e => {
-    cursor.style.transform = "translate3d(" + e.clientX + "px," + e.clientY + "px,0)";
+  const isTouchDevice = window.matchMedia(
+    "(hover: none), (pointer: coarse)"
+  ).matches;
+
+  if (isTouchDevice) return;
+
+  let cursor = document.getElementById("rq-pixel-cursor");
+
+  if (!cursor) {
+    cursor = document.createElement("img");
+
+    cursor.id = "rq-pixel-cursor";
+
+    cursor.src =
+      "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
+
+    cursor.alt = "";
+
+    cursor.setAttribute("aria-hidden", "true");
+    cursor.setAttribute("draggable", "false");
+
+    document.body.appendChild(cursor);
+  }
+
+
+  /* =======================================================
+     MOUSE MOVEMENT
+     ======================================================= */
+
+  let hoverFrame = null;
+  let latestMouseX = 0;
+  let latestMouseY = 0;
+
+  document.addEventListener("mousemove", function (event) {
+    latestMouseX = event.clientX;
+    latestMouseY = event.clientY;
+
+    cursor.style.transform =
+      "translate3d(" +
+      latestMouseX +
+      "px, " +
+      latestMouseY +
+      "px, 0)";
+
+    /*
+     * Snap the glow position to 4px increments so it moves
+     * with a slightly crunchy/pixelated feel.
+     */
+    const glowX =
+      Math.round((latestMouseX - 90) / 4) * 4;
+
+    const glowY =
+      Math.round((latestMouseY - 90) / 4) * 4;
+
+    cursorGlow.style.transform =
+      "translate3d(" +
+      glowX +
+      "px, " +
+      glowY +
+      "px, 0)";
+
+    cursorGlow.style.opacity = "1";
+
+    if (!hoverFrame) {
+      hoverFrame = requestAnimationFrame(function () {
+        updateHexHover(
+          latestMouseX,
+          latestMouseY
+        );
+
+        hoverFrame = null;
+      });
+    }
   });
-  document.documentElement.addEventListener("mouseleave", () => cursor.style.visibility = "hidden");
-  document.documentElement.addEventListener("mouseenter", () => cursor.style.visibility = "visible");
-  document.addEventListener("visibilitychange", () => cursor.style.visibility = document.hidden ? "hidden" : "visible");
+
+
+  /* =======================================================
+     ENTER / LEAVE
+     ======================================================= */
+
+  document.documentElement.addEventListener(
+    "mouseleave",
+    function () {
+      cursor.style.visibility = "hidden";
+      cursorGlow.style.opacity = "0";
+      clearHexHighlights();
+    }
+  );
+
+  document.documentElement.addEventListener(
+    "mouseenter",
+    function () {
+      cursor.style.visibility = "visible";
+    }
+  );
+
+  document.addEventListener(
+    "visibilitychange",
+    function () {
+      const hidden = document.hidden;
+
+      cursor.style.visibility =
+        hidden
+          ? "hidden"
+          : "visible";
+
+      cursorGlow.style.opacity =
+        hidden
+          ? "0"
+          : cursorGlow.style.opacity;
+    }
+  );
+
 });
