@@ -312,6 +312,7 @@ body * {
   display: inline-block;
 
   margin: 0;
+  margin-top: 32px;
 
   color: #f5f5f5;
 
