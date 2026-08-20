@@ -65,94 +65,70 @@ body * {
 
 /* =========================================================
    ROSE QUARTZ PORTFOLIO
-   LOOPING HEX GRID
+   LOOPING HEXAGON BACKGROUND
    ========================================================= */
 
-:root {
-  --rq-bg: #09090b;
-  --rq-hex: rgba(185, 131, 169, 0.18);
-}
-
-
-/* ---------------------------------------------------------
-   PAGE
-   --------------------------------------------------------- */
-
-html,
-body {
-  min-height: 100%;
-  background: var(--rq-bg);
+html {
+  background: #09090b;
 }
 
 body {
-  position: relative;
-  overflow-x: hidden;
-}
-
-
-/* ---------------------------------------------------------
-   HEXAGON GRID
-   --------------------------------------------------------- */
-
-body::before {
-  content: "";
-
-  position: fixed;
-  inset: -100px;
-
-  pointer-events: none;
-  z-index: -1;
-
-  background-color: var(--rq-bg);
+  min-height: 100vh;
+  background-color: #09090b;
 
   background-image:
     linear-gradient(
       30deg,
-      var(--rq-hex) 12%,
+      rgba(185, 131, 169, 0.22) 12%,
       transparent 12.5%,
       transparent 87%,
-      var(--rq-hex) 87.5%,
-      var(--rq-hex)
+      rgba(185, 131, 169, 0.22) 87.5%,
+      rgba(185, 131, 169, 0.22)
     ),
+
     linear-gradient(
       150deg,
-      var(--rq-hex) 12%,
+      rgba(185, 131, 169, 0.22) 12%,
       transparent 12.5%,
       transparent 87%,
-      var(--rq-hex) 87.5%,
-      var(--rq-hex)
+      rgba(185, 131, 169, 0.22) 87.5%,
+      rgba(185, 131, 169, 0.22)
     ),
+
     linear-gradient(
       30deg,
-      var(--rq-hex) 12%,
+      rgba(185, 131, 169, 0.22) 12%,
       transparent 12.5%,
       transparent 87%,
-      var(--rq-hex) 87.5%,
-      var(--rq-hex)
+      rgba(185, 131, 169, 0.22) 87.5%,
+      rgba(185, 131, 169, 0.22)
     ),
+
     linear-gradient(
       150deg,
-      var(--rq-hex) 12%,
+      rgba(185, 131, 169, 0.22) 12%,
       transparent 12.5%,
       transparent 87%,
-      var(--rq-hex) 87.5%,
-      var(--rq-hex)
+      rgba(185, 131, 169, 0.22) 87.5%,
+      rgba(185, 131, 169, 0.22)
     ),
+
     linear-gradient(
       60deg,
-      rgba(185, 131, 169, 0.08) 25%,
+      rgba(185, 131, 169, 0.09) 25%,
       transparent 25.5%,
       transparent 75%,
-      rgba(185, 131, 169, 0.08) 75%,
-      rgba(185, 131, 169, 0.08)
+      rgba(185, 131, 169, 0.09) 75%,
+      rgba(185, 131, 169, 0.09)
     ),
+
     linear-gradient(
       60deg,
-      rgba(185, 131, 169, 0.08) 25%,
+      rgba(185, 131, 169, 0.09) 25%,
       transparent 25.5%,
       transparent 75%,
-      rgba(185, 131, 169, 0.08) 75%,
-      rgba(185, 131, 169, 0.08)
+      rgba(185, 131, 169, 0.09) 75%,
+      rgba(185, 131, 169, 0.09)
     );
 
   background-size: 64px 112px;
@@ -165,31 +141,45 @@ body::before {
     0 0,
     32px 56px;
 
-  animation: rq-hex-scroll 8s linear infinite;
+  animation: rq-hex-scroll 6s linear infinite;
 }
 
 
-/* ---------------------------------------------------------
-   LOOP
-   --------------------------------------------------------- */
+/* =========================================================
+   HEXAGON MOVEMENT
+   ========================================================= */
 
 @keyframes rq-hex-scroll {
+
   from {
-    transform: translate3d(0, 0, 0);
+    background-position:
+      0 0,
+      0 0,
+      32px 56px,
+      32px 56px,
+      0 0,
+      32px 56px;
   }
 
   to {
-    transform: translate3d(64px, 112px, 0);
+    background-position:
+      64px 112px,
+      64px 112px,
+      96px 168px,
+      96px 168px,
+      64px 112px,
+      96px 168px;
   }
+
 }
 
 
-/* ---------------------------------------------------------
-   REDUCED MOTION
-   --------------------------------------------------------- */
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  body::before {
+  body {
     animation: none;
   }
 }
