@@ -1,86 +1,64 @@
 /* =========================================================
    ROSE QUARTZ PORTFOLIO
-   Custom Cursor
+   PIXEL CURSOR
    ========================================================= */
 
-:root {
-  --pixel-cursor: url("https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png");
-}
-
-
-/* ---------------------------------------------------------
-   BASE CURSOR
-   --------------------------------------------------------- */
-
 html,
-body {
-  cursor: var(--pixel-cursor) 0 0, auto;
-}
-
-
-/* ---------------------------------------------------------
-   INTERACTIVE ELEMENTS
-
-   Webflow/browser defaults normally change these to a hand,
-   text cursor, etc. We keep our pixel cursor everywhere.
-   --------------------------------------------------------- */
-
+body,
 a,
 button,
-.w-button,
-[role="button"],
-[onclick],
-label,
-summary,
-select,
-option,
 input,
 textarea,
+select,
+label,
+summary,
+[role="button"],
+.w-button,
 .w-dropdown-toggle,
-.w-nav-button,
-.w-slider-arrow-left,
-.w-slider-arrow-right,
-[data-cursor] {
-  cursor: var(--pixel-cursor) 0 0, pointer !important;
+.w-nav-button {
+  cursor: none !important;
 }
 
 
 /* ---------------------------------------------------------
-   TEXT
-
-   Prevent the browser's I-beam from replacing our cursor.
+   CUSTOM PIXEL CURSOR
    --------------------------------------------------------- */
 
-p,
-span,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-li,
-blockquote {
-  cursor: var(--pixel-cursor) 0 0, auto;
+.pixel-cursor {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 36px;
+  height: 51px;
+
+  background-image: url("https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png");
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-size: 36px 51px;
+
+  pointer-events: none;
+
+  z-index: 2147483647;
+
+  transform: translate3d(-100px, -100px, 0);
+
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  will-change: transform;
 }
 
 
-/* ---------------------------------------------------------
-   DISABLED ELEMENTS
-   --------------------------------------------------------- */
-
-button:disabled,
-input:disabled,
-select:disabled,
-[aria-disabled="true"] {
-  cursor: var(--pixel-cursor) 0 0, not-allowed !important;
+/* Hide cursor when JS hasn't initialized yet */
+.pixel-cursor:not(.is-visible) {
+  opacity: 0;
 }
 
 
 /* ---------------------------------------------------------
    TOUCH DEVICES
-
-   Don't interfere with phones/tablets.
    --------------------------------------------------------- */
 
 @media (hover: none), (pointer: coarse) {
@@ -88,15 +66,19 @@ select:disabled,
   body,
   a,
   button,
-  .w-button,
-  [role="button"],
-  [onclick],
-  label,
-  summary,
-  select,
   input,
   textarea,
-  [data-cursor] {
+  select,
+  label,
+  summary,
+  [role="button"],
+  .w-button,
+  .w-dropdown-toggle,
+  .w-nav-button {
     cursor: auto !important;
+  }
+
+  .pixel-cursor {
+    display: none !important;
   }
 }
