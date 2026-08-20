@@ -547,16 +547,20 @@ body * {
 #rq-top-nav {
   position: fixed;
 
-  top: 22px;
-  right: 28px;
+  top: 18px;
+  right: 30px;
 
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 14px;
+
+  /* Extra breathing room for hover scaling */
+  padding: 8px 10px;
 
   z-index: 1000;
 
   user-select: none;
+  overflow: visible;
 }
 
 
@@ -567,12 +571,14 @@ body * {
 .rq-nav-button {
   position: relative;
 
-  width: 42px;
-  height: 50px;
+  width: 38px;
+  height: 38px;
 
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+
+  flex: 0 0 38px;
 
   padding: 0;
 
@@ -580,16 +586,14 @@ body * {
   outline: 0;
 
   background: transparent;
-
   text-decoration: none;
 
   cursor: none !important;
 
-  transform:
-    translate3d(0, 0, 0)
-    scale(1);
+  overflow: visible;
 
-  transform-origin: center 18px;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center;
 
   transition:
     transform 120ms steps(4);
@@ -597,12 +601,12 @@ body * {
 
 
 /* =========================================================
-   PIXEL ICON
+   ICON
    ========================================================= */
 
 .rq-nav-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 
   display: block;
 
@@ -610,6 +614,9 @@ body * {
   image-rendering: crisp-edges;
 
   pointer-events: none;
+
+  transition:
+    filter 100ms steps(3);
 }
 
 
@@ -620,18 +627,22 @@ body * {
 .rq-nav-button:hover {
   transform:
     translate3d(0, -3px, 0)
-    scale(1.22);
+    scale(1.18);
 
   z-index: 5;
 }
 
+.rq-nav-button:hover .rq-nav-icon {
+  filter: brightness(1.18);
+}
 
-/* Slight press-down feedback */
+
+/* Press */
 
 .rq-nav-button:active {
   transform:
     translate3d(0, 1px, 0)
-    scale(1.12);
+    scale(1.08);
 }
 
 
@@ -642,14 +653,18 @@ body * {
 .rq-nav-label {
   position: absolute;
 
-  top: 42px;
+  top: 43px;
   left: 50%;
+
+  padding: 3px 5px;
 
   transform:
     translateX(-50%)
-    translateY(-3px);
+    translateY(-2px);
 
   opacity: 0;
+
+  background: #09090b;
 
   color: #ffffff;
 
@@ -662,12 +677,6 @@ body * {
   white-space: nowrap;
 
   pointer-events: none;
-
-  text-shadow:
-    1px 0 #09090b,
-    -1px 0 #09090b,
-    0 1px #09090b,
-    0 -1px #09090b;
 
   transition:
     opacity 80ms steps(2),
@@ -685,7 +694,7 @@ body * {
 
 
 /* =========================================================
-   ACTIVE PAGE DOT
+   ACTIVE PAGE
    ========================================================= */
 
 .rq-nav-button::after {
@@ -693,8 +702,8 @@ body * {
 
   position: absolute;
 
-  top: -8px;
   left: 50%;
+  bottom: -5px;
 
   width: 4px;
   height: 4px;
@@ -704,8 +713,6 @@ body * {
   opacity: 0;
 
   transform: translateX(-50%);
-
-  image-rendering: pixelated;
 }
 
 
@@ -719,20 +726,26 @@ body * {
    ========================================================= */
 
 @media (max-width: 700px) {
-  #rq-top-nav {
-    top: 14px;
-    right: 14px;
 
-    gap: 6px;
+  #rq-top-nav {
+    top: 10px;
+    right: 10px;
+
+    gap: 7px;
+
+    padding: 6px;
   }
 
   .rq-nav-button {
-    width: 34px;
+    width: 32px;
+    height: 32px;
+
+    flex-basis: 32px;
   }
 
   .rq-nav-icon {
-    width: 30px;
-    height: 30px;
+    width: 27px;
+    height: 27px;
   }
 
   .rq-nav-label {
@@ -746,7 +759,9 @@ body * {
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   .rq-nav-button,
+  .rq-nav-icon,
   .rq-nav-label {
     transition: none !important;
   }
