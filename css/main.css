@@ -803,7 +803,7 @@ body * {
 .portfolio-game-name {
   color: #f6edf3;
 
-  font-size: 1rem;
+  font-size: 1.3rem;
   line-height: 1.1;
 
   letter-spacing: 0.04em;
@@ -823,11 +823,16 @@ body * {
       0.78
     );
 
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   line-height: 1.25;
 
   text-shadow:
     0 2px 0 rgba(0, 0, 0, 0.72);
+}
+
+.portfolio-game-name,
+.portfolio-game-tagline {
+  font-family: "Pixel Sans", sans-serif;
 }
 
 .portfolio-game-item:has(
