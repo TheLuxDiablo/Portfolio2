@@ -721,15 +721,17 @@ body * {
 
   top: var(--game-nav-center-y, 50vh);
 
-  width: 56px;
-  height: 96px;
+  width: 72px;
+  height: 124px;
 
   padding: 0;
 
-  border: 0;
+  border:
+    4px solid
+    rgba(240, 182, 219, 0.35);
 
   background:
-    rgba(9, 9, 11, 0.58);
+    rgba(9, 9, 11, 0.82);
 
   opacity: 0;
 
@@ -741,6 +743,7 @@ body * {
   transition:
     opacity 120ms steps(3),
     background 120ms steps(3),
+    border-color 120ms steps(3),
     transform 120ms steps(3);
 
   z-index: 1000;
@@ -748,10 +751,13 @@ body * {
   appearance: none;
 
   cursor: none !important;
+
+  box-shadow:
+    0 8px 0 rgba(0, 0, 0, 0.28);
 }
 
 .portfolio-game-nav.has-overflow {
-  opacity: 0.42;
+  opacity: 0.78;
   pointer-events: auto;
 }
 
@@ -761,22 +767,22 @@ body * {
 }
 
 .portfolio-game-nav-left {
-  left: 0;
+  left: 10px;
 
   border-radius:
-    0 18px 18px 0;
+    0 22px 22px 0;
 }
 
 .portfolio-game-nav-right {
-  right: 0;
+  right: 10px;
 
   border-radius:
-    18px 0 0 18px;
+    22px 0 0 22px;
 }
 
 
 /* ---------------------------------------------------------
-   CSS PIXEL CHEVRONS
+   CHEVRONS
    --------------------------------------------------------- */
 
 .portfolio-game-nav::before,
@@ -788,8 +794,8 @@ body * {
   left: 50%;
   top: 50%;
 
-  width: 20px;
-  height: 6px;
+  width: 30px;
+  height: 8px;
 
   background:
     var(--portfolio-accent-bright);
@@ -798,34 +804,33 @@ body * {
 
   transform-origin: center;
 
-  transition:
-    transform 120ms steps(3),
-    opacity 120ms steps(3);
+  opacity: 1;
 
-  opacity: 0.88;
+  box-shadow:
+    0 0 0 2px rgba(9, 9, 11, 0.9);
 }
 
 .portfolio-game-nav-left::before {
   transform:
-    translate(-58%, -7px)
+    translate(-60%, -10px)
     rotate(-45deg);
 }
 
 .portfolio-game-nav-left::after {
   transform:
-    translate(-58%, 7px)
+    translate(-60%, 10px)
     rotate(45deg);
 }
 
 .portfolio-game-nav-right::before {
   transform:
-    translate(-42%, -7px)
+    translate(-40%, -10px)
     rotate(45deg);
 }
 
 .portfolio-game-nav-right::after {
   transform:
-    translate(-42%, 7px)
+    translate(-40%, 10px)
     rotate(-45deg);
 }
 
@@ -835,22 +840,27 @@ body * {
    --------------------------------------------------------- */
 
 .portfolio-game-nav:hover {
-  opacity: 0.92;
+  opacity: 1;
 
   background:
-    rgba(18, 18, 22, 0.88);
+    rgba(18, 18, 22, 0.96);
+
+  border-color:
+    var(--portfolio-accent-bright);
 }
 
 .portfolio-game-nav-left:hover {
   transform:
     translateY(-50%)
-    translateX(4px);
+    translateX(5px)
+    scale(1.04);
 }
 
 .portfolio-game-nav-right:hover {
   transform:
     translateY(-50%)
-    translateX(-4px);
+    translateX(-5px)
+    scale(1.04);
 }
 
 .portfolio-game-nav:active {
@@ -860,15 +870,15 @@ body * {
 .portfolio-game-nav-left:active {
   transform:
     translateY(-50%)
-    translateX(1px)
-    scale(0.94);
+    translateX(2px)
+    scale(0.96);
 }
 
 .portfolio-game-nav-right:active {
   transform:
     translateY(-50%)
-    translateX(-1px)
-    scale(0.94);
+    translateX(-2px)
+    scale(0.96);
 }
 
 
