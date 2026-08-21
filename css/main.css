@@ -554,8 +554,8 @@ body * {
   margin-right: 0;
 
   padding:
-    14px 48px
-    30px;
+    28px 48px
+    42px;
 
   box-sizing: border-box;
 
@@ -566,16 +566,22 @@ body * {
   align-items: center;
 
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: hidden;
 
   scrollbar-width: none;
 
   -webkit-overflow-scrolling: touch;
+
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+
+  overscroll-behavior-x: contain;
 }
 
 .portfolio-games::-webkit-scrollbar {
   display: none;
 }
+
 
 .portfolio-game-tile {
   --tile-x: 0px;
@@ -601,9 +607,7 @@ body * {
 
   background: #101014;
 
-  scroll-snap-align: start;
-  
-  gap: 32px;
+  scroll-snap-align: center;
 
   outline: none;
 
@@ -619,7 +623,8 @@ body * {
   transition:
     transform 120ms steps(3),
     border-color 120ms steps(3),
-    box-shadow 120ms steps(3);
+    box-shadow 120ms steps(3),
+    opacity 120ms steps(3);
 
   will-change: transform;
 
@@ -653,11 +658,12 @@ body * {
 
 
 /* ---------------------------------------------------------
-   HOVER / FOCUS
+   HOVER / SELECTED / FOCUS
    --------------------------------------------------------- */
 
 .portfolio-game-tile.is-hovering,
 .portfolio-game-tile:hover,
+.portfolio-game-tile.is-selected,
 .portfolio-game-tile:focus-visible {
   border-color: #44444d;
 
@@ -678,6 +684,8 @@ body * {
 .portfolio-game-tile.is-hovering
 .portfolio-game-image,
 .portfolio-game-tile:hover
+.portfolio-game-image,
+.portfolio-game-tile.is-selected
 .portfolio-game-image,
 .portfolio-game-tile:focus-visible
 .portfolio-game-image {
@@ -704,21 +712,183 @@ body * {
 }
 
 
+/* =========================================================
+   GAME CAROUSEL EDGE CONTROLS
+   ========================================================= */
+
+.portfolio-game-nav {
+  position: fixed;
+
+  top: var(--game-nav-center-y, 50vh);
+
+  width: 56px;
+  height: 96px;
+
+  padding: 0;
+
+  border: 0;
+
+  background:
+    rgba(9, 9, 11, 0.58);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transform:
+    translateY(-50%);
+
+  transition:
+    opacity 120ms steps(3),
+    background 120ms steps(3),
+    transform 120ms steps(3);
+
+  z-index: 1000;
+
+  appearance: none;
+
+  cursor: none !important;
+}
+
+.portfolio-game-nav.has-overflow {
+  opacity: 0.42;
+  pointer-events: auto;
+}
+
+.portfolio-game-nav.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.portfolio-game-nav-left {
+  left: 0;
+
+  border-radius:
+    0 18px 18px 0;
+}
+
+.portfolio-game-nav-right {
+  right: 0;
+
+  border-radius:
+    18px 0 0 18px;
+}
+
+
+/* ---------------------------------------------------------
+   CSS PIXEL CHEVRONS
+   --------------------------------------------------------- */
+
+.portfolio-game-nav::before,
+.portfolio-game-nav::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 20px;
+  height: 6px;
+
+  background:
+    var(--portfolio-accent-bright);
+
+  image-rendering: pixelated;
+
+  transform-origin: center;
+
+  transition:
+    transform 120ms steps(3),
+    opacity 120ms steps(3);
+
+  opacity: 0.88;
+}
+
+.portfolio-game-nav-left::before {
+  transform:
+    translate(-58%, -7px)
+    rotate(-45deg);
+}
+
+.portfolio-game-nav-left::after {
+  transform:
+    translate(-58%, 7px)
+    rotate(45deg);
+}
+
+.portfolio-game-nav-right::before {
+  transform:
+    translate(-42%, -7px)
+    rotate(45deg);
+}
+
+.portfolio-game-nav-right::after {
+  transform:
+    translate(-42%, 7px)
+    rotate(-45deg);
+}
+
+
+/* ---------------------------------------------------------
+   NAV HOVER / PRESS
+   --------------------------------------------------------- */
+
+.portfolio-game-nav:hover {
+  opacity: 0.92;
+
+  background:
+    rgba(18, 18, 22, 0.88);
+}
+
+.portfolio-game-nav-left:hover {
+  transform:
+    translateY(-50%)
+    translateX(4px);
+}
+
+.portfolio-game-nav-right:hover {
+  transform:
+    translateY(-50%)
+    translateX(-4px);
+}
+
+.portfolio-game-nav:active {
+  opacity: 1;
+}
+
+.portfolio-game-nav-left:active {
+  transform:
+    translateY(-50%)
+    translateX(1px)
+    scale(0.94);
+}
+
+.portfolio-game-nav-right:active {
+  transform:
+    translateY(-50%)
+    translateX(-1px)
+    scale(0.94);
+}
+
+
 /* ---------------------------------------------------------
    MOBILE
    --------------------------------------------------------- */
 
 @media (max-width: 767px) {
   .portfolio-games {
-    width: calc(100vw - 24px);
+    width: 100%;
 
     margin-top: 44px;
 
     padding:
-      10px 4px
-      24px;
+      24px 20px
+      36px;
 
     gap: 16px;
+
+    scroll-snap-type: x mandatory;
   }
 
   .portfolio-game-tile {
@@ -728,6 +898,10 @@ body * {
 
     border-radius: 24px;
   }
+
+  .portfolio-game-nav {
+    display: none;
+  }
 }
 
 
@@ -736,8 +910,15 @@ body * {
    --------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
+  .portfolio-games {
+    scroll-behavior: auto;
+  }
+
   .portfolio-game-tile,
-  .portfolio-game-image {
+  .portfolio-game-image,
+  .portfolio-game-nav,
+  .portfolio-game-nav::before,
+  .portfolio-game-nav::after {
     transition: none !important;
   }
 

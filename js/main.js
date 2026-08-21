@@ -604,22 +604,166 @@ document.addEventListener("DOMContentLoaded", function () {
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
+  const row = document.querySelector(".portfolio-games");
+
   const tiles = Array.from(
     document.querySelectorAll(".portfolio-game-tile")
   );
 
-  if (!tiles.length) return;
+  if (!row || !tiles.length) return;
 
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  tiles.forEach(function (tile) {
-    /*
-     * Make plain Webflow divs keyboard-focusable.
-     * If you later switch the tile itself to a Link Block,
-     * this does not interfere with the link.
-     */
+  let selectedIndex = 0;
+  let scrollTimer = null;
+
+
+  /* -------------------------------------------------------
+     EDGE CONTROLS
+     ------------------------------------------------------- */
+
+  const previousButton = document.createElement("button");
+  previousButton.className =
+    "portfolio-game-nav portfolio-game-nav-left";
+
+  previousButton.type = "button";
+  previousButton.setAttribute("aria-label", "Previous game");
+
+  const nextButton = document.createElement("button");
+  nextButton.className =
+    "portfolio-game-nav portfolio-game-nav-right";
+
+  nextButton.type = "button";
+  nextButton.setAttribute("aria-label", "Next game");
+
+  document.body.appendChild(previousButton);
+  document.body.appendChild(nextButton);
+
+
+  /* -------------------------------------------------------
+     SELECTION
+     ------------------------------------------------------- */
+
+  function setSelected(index, shouldScroll) {
+    if (!tiles.length) return;
+
+    selectedIndex =
+      (index + tiles.length) % tiles.length;
+
+    tiles.forEach(function (tile, tileIndex) {
+      const selected = tileIndex === selectedIndex;
+
+      tile.classList.toggle(
+        "is-selected",
+        selected
+      );
+
+      tile.setAttribute(
+        "aria-selected",
+        selected ? "true" : "false"
+      );
+    });
+
+    if (shouldScroll) {
+      scrollTileIntoView(tiles[selectedIndex]);
+    }
+
+    updateNavigation();
+  }
+
+
+  /* -------------------------------------------------------
+     SCROLL TO TILE
+     ------------------------------------------------------- */
+
+  function scrollTileIntoView(tile) {
+    const rowRect = row.getBoundingClientRect();
+    const tileRect = tile.getBoundingClientRect();
+
+    const tileCenter =
+      tile.offsetLeft +
+      tile.offsetWidth / 2;
+
+    const target =
+      tileCenter -
+      row.clientWidth / 2;
+
+    const maxScroll =
+      row.scrollWidth -
+      row.clientWidth;
+
+    const clampedTarget =
+      Math.max(
+        0,
+        Math.min(target, maxScroll)
+      );
+
+    row.scrollTo({
+      left: clampedTarget,
+      behavior: reducedMotion
+        ? "auto"
+        : "smooth"
+    });
+  }
+
+
+  /* -------------------------------------------------------
+     NAV POSITION / VISIBILITY
+     ------------------------------------------------------- */
+
+  function updateNavigation() {
+    const rect = row.getBoundingClientRect();
+
+    document.documentElement.style.setProperty(
+      "--game-nav-center-y",
+      rect.top + rect.height / 2 + "px"
+    );
+
+    const maxScroll =
+      Math.max(
+        0,
+        row.scrollWidth -
+        row.clientWidth
+      );
+
+    const atStart =
+      row.scrollLeft <= 2;
+
+    const atEnd =
+      row.scrollLeft >= maxScroll - 2;
+
+    previousButton.classList.toggle(
+      "is-hidden",
+      atStart
+    );
+
+    nextButton.classList.toggle(
+      "is-hidden",
+      atEnd
+    );
+
+    const hasOverflow =
+      maxScroll > 2;
+
+    previousButton.classList.toggle(
+      "has-overflow",
+      hasOverflow
+    );
+
+    nextButton.classList.toggle(
+      "has-overflow",
+      hasOverflow
+    );
+  }
+
+
+  /* -------------------------------------------------------
+     TILE INTERACTION
+     ------------------------------------------------------- */
+
+  tiles.forEach(function (tile, index) {
     if (
       tile.tagName !== "A" &&
       !tile.hasAttribute("tabindex")
@@ -627,62 +771,298 @@ document.addEventListener("DOMContentLoaded", function () {
       tile.setAttribute("tabindex", "0");
     }
 
-    tile.addEventListener("mouseenter", function () {
-      tile.classList.add("is-hovering");
-    });
+    tile.setAttribute("role", "option");
 
-    tile.addEventListener("mouseleave", function () {
-      tile.classList.remove("is-hovering");
-      tile.classList.remove("is-pressed");
-      tile.style.setProperty("--tile-x", "0px");
-      tile.style.setProperty("--tile-y", "0px");
-    });
+    tile.addEventListener(
+      "mouseenter",
+      function () {
+        tile.classList.add("is-hovering");
 
-    tile.addEventListener("mousedown", function () {
-      tile.classList.add("is-pressed");
-    });
+        selectedIndex = index;
 
-    tile.addEventListener("mouseup", function () {
-      tile.classList.remove("is-pressed");
-    });
+        tiles.forEach(function (otherTile, otherIndex) {
+          otherTile.classList.toggle(
+            "is-selected",
+            otherIndex === selectedIndex
+          );
+        });
+      }
+    );
 
-    tile.addEventListener("blur", function () {
-      tile.classList.remove("is-pressed");
-      tile.style.setProperty("--tile-x", "0px");
-      tile.style.setProperty("--tile-y", "0px");
-    });
-
-    if (!reducedMotion) {
-      tile.addEventListener("mousemove", function (event) {
-        const rect = tile.getBoundingClientRect();
-
-        const normalizedX =
-          (event.clientX - rect.left) / rect.width - 0.5;
-
-        const normalizedY =
-          (event.clientY - rect.top) / rect.height - 0.5;
-
-        /*
-         * Very small movement only. The tile should feel alive,
-         * not like a floating 3D card.
-         */
-        const moveX =
-          Math.round(normalizedX * 6);
-
-        const moveY =
-          Math.round(normalizedY * 6);
+    tile.addEventListener(
+      "mouseleave",
+      function () {
+        tile.classList.remove("is-hovering");
+        tile.classList.remove("is-pressed");
 
         tile.style.setProperty(
           "--tile-x",
-          moveX + "px"
+          "0px"
         );
 
         tile.style.setProperty(
           "--tile-y",
-          moveY + "px"
+          "0px"
         );
-      });
+      }
+    );
+
+    tile.addEventListener(
+      "focus",
+      function () {
+        setSelected(index, true);
+      }
+    );
+
+    tile.addEventListener(
+      "mousedown",
+      function () {
+        tile.classList.add("is-pressed");
+      }
+    );
+
+    tile.addEventListener(
+      "mouseup",
+      function () {
+        tile.classList.remove("is-pressed");
+      }
+    );
+
+    tile.addEventListener(
+      "blur",
+      function () {
+        tile.classList.remove("is-pressed");
+
+        tile.style.setProperty(
+          "--tile-x",
+          "0px"
+        );
+
+        tile.style.setProperty(
+          "--tile-y",
+          "0px"
+        );
+      }
+    );
+
+    if (!reducedMotion) {
+      tile.addEventListener(
+        "mousemove",
+        function (event) {
+          const rect =
+            tile.getBoundingClientRect();
+
+          const normalizedX =
+            (event.clientX - rect.left) /
+            rect.width -
+            0.5;
+
+          const normalizedY =
+            (event.clientY - rect.top) /
+            rect.height -
+            0.5;
+
+          const moveX =
+            Math.round(normalizedX * 6);
+
+          const moveY =
+            Math.round(normalizedY * 6);
+
+          tile.style.setProperty(
+            "--tile-x",
+            moveX + "px"
+          );
+
+          tile.style.setProperty(
+            "--tile-y",
+            moveY + "px"
+          );
+        }
+      );
     }
   });
+
+
+  /* -------------------------------------------------------
+     EDGE BUTTONS
+     ------------------------------------------------------- */
+
+  previousButton.addEventListener(
+    "click",
+    function () {
+      setSelected(
+        selectedIndex - 1,
+        true
+      );
+
+      tiles[selectedIndex].focus({
+        preventScroll: true
+      });
+    }
+  );
+
+  nextButton.addEventListener(
+    "click",
+    function () {
+      setSelected(
+        selectedIndex + 1,
+        true
+      );
+
+      tiles[selectedIndex].focus({
+        preventScroll: true
+      });
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     KEYBOARD
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "keydown",
+    function (event) {
+      if (
+        event.key !== "ArrowLeft" &&
+        event.key !== "ArrowRight"
+      ) {
+        return;
+      }
+
+      const activeElement =
+        document.activeElement;
+
+      const gamesActive =
+        row.matches(":hover") ||
+        tiles.includes(activeElement);
+
+      if (!gamesActive) return;
+
+      event.preventDefault();
+
+      const direction =
+        event.key === "ArrowRight"
+          ? 1
+          : -1;
+
+      setSelected(
+        selectedIndex + direction,
+        true
+      );
+
+      tiles[selectedIndex].focus({
+        preventScroll: true
+      });
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     MOUSE WHEEL
+     ------------------------------------------------------- */
+
+  row.addEventListener(
+    "wheel",
+    function (event) {
+      const dominantDelta =
+        Math.abs(event.deltaX) >
+        Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY;
+
+      if (dominantDelta === 0) return;
+
+      event.preventDefault();
+
+      row.scrollBy({
+        left: dominantDelta,
+        behavior: "auto"
+      });
+    },
+    {
+      passive: false
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     SCROLL STATE
+     ------------------------------------------------------- */
+
+  row.addEventListener(
+    "scroll",
+    function () {
+      updateNavigation();
+
+      clearTimeout(scrollTimer);
+
+      scrollTimer = setTimeout(
+        function () {
+          const rowCenter =
+            row.getBoundingClientRect().left +
+            row.clientWidth / 2;
+
+          let closestIndex = 0;
+          let closestDistance = Infinity;
+
+          tiles.forEach(function (tile, index) {
+            const rect =
+              tile.getBoundingClientRect();
+
+            const center =
+              rect.left +
+              rect.width / 2;
+
+            const distance =
+              Math.abs(center - rowCenter);
+
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestIndex = index;
+            }
+          });
+
+          selectedIndex = closestIndex;
+
+          tiles.forEach(
+            function (tile, index) {
+              tile.classList.toggle(
+                "is-selected",
+                index === selectedIndex
+              );
+            }
+          );
+        },
+        80
+      );
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     RESIZE
+     ------------------------------------------------------- */
+
+  window.addEventListener(
+    "resize",
+    updateNavigation
+  );
+
+  window.addEventListener(
+    "load",
+    updateNavigation
+  );
+
+
+  /* -------------------------------------------------------
+     INITIAL STATE
+     ------------------------------------------------------- */
+
+  setSelected(0, false);
+  updateNavigation();
 });
 
