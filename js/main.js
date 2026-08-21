@@ -685,6 +685,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
+     WHOLE-HEX BACKGROUND BREAK
+     ------------------------------------------------------- */
+
+  function updateGameHexVisibility() {
+    const gameBackground =
+      document.getElementById(
+        "portfolio-game-background"
+      );
+
+    const hexes = Array.from(
+      document.querySelectorAll(
+        ".portfolio-hex"
+      )
+    );
+
+    if (!hexes.length) return;
+
+    const active =
+      document.body.classList.contains(
+        "has-game-background"
+      );
+
+    if (!active || !gameBackground) {
+      hexes.forEach(function (hex) {
+        hex.classList.remove(
+          "is-game-hidden"
+        );
+      });
+
+      return;
+    }
+
+    const backgroundRect =
+      gameBackground.getBoundingClientRect();
+
+    const breakY =
+      backgroundRect.bottom;
+
+    hexes.forEach(function (hex) {
+      const rect =
+        hex.getBoundingClientRect();
+
+      /*
+       * Hide a hex only if its full visible bounds belong to
+       * the upper game-image region. Hexes that cross the
+       * boundary stay completely visible, so none are sliced.
+       */
+      const shouldHide =
+        rect.bottom <= breakY;
+
+      hex.classList.toggle(
+        "is-game-hidden",
+        shouldHide
+      );
+    });
+  }
+
+
+  /* -------------------------------------------------------
      GAME BACKGROUND
      ------------------------------------------------------- */
 
@@ -738,6 +797,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.add(
       "has-game-background"
     );
+
+    requestAnimationFrame(
+      updateGameHexVisibility
+    );
   }
 
 
@@ -748,6 +811,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.classList.remove(
       "has-game-background"
+    );
+
+    requestAnimationFrame(
+      updateGameHexVisibility
     );
   }
 
@@ -936,6 +1003,16 @@ document.addEventListener("DOMContentLoaded", function () {
       "is-hidden",
       atEnd
     );
+
+    if (
+      document.body.classList.contains(
+        "has-game-background"
+      )
+    ) {
+      requestAnimationFrame(
+        updateGameHexVisibility
+      );
+    }
   }
 
 
@@ -1226,6 +1303,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function () {
       updateNavigation();
       refreshMouseSelection();
+
+      requestAnimationFrame(
+        updateGameHexVisibility
+      );
     }
   );
 
