@@ -19,7 +19,9 @@ body {
   background: var(--portfolio-bg);
   width: 100%;
   height: 100%;
+
   overflow-y: hidden;
+  overflow-x: auto;
 }
 
 body {
@@ -563,20 +565,8 @@ body * {
 
   align-items: center;
 
-  overflow-x: auto;
-  overflow-y: visible;
-
-  scrollbar-width: none;
-
-  -webkit-overflow-scrolling: touch;
-
-  scroll-snap-type: x proximity;
+  overflow: visible;
 }
-
-.portfolio-games::-webkit-scrollbar {
-  display: none;
-}
-
 
 .portfolio-game-tile {
   --tile-x: 0px;
@@ -586,7 +576,7 @@ body * {
 
   flex:
     0 0
-    clamp(320px, 32vw, 420px);
+    clamp(290px, 29vw, 380px);
 
   aspect-ratio: 1 / 1;
 
