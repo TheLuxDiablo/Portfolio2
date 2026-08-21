@@ -824,8 +824,28 @@ document.addEventListener("DOMContentLoaded", function () {
      ------------------------------------------------------- */
 
   function ensureTileInfo(tile) {
+    let wrapper =
+      tile.closest(
+        ".portfolio-game-item"
+      );
+
+    if (!wrapper) {
+      wrapper =
+        document.createElement("div");
+
+      wrapper.className =
+        "portfolio-game-item";
+
+      tile.parentNode.insertBefore(
+        wrapper,
+        tile
+      );
+
+      wrapper.appendChild(tile);
+    }
+
     let info =
-      tile.querySelector(
+      wrapper.querySelector(
         ".portfolio-game-info"
       );
 
@@ -851,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
       info.appendChild(name);
       info.appendChild(tagline);
 
-      tile.appendChild(info);
+      wrapper.appendChild(info);
     }
 
     const name =
@@ -961,6 +981,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
+     DYNAMIC ROW POSITIONING
+     ------------------------------------------------------- */
+
+  function updateRowPositioning() {
+    const items = Array.from(
+      row.querySelectorAll(
+        ".portfolio-game-item"
+      )
+    );
+
+    if (!items.length) return;
+
+    const rowStyle =
+      window.getComputedStyle(row);
+
+    const leftPadding =
+      parseFloat(
+        rowStyle.paddingLeft
+      ) || 0;
+
+    const rightPadding =
+      parseFloat(
+        rowStyle.paddingRight
+      ) || 0;
+
+    const gap =
+      parseFloat(
+        rowStyle.columnGap
+      ) ||
+      parseFloat(
+        rowStyle.gap
+      ) ||
+      0;
+
+    const contentWidth =
+      items.reduce(
+        function (total, item) {
+          return (
+            total +
+            item.offsetWidth
+          );
+        },
+        0
+      ) +
+      gap *
+      Math.max(
+        0,
+        items.length - 1
+      );
+
+    const availableWidth =
+      row.clientWidth -
+      leftPadding -
+      rightPadding;
+
+    const shouldCenter =
+      contentWidth <
+      availableWidth;
+
+    row.classList.toggle(
+      "is-centered",
+      shouldCenter
+    );
+  }
+
+
+  /* -------------------------------------------------------
      VIEWPORT SCROLL
      ------------------------------------------------------- */
 
@@ -971,6 +1058,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return row.clientWidth * 0.7;
     }
 
+    const firstItem =
+      firstTile.closest(
+        ".portfolio-game-item"
+      ) || firstTile;
+
     const rowStyle =
       window.getComputedStyle(row);
 
@@ -979,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", function () {
       parseFloat(rowStyle.gap) ||
       0;
 
-    return firstTile.offsetWidth + gap;
+    return firstItem.offsetWidth + gap;
   }
 
 
@@ -1001,6 +1093,8 @@ document.addEventListener("DOMContentLoaded", function () {
      ------------------------------------------------------- */
 
   function updateNavigation() {
+    updateRowPositioning();
+
     const rect =
       row.getBoundingClientRect();
 

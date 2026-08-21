@@ -654,7 +654,7 @@ body * {
 
   gap: 32px;
 
-  align-items: center;
+  align-items: flex-start;
 
   overflow-x: auto;
   overflow-y: hidden;
@@ -674,6 +674,23 @@ body * {
 }
 
 
+
+.portfolio-game-item {
+  width:
+    clamp(290px, 29vw, 380px);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  min-width: 0;
+}
+
+.portfolio-games.is-centered {
+  justify-content: center;
+}
+
 .portfolio-game-tile {
   --tile-x: 0px;
   --tile-y: 0px;
@@ -683,6 +700,8 @@ body * {
   flex:
     0 0
     clamp(290px, 29vw, 380px);
+
+  width: 100%;
 
   aspect-ratio: 1 / 1;
 
@@ -757,23 +776,13 @@ body * {
    --------------------------------------------------------- */
 
 .portfolio-game-info {
-  position: absolute;
-
-  left: 50%;
-  bottom: 18px;
-
   width:
     min(
-      calc(100% + 18px),
+      calc(100% + 24px),
       420px
     );
 
-  transform:
-    translateX(-50%)
-    translateY(8px);
-
-  padding:
-    12px 16px;
+  margin-top: 16px;
 
   box-sizing: border-box;
 
@@ -783,7 +792,8 @@ body * {
 
   opacity: 0;
 
-  z-index: 6;
+  transform:
+    translateY(-6px);
 
   transition:
     opacity 140ms steps(3),
@@ -820,51 +830,14 @@ body * {
     0 2px 0 rgba(0, 0, 0, 0.72);
 }
 
-.portfolio-game-tile.is-selected
+.portfolio-game-item:has(
+  .portfolio-game-tile.is-selected
+)
 .portfolio-game-info {
   opacity: 1;
 
   transform:
-    translateX(-50%)
     translateY(0);
-}
-
-
-/*
- * A soft dark backing keeps the text readable without
- * turning the bottom of the cover into a solid panel.
- */
-.portfolio-game-info::before {
-  content: "";
-
-  position: absolute;
-
-  left: 50%;
-  bottom: -10px;
-
-  width:
-    min(
-      calc(100% + 22px),
-      440px
-    );
-
-  height: 96px;
-
-  transform:
-    translateX(-50%);
-
-  background:
-    linear-gradient(
-      to top,
-      rgba(9, 9, 11, 0.88) 0%,
-      rgba(9, 9, 11, 0.62) 52%,
-      transparent 100%
-    );
-
-  border-radius:
-    0 0 14px 14px;
-
-  z-index: -1;
 }
 
 
@@ -1177,25 +1150,25 @@ body * {
     scroll-snap-type: x mandatory;
   }
 
-  .portfolio-game-tile {
+  .portfolio-game-item {
     flex-basis: min(74vw, 250px);
+    width: min(74vw, 250px);
+  }
 
+  .portfolio-game-tile {
     border-width: 8px;
 
     border-radius: 24px;
   }
 
   .portfolio-game-info {
-    bottom: 12px;
-
     width:
       min(
-        calc(100% + 10px),
+        calc(100% + 12px),
         280px
       );
 
-    padding:
-      10px 12px;
+    margin-top: 12px;
   }
 
   .portfolio-game-name {
