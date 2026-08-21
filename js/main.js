@@ -620,6 +620,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let scrollTimer = null;
   let selectionTimer = null;
 
+  let mouseX = 0;
+  let mouseY = 0;
+  let hasMousePosition = false;
+
 
   /* -------------------------------------------------------
      EDGE CONTROLS
@@ -647,14 +651,53 @@ document.addEventListener("DOMContentLoaded", function () {
      SELECTION
      ------------------------------------------------------- */
 
+  function getHoveredTileIndex() {
+    if (!hasMousePosition) return -1;
+
+    const element =
+      document.elementFromPoint(
+        mouseX,
+        mouseY
+      );
+
+    if (!element) return -1;
+
+    const hoveredTile =
+      element.closest(
+        ".portfolio-game-tile"
+      );
+
+    if (!hoveredTile) return -1;
+
+    return tiles.indexOf(hoveredTile);
+  }
+
+
   function setSelected(index, shouldScroll) {
     if (!tiles.length) return;
+
+    /*
+     * Mouse hover has absolute priority.
+     *
+     * If the pointer is physically over a game tile,
+     * no keyboard input, wheel scroll, focus change,
+     * or scroll-settle calculation is allowed to select
+     * a different tile.
+     */
+    const hoveredIndex =
+      getHoveredTileIndex();
+
+    if (hoveredIndex !== -1) {
+      index = hoveredIndex;
+      shouldScroll = false;
+    }
 
     selectedIndex =
       (index + tiles.length) % tiles.length;
 
     tiles.forEach(function (tile, tileIndex) {
-      const selected = tileIndex === selectedIndex;
+      const selected =
+        tileIndex === selectedIndex;
 
       tile.classList.toggle(
         "is-selected",
@@ -668,7 +711,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (shouldScroll) {
-      scrollTileIntoView(tiles[selectedIndex]);
+      scrollTileIntoView(
+        tiles[selectedIndex]
+      );
     }
 
     updateNavigation();
@@ -758,6 +803,43 @@ document.addEventListener("DOMContentLoaded", function () {
       hasOverflow
     );
   }
+
+
+  /* -------------------------------------------------------
+     MOUSE AUTHORITY
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "mousemove",
+    function (event) {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      hasMousePosition = true;
+
+      const hoveredIndex =
+        getHoveredTileIndex();
+
+      if (
+        hoveredIndex !== -1 &&
+        hoveredIndex !== selectedIndex
+      ) {
+        setSelected(
+          hoveredIndex,
+          false
+        );
+      }
+    },
+    {
+      passive: true
+    }
+  );
+
+  document.documentElement.addEventListener(
+    "mouseleave",
+    function () {
+      hasMousePosition = false;
+    }
+  );
 
 
   /* -------------------------------------------------------
@@ -1005,6 +1087,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function () {
       updateNavigation();
 
+      /*
+       * Scrolling can move a different tile underneath a
+       * stationary pointer. Re-check the actual pixel under
+       * the mouse every time the row moves.
+       */
+      const hoveredIndex =
+        getHoveredTileIndex();
+
+      if (hoveredIndex !== -1) {
+        setSelected(
+          hoveredIndex,
+          false
+        );
+      }
+
       clearTimeout(selectionTimer);
 
       selectionTimer = setTimeout(
@@ -1035,8 +1132,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
           /*
            * Use the same selection path as every other input.
-           * This guarantees there is never more than one
-           * .is-selected tile at a time.
+           * setSelected() will refuse to override a tile that
+           * is currently under the mouse.
            */
           setSelected(closestIndex, false);
         },
