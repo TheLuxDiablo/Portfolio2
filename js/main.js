@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const SVG_NS = "http://www.w3.org/2000/svg";
 
-  let backgroundRoot = document.getElementById("rq-background");
+  let backgroundRoot = document.getElementById("portfolio-background");
 
   if (!backgroundRoot) {
     backgroundRoot = document.createElement("div");
-    backgroundRoot.id = "rq-background";
+    backgroundRoot.id = "portfolio-background";
     backgroundRoot.setAttribute("aria-hidden", "true");
     document.body.prepend(backgroundRoot);
   }
@@ -20,20 +20,20 @@ document.addEventListener("DOMContentLoaded", function () {
      HEXAGON SVG
      ======================================================= */
 
-  let hexBackground = document.getElementById("rq-hex-background");
+  let hexBackground = document.getElementById("portfolio-hex-background");
 
   if (!hexBackground) {
     hexBackground = document.createElementNS(SVG_NS, "svg");
-    hexBackground.id = "rq-hex-background";
+    hexBackground.id = "portfolio-hex-background";
     hexBackground.setAttribute("aria-hidden", "true");
     backgroundRoot.appendChild(hexBackground);
   }
 
-  let hexGrid = document.getElementById("rq-hex-grid");
+  let hexGrid = document.getElementById("portfolio-hex-grid");
 
   if (!hexGrid) {
     hexGrid = document.createElementNS(SVG_NS, "g");
-    hexGrid.id = "rq-hex-grid";
+    hexGrid.id = "portfolio-hex-grid";
     hexBackground.appendChild(hexGrid);
   }
 
@@ -42,11 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
      CURSOR-REACTIVE BACKGROUND GLOW
      ======================================================= */
 
-  let cursorGlow = document.getElementById("rq-cursor-glow");
+  let cursorGlow = document.getElementById("portfolio-cursor-glow");
 
   if (!cursorGlow) {
     cursorGlow = document.createElement("div");
-    cursorGlow.id = "rq-cursor-glow";
+    cursorGlow.id = "portfolio-cursor-glow";
     backgroundRoot.appendChild(cursorGlow);
   }
 
@@ -55,11 +55,11 @@ document.addEventListener("DOMContentLoaded", function () {
      DITHER OVERLAY
      ======================================================= */
 
-  let dither = document.getElementById("rq-dither-background");
+  let dither = document.getElementById("portfolio-dither-background");
 
   if (!dither) {
     dither = document.createElement("div");
-    dither.id = "rq-dither-background";
+    dither.id = "portfolio-dither-background";
     backgroundRoot.appendChild(dither);
   }
 
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
           );
 
         hex.setAttribute("points", points);
-        hex.setAttribute("class", "rq-hex");
+        hex.setAttribute("class", "portfolio-hex");
 
         hexGrid.appendChild(hex);
 
@@ -276,12 +276,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (isTouchDevice) return;
 
-  let cursor = document.getElementById("rq-pixel-cursor");
+  let cursor = document.getElementById("portfolio-pixel-cursor");
 
   if (!cursor) {
     cursor = document.createElement("img");
 
-    cursor.id = "rq-pixel-cursor";
+    cursor.id = "portfolio-pixel-cursor";
 
     cursor.src =
       "https://cdn.prod.website-files.com/687349e4c48611614b296b1e/6a87244a1c7206f1dd64ef71_Arrow2.png";
@@ -385,11 +385,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 /* =========================================================
-   RQ NAME JUICE
+   NAME JUICE
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
-  const name = document.querySelector(".rq-name");
+  const name = document.querySelector(".portfolio-name");
 
   if (!name) return;
 
@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const span = document.createElement("span");
 
-    span.className = "rq-name-letter";
+    span.className = "portfolio-name-letter";
 
     if (char === " ") {
       span.innerHTML = "&nbsp;";
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function spawnScore() {
     const score = document.createElement("span");
 
-    score.className = "rq-score-pop";
+    score.className = "portfolio-score-pop";
 
     /*
      * Arcade-y randomized score.
@@ -513,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < count; i++) {
       const particle = document.createElement("span");
 
-      particle.className = "rq-name-particle";
+      particle.className = "portfolio-name-particle";
 
       const angle =
         (Math.PI * 2 * i) / count;
@@ -598,3 +598,91 @@ document.addEventListener("DOMContentLoaded", function () {
     spawnParticles();
   });
 });
+
+/* =========================================================
+   GAME TILES
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const tiles = Array.from(
+    document.querySelectorAll(".portfolio-game-tile")
+  );
+
+  if (!tiles.length) return;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  tiles.forEach(function (tile) {
+    /*
+     * Make plain Webflow divs keyboard-focusable.
+     * If you later switch the tile itself to a Link Block,
+     * this does not interfere with the link.
+     */
+    if (
+      tile.tagName !== "A" &&
+      !tile.hasAttribute("tabindex")
+    ) {
+      tile.setAttribute("tabindex", "0");
+    }
+
+    tile.addEventListener("mouseenter", function () {
+      tile.classList.add("is-hovering");
+    });
+
+    tile.addEventListener("mouseleave", function () {
+      tile.classList.remove("is-hovering");
+      tile.classList.remove("is-pressed");
+      tile.style.setProperty("--tile-x", "0px");
+      tile.style.setProperty("--tile-y", "0px");
+    });
+
+    tile.addEventListener("mousedown", function () {
+      tile.classList.add("is-pressed");
+    });
+
+    tile.addEventListener("mouseup", function () {
+      tile.classList.remove("is-pressed");
+    });
+
+    tile.addEventListener("blur", function () {
+      tile.classList.remove("is-pressed");
+      tile.style.setProperty("--tile-x", "0px");
+      tile.style.setProperty("--tile-y", "0px");
+    });
+
+    if (!reducedMotion) {
+      tile.addEventListener("mousemove", function (event) {
+        const rect = tile.getBoundingClientRect();
+
+        const normalizedX =
+          (event.clientX - rect.left) / rect.width - 0.5;
+
+        const normalizedY =
+          (event.clientY - rect.top) / rect.height - 0.5;
+
+        /*
+         * Very small movement only. The tile should feel alive,
+         * not like a floating 3D card.
+         */
+        const moveX =
+          Math.round(normalizedX * 6);
+
+        const moveY =
+          Math.round(normalizedY * 6);
+
+        tile.style.setProperty(
+          "--tile-x",
+          moveX + "px"
+        );
+
+        tile.style.setProperty(
+          "--tile-y",
+          moveY + "px"
+        );
+      });
+    }
+  });
+});
+
