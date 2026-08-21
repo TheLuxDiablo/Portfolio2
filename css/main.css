@@ -586,7 +586,7 @@ body * {
 
   flex:
     0 0
-    clamp(260px, 27vw, 340px);
+    clamp(320px, 32vw, 420px);
 
   aspect-ratio: 1 / 1;
 
@@ -603,6 +603,8 @@ body * {
   background: #101014;
 
   scroll-snap-align: start;
+  
+  gap: 32px;
 
   outline: none;
 
@@ -646,10 +648,7 @@ body * {
 
   user-select: none;
 
-  transform: scale(1.001);
-
   transition:
-    transform 160ms steps(4),
     filter 160ms steps(4);
 }
 
@@ -665,6 +664,16 @@ body * {
 
   box-shadow:
     0 10px 0 rgba(0, 0, 0, 0.28);
+
+  transform:
+    translate3d(
+      var(--tile-x),
+      calc(var(--tile-y) - 5px),
+      0
+    )
+    scale(1.035);
+
+  z-index: 2;
 }
 
 .portfolio-game-tile.is-hovering
@@ -673,8 +682,6 @@ body * {
 .portfolio-game-image,
 .portfolio-game-tile:focus-visible
 .portfolio-game-image {
-  transform: scale(1.035);
-
   filter: brightness(1.06);
 }
 
