@@ -21,7 +21,7 @@ body {
   height: 100%;
 
   overflow-y: hidden;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 body {
@@ -547,13 +547,15 @@ body * {
    ========================================================= */
 
 .portfolio-games {
-  width: max-content;
+  width: 100%;
 
-  margin-top: 92px;
-  margin-left: 40px;
-  margin-right: 40px;
+  margin-top: 84px;
+  margin-left: 0;
+  margin-right: 0;
 
-  padding: 14px 0 30px;
+  padding:
+    14px 48px
+    30px;
 
   box-sizing: border-box;
 
@@ -563,7 +565,16 @@ body * {
 
   align-items: center;
 
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.portfolio-games::-webkit-scrollbar {
+  display: none;
 }
 
 .portfolio-game-tile {
