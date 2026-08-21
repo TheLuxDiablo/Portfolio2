@@ -629,9 +629,20 @@ document.addEventListener("DOMContentLoaded", function () {
       "true"
     );
 
-    document.body.prepend(
-      gameBackground
-    );
+    const backgroundRoot =
+      document.getElementById(
+        "portfolio-background"
+      );
+
+    if (backgroundRoot) {
+      backgroundRoot.appendChild(
+        gameBackground
+      );
+    } else {
+      document.body.prepend(
+        gameBackground
+      );
+    }
   }
 
   const reducedMotion = window.matchMedia(
@@ -867,11 +878,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const rect =
       row.getBoundingClientRect();
 
+    const rowCenterY =
+      rect.top +
+      rect.height / 2;
+
     document.documentElement.style.setProperty(
       "--game-nav-center-y",
-      rect.top +
-      rect.height / 2 +
-      "px"
+      rowCenterY + "px"
+    );
+
+    /*
+     * The active game artwork lives behind the page and extends
+     * from the top of the viewport through the midpoint of the
+     * game row. It never participates in page layout.
+     */
+    document.documentElement.style.setProperty(
+      "--game-bg-height",
+      Math.max(
+        0,
+        rowCenterY
+      ) + "px"
     );
 
     const maxScroll =

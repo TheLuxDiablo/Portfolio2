@@ -224,43 +224,39 @@ body > *:not(#portfolio-background):not(#portfolio-pixel-cursor) {
    ========================================================= */
 
 #portfolio-game-background {
-  position: fixed;
+  position: absolute;
 
   left: 0;
   top: 0;
 
   width: 100vw;
-  height: 45vh;
+  height: var(--game-bg-height, 58vh);
 
-  z-index: 0;
+  z-index: 1;
 
   pointer-events: none;
   user-select: none;
 
-  background-position: center;
+  background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
 
   opacity: 0;
 
   transform:
-    translate3d(0, -10px, 0)
-    scale(1.015);
+    translate3d(0, -8px, 0)
+    scale(1.01);
 
   transition:
     opacity 220ms ease,
-    transform 320ms ease;
+    transform 300ms ease;
 
-  /*
-   * Darkens the image toward the bottom so it melts back
-   * into the portfolio background instead of ending abruptly.
-   */
   -webkit-mask-image:
     linear-gradient(
       to bottom,
       #000 0%,
       #000 72%,
-      rgba(0, 0, 0, 0.78) 84%,
+      rgba(0, 0, 0, 0.82) 86%,
       transparent 100%
     );
 
@@ -269,7 +265,7 @@ body > *:not(#portfolio-background):not(#portfolio-pixel-cursor) {
       to bottom,
       #000 0%,
       #000 72%,
-      rgba(0, 0, 0, 0.78) 84%,
+      rgba(0, 0, 0, 0.82) 86%,
       transparent 100%
     );
 
@@ -288,14 +284,20 @@ body > *:not(#portfolio-background):not(#portfolio-pixel-cursor) {
 
 
 /*
- * While a game image is active, remove the hex layer only
- * from the top 45% of the viewport. The lower hex field stays.
+ * The game art replaces the upper part of the hex field while
+ * the lower hexes remain visible behind the cards.
  */
 body.has-game-background
 #portfolio-hex-background {
   clip-path:
-    inset(45vh 0 0 0);
+    inset(
+      var(--game-bg-height, 58vh)
+      0
+      0
+      0
+    );
 }
+
 
 /* =========================================================
    BACKGROUND ANIMATIONS
@@ -755,7 +757,8 @@ body * {
 
   box-shadow:
     0 12px 0 rgba(0, 0, 0, 0.34),
-    0 0 0 3px rgba(240, 182, 219, 0.22);
+    0 0 0 3px rgba(240, 182, 219, 0.22),
+    0 0 18px rgba(240, 182, 219, 0.30);
 
   transform:
     translate3d(
@@ -767,7 +770,9 @@ body * {
 
   z-index: 3;
 
-  overflow: visible;
+  animation:
+    portfolio-tile-highlight
+    1.15s ease-in-out infinite;
 }
 
 .portfolio-game-tile.is-selected
@@ -776,68 +781,30 @@ body * {
 }
 
 
-/* ---------------------------------------------------------
-   ANIMATED DS-STYLE SELECTION LIGHT
-   --------------------------------------------------------- */
+@keyframes portfolio-tile-highlight {
+  0%,
+  100% {
+    border-color:
+      #d992bd;
 
-.portfolio-game-tile::after {
-  content: "";
-
-  position: absolute;
-
-  inset: -8px;
-
-  border-radius:
-    calc(28px + 8px);
-
-  padding: 6px;
-
-  pointer-events: none;
-
-  opacity: 0;
-
-  background:
-    conic-gradient(
-      from 0deg,
-      transparent 0deg,
-      transparent 265deg,
-      rgba(255, 255, 255, 0.12) 300deg,
-      #ffffff 326deg,
-      var(--portfolio-accent-bright) 345deg,
-      transparent 360deg
-    );
-
-  -webkit-mask:
-    linear-gradient(#000 0 0)
-      content-box,
-    linear-gradient(#000 0 0);
-
-  -webkit-mask-composite: xor;
-
-  mask-composite: exclude;
-
-  transform: rotate(0deg);
-
-  z-index: 5;
-}
-
-.portfolio-game-tile.is-selected::after {
-  opacity: 1;
-
-  animation:
-    portfolio-tile-border-light
-    1.65s linear infinite;
-}
-
-@keyframes portfolio-tile-border-light {
-  from {
-    transform: rotate(0deg);
+    box-shadow:
+      0 12px 0 rgba(0, 0, 0, 0.34),
+      0 0 0 3px rgba(240, 182, 219, 0.18),
+      0 0 12px rgba(240, 182, 219, 0.20);
   }
 
-  to {
-    transform: rotate(360deg);
+  50% {
+    border-color:
+      #ffd9ef;
+
+    box-shadow:
+      0 12px 0 rgba(0, 0, 0, 0.34),
+      0 0 0 4px rgba(255, 217, 239, 0.34),
+      0 0 28px rgba(240, 182, 219, 0.48);
   }
 }
+
+
 
 
 
@@ -1115,10 +1082,11 @@ body * {
   #portfolio-game-background {
     transition: none !important;
   }
+}
 
-  .portfolio-game-tile.is-selected::after {
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-game-tile.is-selected {
     animation: none !important;
-
-    transform: rotate(0deg);
   }
 }
