@@ -666,8 +666,7 @@ body * {
    cannot visually compete with the actual selection.
    --------------------------------------------------------- */
 
-.portfolio-game-tile.is-selected,
-.portfolio-game-tile:focus-visible {
+.portfolio-game-tile.is-selected {
   border-color:
     var(--portfolio-accent-bright);
 
@@ -687,8 +686,6 @@ body * {
 }
 
 .portfolio-game-tile.is-selected
-.portfolio-game-image,
-.portfolio-game-tile:focus-visible
 .portfolio-game-image {
   filter: brightness(1.06);
 }
@@ -704,6 +701,17 @@ body * {
   border-color: #29292f;
 }
 
+
+
+
+/* Keyboard focus is navigation/accessibility only, not selection. */
+.portfolio-game-tile:focus-visible:not(.is-selected) {
+  outline:
+    3px solid
+    rgba(240, 182, 219, 0.35);
+
+  outline-offset: 4px;
+}
 
 /* ---------------------------------------------------------
    PRESS

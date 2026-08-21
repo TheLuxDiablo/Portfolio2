@@ -616,13 +616,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  let selectedIndex = 0;
-  let scrollTimer = null;
-  let selectionTimer = null;
-
   let mouseX = 0;
   let mouseY = 0;
   let hasMousePosition = false;
+
+  let scrollTimer = null;
 
 
   /* -------------------------------------------------------
@@ -634,14 +632,20 @@ document.addEventListener("DOMContentLoaded", function () {
     "portfolio-game-nav portfolio-game-nav-left";
 
   previousButton.type = "button";
-  previousButton.setAttribute("aria-label", "Previous game");
+  previousButton.setAttribute(
+    "aria-label",
+    "Scroll games left"
+  );
 
   const nextButton = document.createElement("button");
   nextButton.className =
     "portfolio-game-nav portfolio-game-nav-right";
 
   nextButton.type = "button";
-  nextButton.setAttribute("aria-label", "Next game");
+  nextButton.setAttribute(
+    "aria-label",
+    "Scroll games right"
+  );
 
   document.body.appendChild(previousButton);
   document.body.appendChild(nextButton);
@@ -649,10 +653,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* -------------------------------------------------------
      SELECTION
+
+     Mouse hover is the ONLY selector.
+     Scrolling, arrows, keyboard, and focus only move the
+     viewport. They never create or preserve selection.
      ------------------------------------------------------- */
 
-  function getHoveredTileIndex() {
-    if (!hasMousePosition) return -1;
+  function clearSelection() {
+    tiles.forEach(function (tile) {
+      tile.classList.remove("is-selected");
+      tile.classList.remove("is-hovering");
+
+      tile.setAttribute(
+        "aria-selected",
+        "false"
+      );
+    });
+  }
+
+
+  function selectTile(tile) {
+    if (!tile) {
+      clearSelection();
+      return;
+    }
+
+    tiles.forEach(function (otherTile) {
+      const selected =
+        otherTile === tile;
+
+      otherTile.classList.toggle(
+        "is-selected",
+        selected
+      );
+
+      otherTile.classList.toggle(
+        "is-hovering",
+        selected
+      );
+
+      otherTile.setAttribute(
+        "aria-selected",
+        selected ? "true" : "false"
+      );
+    });
+  }
+
+
+  function getHoveredTile() {
+    if (!hasMousePosition) return null;
 
     const element =
       document.elementFromPoint(
@@ -660,97 +709,58 @@ document.addEventListener("DOMContentLoaded", function () {
         mouseY
       );
 
-    if (!element) return -1;
+    if (!element) return null;
 
-    const hoveredTile =
-      element.closest(
-        ".portfolio-game-tile"
-      );
-
-    if (!hoveredTile) return -1;
-
-    return tiles.indexOf(hoveredTile);
+    return element.closest(
+      ".portfolio-game-tile"
+    );
   }
 
 
-  function setSelected(index, shouldScroll) {
-    if (!tiles.length) return;
+  function refreshMouseSelection() {
+    const hoveredTile =
+      getHoveredTile();
 
-    /*
-     * Mouse hover has absolute priority.
-     *
-     * If the pointer is physically over a game tile,
-     * no keyboard input, wheel scroll, focus change,
-     * or scroll-settle calculation is allowed to select
-     * a different tile.
-     */
-    const hoveredIndex =
-      getHoveredTileIndex();
-
-    if (hoveredIndex !== -1) {
-      index = hoveredIndex;
-      shouldScroll = false;
+    if (hoveredTile) {
+      selectTile(hoveredTile);
+    } else {
+      clearSelection();
     }
-
-    selectedIndex =
-      (index + tiles.length) % tiles.length;
-
-    tiles.forEach(function (tile, tileIndex) {
-      const selected =
-        tileIndex === selectedIndex;
-
-      tile.classList.toggle(
-        "is-selected",
-        selected
-      );
-
-      tile.setAttribute(
-        "aria-selected",
-        selected ? "true" : "false"
-      );
-    });
-
-    if (shouldScroll) {
-      scrollTileIntoView(
-        tiles[selectedIndex]
-      );
-    }
-
-    updateNavigation();
   }
 
 
   /* -------------------------------------------------------
-     SCROLL TO TILE
+     VIEWPORT SCROLL
      ------------------------------------------------------- */
 
-  function scrollTileIntoView(tile) {
-    const rowRect = row.getBoundingClientRect();
-    const tileRect = tile.getBoundingClientRect();
+  function getScrollStep() {
+    const firstTile = tiles[0];
 
-    const tileCenter =
-      tile.offsetLeft +
-      tile.offsetWidth / 2;
+    if (!firstTile) {
+      return row.clientWidth * 0.7;
+    }
 
-    const target =
-      tileCenter -
-      row.clientWidth / 2;
+    const rowStyle =
+      window.getComputedStyle(row);
 
-    const maxScroll =
-      row.scrollWidth -
-      row.clientWidth;
+    const gap =
+      parseFloat(rowStyle.columnGap) ||
+      parseFloat(rowStyle.gap) ||
+      0;
 
-    const clampedTarget =
-      Math.max(
-        0,
-        Math.min(target, maxScroll)
-      );
+    return firstTile.offsetWidth + gap;
+  }
 
-    row.scrollTo({
-      left: clampedTarget,
-      behavior: reducedMotion
-        ? "auto"
-        : "smooth"
+
+  function scrollGames(direction) {
+    row.scrollBy({
+      left:
+        getScrollStep() *
+        direction,
+      behavior:
+        reducedMotion
+          ? "auto"
+          : "smooth"
     });
   }
 
@@ -760,11 +770,14 @@ document.addEventListener("DOMContentLoaded", function () {
      ------------------------------------------------------- */
 
   function updateNavigation() {
-    const rect = row.getBoundingClientRect();
+    const rect =
+      row.getBoundingClientRect();
 
     document.documentElement.style.setProperty(
       "--game-nav-center-y",
-      rect.top + rect.height / 2 + "px"
+      rect.top +
+      rect.height / 2 +
+      "px"
     );
 
     const maxScroll =
@@ -778,17 +791,8 @@ document.addEventListener("DOMContentLoaded", function () {
       row.scrollLeft <= 2;
 
     const atEnd =
-      row.scrollLeft >= maxScroll - 2;
-
-    previousButton.classList.toggle(
-      "is-hidden",
-      atStart
-    );
-
-    nextButton.classList.toggle(
-      "is-hidden",
-      atEnd
-    );
+      row.scrollLeft >=
+      maxScroll - 2;
 
     const hasOverflow =
       maxScroll > 2;
@@ -802,79 +806,68 @@ document.addEventListener("DOMContentLoaded", function () {
       "has-overflow",
       hasOverflow
     );
+
+    previousButton.classList.toggle(
+      "is-hidden",
+      atStart
+    );
+
+    nextButton.classList.toggle(
+      "is-hidden",
+      atEnd
+    );
   }
-
-
-  /* -------------------------------------------------------
-     MOUSE AUTHORITY
-     ------------------------------------------------------- */
-
-  document.addEventListener(
-    "mousemove",
-    function (event) {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-      hasMousePosition = true;
-
-      const hoveredIndex =
-        getHoveredTileIndex();
-
-      if (
-        hoveredIndex !== -1 &&
-        hoveredIndex !== selectedIndex
-      ) {
-        setSelected(
-          hoveredIndex,
-          false
-        );
-      }
-    },
-    {
-      passive: true
-    }
-  );
-
-  document.documentElement.addEventListener(
-    "mouseleave",
-    function () {
-      hasMousePosition = false;
-    }
-  );
 
 
   /* -------------------------------------------------------
      TILE INTERACTION
      ------------------------------------------------------- */
 
-  tiles.forEach(function (tile, index) {
+  tiles.forEach(function (tile) {
     if (
       tile.tagName !== "A" &&
       !tile.hasAttribute("tabindex")
     ) {
-      tile.setAttribute("tabindex", "0");
+      tile.setAttribute(
+        "tabindex",
+        "0"
+      );
     }
 
-    tile.setAttribute("role", "option");
+    tile.setAttribute(
+      "role",
+      "option"
+    );
+
+    tile.setAttribute(
+      "aria-selected",
+      "false"
+    );
 
     tile.addEventListener(
-      "mouseenter",
+      "mousedown",
       function () {
-        tile.classList.add("is-hovering");
+        tile.classList.add(
+          "is-pressed"
+        );
+      }
+    );
 
-        /*
-         * Hover can change the active selection, but it always
-         * goes through the same single-selection function as
-         * keyboard, arrows, and scrolling.
-         */
-        setSelected(index, false);
+    tile.addEventListener(
+      "mouseup",
+      function () {
+        tile.classList.remove(
+          "is-pressed"
+        );
       }
     );
 
     tile.addEventListener(
       "mouseleave",
       function () {
-        tile.classList.remove("is-hovering");
-        tile.classList.remove("is-pressed");
+        tile.classList.remove(
+          "is-pressed"
+        );
 
         tile.style.setProperty(
           "--tile-x",
@@ -889,30 +882,11 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     tile.addEventListener(
-      "focus",
-      function () {
-        setSelected(index, true);
-      }
-    );
-
-    tile.addEventListener(
-      "mousedown",
-      function () {
-        tile.classList.add("is-pressed");
-      }
-    );
-
-    tile.addEventListener(
-      "mouseup",
-      function () {
-        tile.classList.remove("is-pressed");
-      }
-    );
-
-    tile.addEventListener(
       "blur",
       function () {
-        tile.classList.remove("is-pressed");
+        tile.classList.remove(
+          "is-pressed"
+        );
 
         tile.style.setProperty(
           "--tile-x",
@@ -944,10 +918,14 @@ document.addEventListener("DOMContentLoaded", function () {
             0.5;
 
           const moveX =
-            Math.round(normalizedX * 6);
+            Math.round(
+              normalizedX * 6
+            );
 
           const moveY =
-            Math.round(normalizedY * 6);
+            Math.round(
+              normalizedY * 6
+            );
 
           tile.style.setProperty(
             "--tile-x",
@@ -965,40 +943,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
+     MOUSE AUTHORITY
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "mousemove",
+    function (event) {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      hasMousePosition = true;
+
+      refreshMouseSelection();
+    },
+    {
+      passive: true
+    }
+  );
+
+  document.documentElement.addEventListener(
+    "mouseleave",
+    function () {
+      hasMousePosition = false;
+      clearSelection();
+    }
+  );
+
+
+  /* -------------------------------------------------------
      EDGE BUTTONS
+
+     These move the viewport only.
      ------------------------------------------------------- */
 
   previousButton.addEventListener(
     "click",
     function () {
-      setSelected(
-        selectedIndex - 1,
-        true
-      );
-
-      tiles[selectedIndex].focus({
-        preventScroll: true
-      });
+      scrollGames(-1);
     }
   );
 
   nextButton.addEventListener(
     "click",
     function () {
-      setSelected(
-        selectedIndex + 1,
-        true
-      );
-
-      tiles[selectedIndex].focus({
-        preventScroll: true
-      });
+      scrollGames(1);
     }
   );
 
 
   /* -------------------------------------------------------
      KEYBOARD
+
+     Arrow keys also move the viewport only.
      ------------------------------------------------------- */
 
   document.addEventListener(
@@ -1022,25 +1017,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       event.preventDefault();
 
-      const direction =
+      scrollGames(
         event.key === "ArrowRight"
           ? 1
-          : -1;
-
-      setSelected(
-        selectedIndex + direction,
-        true
+          : -1
       );
-
-      tiles[selectedIndex].focus({
-        preventScroll: true
-      });
     }
   );
 
 
   /* -------------------------------------------------------
      MOUSE WHEEL
+
+     Wheel changes the viewport only.
+     The selection is recalculated from the physical mouse
+     position as tiles move underneath it.
      ------------------------------------------------------- */
 
   row.addEventListener(
@@ -1056,20 +1047,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
       event.preventDefault();
 
-      row.classList.add("is-scrolling");
-
-      clearTimeout(scrollTimer);
+      row.classList.add(
+        "is-scrolling"
+      );
 
       row.scrollBy({
         left: dominantDelta,
         behavior: "auto"
       });
 
+      refreshMouseSelection();
+
+      clearTimeout(scrollTimer);
+
       scrollTimer = setTimeout(
         function () {
-          row.classList.remove("is-scrolling");
+          row.classList.remove(
+            "is-scrolling"
+          );
+
+          refreshMouseSelection();
         },
-        140
+        120
       );
     },
     {
@@ -1080,65 +1079,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* -------------------------------------------------------
      SCROLL STATE
+
+     Any kind of scrolling may move a tile under or away
+     from a stationary pointer, so selection is continuously
+     recalculated from the mouse position.
      ------------------------------------------------------- */
 
   row.addEventListener(
     "scroll",
     function () {
       updateNavigation();
-
-      /*
-       * Scrolling can move a different tile underneath a
-       * stationary pointer. Re-check the actual pixel under
-       * the mouse every time the row moves.
-       */
-      const hoveredIndex =
-        getHoveredTileIndex();
-
-      if (hoveredIndex !== -1) {
-        setSelected(
-          hoveredIndex,
-          false
-        );
-      }
-
-      clearTimeout(selectionTimer);
-
-      selectionTimer = setTimeout(
-        function () {
-          const rowCenter =
-            row.getBoundingClientRect().left +
-            row.clientWidth / 2;
-
-          let closestIndex = 0;
-          let closestDistance = Infinity;
-
-          tiles.forEach(function (tile, index) {
-            const rect =
-              tile.getBoundingClientRect();
-
-            const center =
-              rect.left +
-              rect.width / 2;
-
-            const distance =
-              Math.abs(center - rowCenter);
-
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closestIndex = index;
-            }
-          });
-
-          /*
-           * Use the same selection path as every other input.
-           * setSelected() will refuse to override a tile that
-           * is currently under the mouse.
-           */
-          setSelected(closestIndex, false);
-        },
-        80
-      );
+      refreshMouseSelection();
     },
     {
       passive: true
@@ -1152,7 +1103,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener(
     "resize",
-    updateNavigation
+    function () {
+      updateNavigation();
+      refreshMouseSelection();
+    }
   );
 
   window.addEventListener(
@@ -1165,7 +1119,7 @@ document.addEventListener("DOMContentLoaded", function () {
      INITIAL STATE
      ------------------------------------------------------- */
 
-  setSelected(0, false);
+  clearSelection();
   updateNavigation();
 });
 
