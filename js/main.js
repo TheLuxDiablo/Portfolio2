@@ -820,6 +820,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
+     GAME TILE INFO
+     ------------------------------------------------------- */
+
+  function ensureTileInfo(tile) {
+    let info =
+      tile.querySelector(
+        ".portfolio-game-info"
+      );
+
+    if (!info) {
+      info =
+        document.createElement("div");
+
+      info.className =
+        "portfolio-game-info";
+
+      const name =
+        document.createElement("div");
+
+      name.className =
+        "portfolio-game-name";
+
+      const tagline =
+        document.createElement("div");
+
+      tagline.className =
+        "portfolio-game-tagline";
+
+      info.appendChild(name);
+      info.appendChild(tagline);
+
+      tile.appendChild(info);
+    }
+
+    const name =
+      info.querySelector(
+        ".portfolio-game-name"
+      );
+
+    const tagline =
+      info.querySelector(
+        ".portfolio-game-tagline"
+      );
+
+    name.textContent =
+      tile.getAttribute(
+        "data-title"
+      ) || "";
+
+    tagline.textContent =
+      tile.getAttribute(
+        "data-tagline"
+      ) || "";
+
+    return info;
+  }
+
+
+  /* -------------------------------------------------------
      SELECTION
 
      Mouse hover is the ONLY selector.
@@ -1021,6 +1080,8 @@ document.addEventListener("DOMContentLoaded", function () {
      ------------------------------------------------------- */
 
   tiles.forEach(function (tile) {
+    ensureTileInfo(tile);
+
     if (
       tile.tagName !== "A" &&
       !tile.hasAttribute("tabindex")
