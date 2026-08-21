@@ -618,6 +618,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let selectedIndex = 0;
   let scrollTimer = null;
+  let selectionTimer = null;
 
 
   /* -------------------------------------------------------
@@ -778,14 +779,12 @@ document.addEventListener("DOMContentLoaded", function () {
       function () {
         tile.classList.add("is-hovering");
 
-        selectedIndex = index;
-
-        tiles.forEach(function (otherTile, otherIndex) {
-          otherTile.classList.toggle(
-            "is-selected",
-            otherIndex === selectedIndex
-          );
-        });
+        /*
+         * Hover can change the active selection, but it always
+         * goes through the same single-selection function as
+         * keyboard, arrows, and scrolling.
+         */
+        setSelected(index, false);
       }
     );
 
@@ -975,10 +974,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       event.preventDefault();
 
+      row.classList.add("is-scrolling");
+
+      clearTimeout(scrollTimer);
+
       row.scrollBy({
         left: dominantDelta,
         behavior: "auto"
       });
+
+      scrollTimer = setTimeout(
+        function () {
+          row.classList.remove("is-scrolling");
+        },
+        140
+      );
     },
     {
       passive: false
@@ -995,9 +1005,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function () {
       updateNavigation();
 
-      clearTimeout(scrollTimer);
+      clearTimeout(selectionTimer);
 
-      scrollTimer = setTimeout(
+      selectionTimer = setTimeout(
         function () {
           const rowCenter =
             row.getBoundingClientRect().left +
@@ -1023,16 +1033,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           });
 
-          selectedIndex = closestIndex;
-
-          tiles.forEach(
-            function (tile, index) {
-              tile.classList.toggle(
-                "is-selected",
-                index === selectedIndex
-              );
-            }
-          );
+          /*
+           * Use the same selection path as every other input.
+           * This guarantees there is never more than one
+           * .is-selected tile at a time.
+           */
+          setSelected(closestIndex, false);
         },
         80
       );
