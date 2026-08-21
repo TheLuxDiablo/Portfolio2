@@ -612,6 +612,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!row || !tiles.length) return;
 
+  let gameBackground =
+    document.getElementById(
+      "portfolio-game-background"
+    );
+
+  if (!gameBackground) {
+    gameBackground =
+      document.createElement("div");
+
+    gameBackground.id =
+      "portfolio-game-background";
+
+    gameBackground.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+    document.body.prepend(
+      gameBackground
+    );
+  }
+
   const reducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
@@ -652,6 +674,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* -------------------------------------------------------
+     GAME BACKGROUND
+     ------------------------------------------------------- */
+
+  function getTileBackground(tile) {
+    if (!tile) return "";
+
+    const customBackground =
+      tile.getAttribute(
+        "data-background"
+      );
+
+    if (customBackground) {
+      return customBackground;
+    }
+
+    const image =
+      tile.querySelector(
+        ".portfolio-game-image"
+      );
+
+    if (image) {
+      return (
+        image.currentSrc ||
+        image.src ||
+        ""
+      );
+    }
+
+    return "";
+  }
+
+
+  function showGameBackground(tile) {
+    const backgroundUrl =
+      getTileBackground(tile);
+
+    if (!backgroundUrl) {
+      hideGameBackground();
+      return;
+    }
+
+    gameBackground.style.backgroundImage =
+      'url("' +
+      backgroundUrl.replace(/"/g, '\\"') +
+      '")';
+
+    gameBackground.classList.add(
+      "is-visible"
+    );
+
+    document.body.classList.add(
+      "has-game-background"
+    );
+  }
+
+
+  function hideGameBackground() {
+    gameBackground.classList.remove(
+      "is-visible"
+    );
+
+    document.body.classList.remove(
+      "has-game-background"
+    );
+  }
+
+
+  /* -------------------------------------------------------
      SELECTION
 
      Mouse hover is the ONLY selector.
@@ -669,6 +759,8 @@ document.addEventListener("DOMContentLoaded", function () {
         "false"
       );
     });
+
+    hideGameBackground();
   }
 
 
@@ -697,6 +789,8 @@ document.addEventListener("DOMContentLoaded", function () {
         selected ? "true" : "false"
       );
     });
+
+    showGameBackground(tile);
   }
 
 
