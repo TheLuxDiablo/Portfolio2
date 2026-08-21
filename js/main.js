@@ -609,13 +609,13 @@ document.addEventListener("DOMContentLoaded", function () {
     {
       id: "profile",
       label: "Profile",
-      color: "#ff5a5f",
+      color: "#ff5b5b",
       href: "/profile",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="12" y="5" width="8" height="8"></rect>
-          <rect x="9" y="15" width="14" height="3"></rect>
-          <rect x="6" y="18" width="20" height="9"></rect>
+          <rect class="rq-icon-main" x="11" y="4" width="10" height="10"></rect>
+          <path class="rq-icon-main" d="M6 28V22H8V19H12V17H20V19H24V22H26V28"></path>
+          <path class="rq-icon-detail" d="M13 9H15M17 9H19"></path>
         </svg>
       `
     },
@@ -626,7 +626,10 @@ document.addEventListener("DOMContentLoaded", function () {
       href: "/",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M4 15 L16 5 L28 15 V27 H19 V19 H13 V27 H4 Z"></path>
+          <path class="rq-icon-main" d="M4 15H7V12H10V9H13V6H19V9H22V12H25V15H28"></path>
+          <path class="rq-icon-main" d="M7 14V28H25V14"></path>
+          <rect class="rq-icon-main" x="13" y="20" width="6" height="8"></rect>
+          <path class="rq-icon-detail" d="M11 16H15"></path>
         </svg>
       `
     },
@@ -637,24 +640,26 @@ document.addEventListener("DOMContentLoaded", function () {
       href: "/experience",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="4" y="11" width="24" height="16"></rect>
-          <rect x="11" y="6" width="10" height="5"></rect>
-          <rect x="14" y="17" width="4" height="3"></rect>
+          <path class="rq-icon-main" d="M11 9V6H21V9"></path>
+          <rect class="rq-icon-main" x="4" y="9" width="24" height="18"></rect>
+          <path class="rq-icon-main" d="M4 15H13V18H19V15H28"></path>
+          <rect class="rq-icon-fill" x="14" y="15" width="4" height="4"></rect>
+          <path class="rq-icon-detail" d="M8 23H12"></path>
         </svg>
       `
     },
     {
       id: "projects",
       label: "Projects",
-      color: "#5fd068",
+      color: "#58d06f",
       href: "/projects",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M7 11 H25 L29 17 V24 H23 L20 21 H12 L9 24 H3 V17 Z"></path>
-          <rect x="9" y="15" width="3" height="9"></rect>
-          <rect x="6" y="18" width="9" height="3"></rect>
-          <rect x="21" y="16" width="3" height="3"></rect>
-          <rect x="24" y="19" width="3" height="3"></rect>
+          <path class="rq-icon-main" d="M8 11H24V13H27V17H29V25H25V27H21L18 23H14L11 27H7V25H3V17H5V13H8Z"></path>
+          <path class="rq-icon-main" d="M8 17V23M5 20H11"></path>
+          <rect class="rq-icon-fill" x="21" y="17" width="3" height="3"></rect>
+          <rect class="rq-icon-fill" x="24" y="20" width="3" height="3"></rect>
+          <path class="rq-icon-detail" d="M14 14H18"></path>
         </svg>
       `
     },
@@ -665,236 +670,42 @@ document.addEventListener("DOMContentLoaded", function () {
       href: "/resume",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M7 4 H20 L25 9 V28 H7 Z"></path>
-          <rect x="11" y="13" width="10" height="2"></rect>
-          <rect x="11" y="18" width="10" height="2"></rect>
-          <rect x="11" y="23" width="7" height="2"></rect>
+          <path class="rq-icon-main" d="M7 4H20L25 9V28H7Z"></path>
+          <path class="rq-icon-main" d="M20 4V9H25"></path>
+          <path class="rq-icon-main" d="M11 14H21M11 19H21M11 24H18"></path>
+          <path class="rq-icon-detail" d="M11 10H15"></path>
         </svg>
       `
     },
     {
       id: "contact",
       label: "Contact",
-      color: "#a66cff",
+      color: "#5965d8",
       href: "/contact",
       icon: `
         <svg viewBox="0 0 32 32" aria-hidden="true">
-          <rect x="4" y="7" width="24" height="18"></rect>
-          <path d="M4 9 L16 18 L28 9 V13 L16 22 L4 13 Z"></path>
+          <rect class="rq-icon-main" x="4" y="7" width="24" height="18"></rect>
+          <path class="rq-icon-main" d="M5 9L16 18L27 9"></path>
+          <path class="rq-icon-main" d="M5 23L12 16M27 23L20 16"></path>
+          <path class="rq-icon-detail" d="M7 11L10 13"></path>
+        </svg>
+      `
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      color: "#a66cff",
+      href: "/settings",
+      icon: `
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <path class="rq-icon-main" d="M13 3H19V6H22V8H26V12H29V20H26V24H22V26H19V29H13V26H10V24H6V20H3V12H6V8H10V6H13Z"></path>
+          <rect class="rq-icon-main" x="12" y="12" width="8" height="8"></rect>
+          <path class="rq-icon-detail" d="M14 14H18"></path>
         </svg>
       `
     }
   ];
 
-  /* -------------------------------------------------------
-     SELF-CONTAINED NAV CSS
-
-     This intentionally overrides any older navbar styles
-     still sitting in Webflow/main.css.
-     ------------------------------------------------------- */
-
-  let navStyle = document.getElementById("rq-nav-runtime-style");
-
-  if (!navStyle) {
-    navStyle = document.createElement("style");
-    navStyle.id = "rq-nav-runtime-style";
-    navStyle.textContent = `
-      #rq-top-nav {
-        position: fixed !important;
-        top: 10px !important;
-        right: 24px !important;
-        left: auto !important;
-        bottom: auto !important;
-
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        gap: 12px !important;
-
-        width: auto !important;
-        height: auto !important;
-
-        margin: 0 !important;
-        padding: 12px !important;
-
-        overflow: visible !important;
-        pointer-events: auto !important;
-        user-select: none !important;
-
-        z-index: 2147483000 !important;
-
-        background: transparent !important;
-      }
-
-      #rq-top-nav .rq-nav-button {
-        position: relative !important;
-
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        min-height: 40px !important;
-
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-
-        flex: 0 0 40px !important;
-
-        margin: 0 !important;
-        padding: 4px !important;
-
-        overflow: visible !important;
-
-        border: 0 !important;
-        outline: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        text-decoration: none !important;
-
-        cursor: none !important;
-
-        transform: translate3d(0, 0, 0) scale(1) !important;
-        transform-origin: center !important;
-
-        transition:
-          transform 120ms steps(4),
-          filter 100ms steps(3) !important;
-      }
-
-      #rq-top-nav .rq-nav-button:hover {
-        transform: translate3d(0, -3px, 0) scale(1.18) !important;
-        filter: brightness(1.12) !important;
-        z-index: 5 !important;
-      }
-
-      #rq-top-nav .rq-nav-button:active {
-        transform: translate3d(0, 1px, 0) scale(1.08) !important;
-      }
-
-      #rq-top-nav .rq-nav-icon {
-        width: 32px !important;
-        height: 32px !important;
-
-        display: block !important;
-
-        pointer-events: none !important;
-        overflow: visible !important;
-      }
-
-      #rq-top-nav .rq-nav-icon svg {
-        width: 32px !important;
-        height: 32px !important;
-
-        display: block !important;
-
-        overflow: visible !important;
-        shape-rendering: crispEdges !important;
-      }
-
-      #rq-top-nav .rq-nav-icon svg path,
-      #rq-top-nav .rq-nav-icon svg rect,
-      #rq-top-nav .rq-nav-icon svg polygon {
-        fill: currentColor !important;
-        stroke: none !important;
-      }
-
-      #rq-top-nav .rq-nav-label {
-        position: absolute !important;
-        top: 46px !important;
-        left: 50% !important;
-
-        display: block !important;
-
-        padding: 3px 5px !important;
-
-        opacity: 0 !important;
-
-        color: #ffffff !important;
-        background: #09090b !important;
-
-        font-family: inherit !important;
-        font-size: 10px !important;
-        line-height: 1 !important;
-        letter-spacing: 0.04em !important;
-        white-space: nowrap !important;
-
-        pointer-events: none !important;
-
-        transform: translateX(-50%) translateY(-2px) !important;
-
-        transition:
-          opacity 80ms steps(2),
-          transform 80ms steps(2) !important;
-      }
-
-      #rq-top-nav .rq-nav-button:hover .rq-nav-label {
-        opacity: 1 !important;
-        transform: translateX(-50%) translateY(0) !important;
-      }
-
-      #rq-top-nav .rq-nav-button::after {
-        content: "" !important;
-
-        position: absolute !important;
-        left: 50% !important;
-        bottom: -7px !important;
-
-        width: 4px !important;
-        height: 4px !important;
-
-        opacity: 0 !important;
-        background: currentColor !important;
-
-        transform: translateX(-50%) !important;
-      }
-
-      #rq-top-nav .rq-nav-button.is-active::after {
-        opacity: 1 !important;
-      }
-
-      @media (max-width: 700px) {
-        #rq-top-nav {
-          top: 6px !important;
-          right: 8px !important;
-          gap: 6px !important;
-          padding: 8px !important;
-        }
-
-        #rq-top-nav .rq-nav-button {
-          width: 34px !important;
-          height: 34px !important;
-          min-width: 34px !important;
-          min-height: 34px !important;
-          flex-basis: 34px !important;
-          padding: 2px !important;
-        }
-
-        #rq-top-nav .rq-nav-icon,
-        #rq-top-nav .rq-nav-icon svg {
-          width: 28px !important;
-          height: 28px !important;
-        }
-
-        #rq-top-nav .rq-nav-label {
-          display: none !important;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        #rq-top-nav .rq-nav-button,
-        #rq-top-nav .rq-nav-label {
-          transition: none !important;
-        }
-      }
-    `;
-
-    document.head.appendChild(navStyle);
-  }
-
-
-  /* -------------------------------------------------------
-     CREATE / RESET NAV
-     ------------------------------------------------------- */
 
   let nav = document.getElementById("rq-top-nav");
 
@@ -908,29 +719,45 @@ document.addEventListener("DOMContentLoaded", function () {
   nav.innerHTML = "";
 
 
-  /* -------------------------------------------------------
-     BUILD BUTTONS
-     ------------------------------------------------------- */
-
   navItems.forEach(function (item) {
     const button = document.createElement("a");
 
-    button.className = "rq-nav-button rq-nav-" + item.id;
+    button.className =
+      "rq-nav-button rq-nav-" + item.id;
+
     button.href = item.href;
-    button.setAttribute("aria-label", item.label);
 
-    /* currentColor guarantees every SVG uses its rainbow color */
+    button.setAttribute(
+      "aria-label",
+      item.label
+    );
+
     button.style.color = item.color;
-    button.style.setProperty("--nav-color", item.color);
+    button.style.setProperty(
+      "--nav-color",
+      item.color
+    );
 
-    const icon = document.createElement("span");
+
+    const icon =
+      document.createElement("span");
+
     icon.className = "rq-nav-icon";
-    icon.setAttribute("aria-hidden", "true");
+
+    icon.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
     icon.innerHTML = item.icon;
 
-    const label = document.createElement("span");
+
+    const label =
+      document.createElement("span");
+
     label.className = "rq-nav-label";
     label.textContent = item.label;
+
 
     button.appendChild(icon);
     button.appendChild(label);
@@ -938,21 +765,21 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  /* -------------------------------------------------------
-     ACTIVE PAGE
-     ------------------------------------------------------- */
-
   const currentPath =
-    window.location.pathname.replace(/\/+$/, "") || "/";
+    window.location.pathname
+      .replace(/\/+$/, "") || "/";
 
-  const buttons = nav.querySelectorAll(".rq-nav-button");
+  const buttons =
+    nav.querySelectorAll(".rq-nav-button");
 
   buttons.forEach(function (button) {
-    const href = button.getAttribute("href");
+    const href =
+      button.getAttribute("href");
 
     if (!href) return;
 
-    const normalizedHref = href.replace(/\/+$/, "") || "/";
+    const normalizedHref =
+      href.replace(/\/+$/, "") || "/";
 
     if (normalizedHref === currentPath) {
       button.classList.add("is-active");
