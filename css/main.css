@@ -586,7 +586,7 @@ body * {
 
   flex:
     0 0
-    clamp(220px, 23vw, 290px);
+    clamp(260px, 27vw, 340px);
 
   aspect-ratio: 1 / 1;
 
@@ -595,7 +595,7 @@ body * {
   overflow: hidden;
 
   border:
-    10px solid
+    16px solid
     #29292f;
 
   border-radius: 28px;
