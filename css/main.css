@@ -50,16 +50,16 @@
 
   --portfolio-game-title-size:
     clamp(
-      1.05rem,
-      min(1.85vw, 2.55vh),
-      2.0rem
+      1.55rem,
+      min(2.3vw, 3.3vh),
+      2.3rem
     );
 
   --portfolio-game-tagline-size:
     clamp(
-      0.78rem,
-      min(1.25vw, 1.7vh),
-      1.35rem
+      1.2rem,
+      min(1.95vw, 2.65vh),
+      1.95rem
     );
 
   --portfolio-nav-width:
