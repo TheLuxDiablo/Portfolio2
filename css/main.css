@@ -12,6 +12,67 @@
   --portfolio-bg: #09090b;
   --portfolio-accent: #b983a9;
   --portfolio-accent-bright: #f0b6db;
+
+  /*
+   * Responsive UI sizing.
+   *
+   * Using both vw and vh keeps the portfolio from feeling huge
+   * on a smaller laptop while preserving the larger desktop scale.
+   */
+  --portfolio-side-padding:
+    clamp(24px, 3.2vw, 52px);
+
+  --portfolio-row-gap:
+    clamp(18px, 2vw, 32px);
+
+  --portfolio-row-top:
+    clamp(42px, 7.5vh, 84px);
+
+  --portfolio-tile-size:
+    clamp(
+      230px,
+      min(29vw, 39vh),
+      380px
+    );
+
+  --portfolio-tile-border:
+    clamp(
+      10px,
+      min(1vw, 1.7vh),
+      16px
+    );
+
+  --portfolio-tile-radius:
+    clamp(20px, 2vw, 28px);
+
+  --portfolio-info-gap:
+    clamp(10px, 1.5vh, 16px);
+
+  --portfolio-game-title-size:
+    clamp(
+      1.05rem,
+      min(1.85vw, 2.55vh),
+      2.0rem
+    );
+
+  --portfolio-game-tagline-size:
+    clamp(
+      0.78rem,
+      min(1.25vw, 1.7vh),
+      1.35rem
+    );
+
+  --portfolio-nav-width:
+    clamp(58px, 5vw, 84px);
+
+  --portfolio-nav-height:
+    clamp(92px, 13vh, 132px);
+
+  --portfolio-nav-chevron-width:
+    clamp(26px, 2.4vw, 38px);
+
+  --portfolio-nav-chevron-height:
+    clamp(6px, 0.55vw, 9px);
 }
 
 html,
@@ -292,21 +353,6 @@ body > *:not(#portfolio-background):not(#portfolio-pixel-cursor) {
 }
 
 
-/*
- * The game art replaces the upper part of the hex field while
- * the lower hexes remain visible behind the cards.
- */
-body.has-game-background
-#portfolio-hex-background {
-  clip-path:
-    inset(
-      var(--game-bg-height, 58vh)
-      0
-      0
-      0
-    );
-}
-
 
 /* =========================================================
    BACKGROUND ANIMATIONS
@@ -407,7 +453,7 @@ body * {
   width: fit-content;
 
   /* Layout */
-  margin-top: 84px;
+  margin-top: clamp(44px, 7.5vh, 84px);
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
@@ -640,19 +686,20 @@ body * {
 .portfolio-games {
   width: 100%;
 
-  margin-top: 84px;
+  margin-top: var(--portfolio-row-top);
   margin-left: 0;
   margin-right: 0;
 
   padding:
-    28px 48px
-    42px;
+    clamp(18px, 2.5vh, 28px)
+    var(--portfolio-side-padding)
+    clamp(28px, 4vh, 42px);
 
   box-sizing: border-box;
 
   display: flex;
 
-  gap: 32px;
+  gap: var(--portfolio-row-gap);
 
   align-items: flex-start;
 
@@ -677,7 +724,7 @@ body * {
 
 .portfolio-game-item {
   width:
-    clamp(290px, 29vw, 380px);
+    var(--portfolio-tile-size);
 
   display: flex;
   flex-direction: column;
@@ -699,7 +746,7 @@ body * {
 
   flex:
     0 0
-    clamp(290px, 29vw, 380px);
+    var(--portfolio-tile-size);
 
   width: 100%;
 
@@ -710,10 +757,10 @@ body * {
   overflow: visible;
 
   border:
-    16px solid
+    var(--portfolio-tile-border) solid
     #29292f;
 
-  border-radius: 28px;
+  border-radius: var(--portfolio-tile-radius);
 
   background:
     #101014;
@@ -760,7 +807,10 @@ body * {
   object-fit: cover;
 
   border-radius:
-    calc(28px - 16px);
+    calc(
+      var(--portfolio-tile-radius) -
+      var(--portfolio-tile-border)
+    );
 
   pointer-events: none;
 
@@ -782,7 +832,7 @@ body * {
       420px
     );
 
-  margin-top: 16px;
+  margin-top: var(--portfolio-info-gap);
 
   box-sizing: border-box;
 
@@ -803,7 +853,7 @@ body * {
 .portfolio-game-name {
   color: #f6edf3;
 
-  font-size: 2.3rem;
+  font-size: var(--portfolio-game-title-size);
   line-height: 1.1;
 
   letter-spacing: 0.04em;
@@ -823,7 +873,7 @@ body * {
       0.78
     );
 
-  font-size: 1.95rem;
+  font-size: var(--portfolio-game-tagline-size);
   line-height: 1.25;
 
   text-shadow:
@@ -886,7 +936,7 @@ body * {
       calc(var(--tile-y) - 6px),
       0
     )
-    scale(1.035);
+    scale(clamp(1.018, 1.5vw, 1.035));
 
   z-index: 3;
 
@@ -973,8 +1023,8 @@ body * {
 
   top: var(--game-nav-center-y, 50vh);
 
-  width: 84px;
-  height: 132px;
+  width: var(--portfolio-nav-width);
+  height: var(--portfolio-nav-height);
 
   padding: 0;
 
@@ -1047,8 +1097,8 @@ body * {
   left: 50%;
   top: 50%;
 
-  width: 38px;
-  height: 9px;
+  width: var(--portfolio-nav-chevron-width);
+  height: var(--portfolio-nav-chevron-height);
 
   background:
     #ffffff;
@@ -1065,25 +1115,25 @@ body * {
 
 .portfolio-game-nav-left::before {
   transform:
-    translate(-62%, -13px)
+    translate(-62%, calc(var(--portfolio-nav-chevron-width) * -0.34))
     rotate(-45deg);
 }
 
 .portfolio-game-nav-left::after {
   transform:
-    translate(-62%, 13px)
+    translate(-62%, calc(var(--portfolio-nav-chevron-width) * 0.34))
     rotate(45deg);
 }
 
 .portfolio-game-nav-right::before {
   transform:
-    translate(-38%, -13px)
+    translate(-38%, calc(var(--portfolio-nav-chevron-width) * -0.34))
     rotate(45deg);
 }
 
 .portfolio-game-nav-right::after {
   transform:
-    translate(-38%, 13px)
+    translate(-38%, calc(var(--portfolio-nav-chevron-width) * 0.34))
     rotate(-45deg);
 }
 
@@ -1141,29 +1191,40 @@ body * {
    --------------------------------------------------------- */
 
 @media (max-width: 767px) {
+  :root {
+    --portfolio-side-padding: 20px;
+
+    --portfolio-row-gap:
+      clamp(14px, 4vw, 18px);
+
+    --portfolio-row-top:
+      clamp(32px, 5vh, 44px);
+
+    --portfolio-tile-size:
+      min(74vw, 250px);
+
+    --portfolio-tile-border:
+      clamp(7px, 2vw, 9px);
+
+    --portfolio-tile-radius:
+      clamp(18px, 5vw, 24px);
+
+    --portfolio-game-title-size:
+      clamp(0.9rem, 4.2vw, 1.15rem);
+
+    --portfolio-game-tagline-size:
+      clamp(0.72rem, 3.3vw, 0.9rem);
+  }
+
   .portfolio-games {
     width: 100%;
 
-    margin-top: 44px;
-
     padding:
-      24px 20px
-      36px;
-
-    gap: 16px;
+      18px
+      var(--portfolio-side-padding)
+      30px;
 
     scroll-snap-type: x mandatory;
-  }
-
-  .portfolio-game-item {
-    flex-basis: min(74vw, 250px);
-    width: min(74vw, 250px);
-  }
-
-  .portfolio-game-tile {
-    border-width: 8px;
-
-    border-radius: 24px;
   }
 
   .portfolio-game-info {
@@ -1172,16 +1233,6 @@ body * {
         calc(100% + 12px),
         280px
       );
-
-    margin-top: 12px;
-  }
-
-  .portfolio-game-name {
-    font-size: 0.9rem;
-  }
-
-  .portfolio-game-tagline {
-    font-size: 0.72rem;
   }
 
   .portfolio-game-nav {

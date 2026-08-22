@@ -1,3 +1,42 @@
+/* =========================================================
+   RESPONSIVE UI METRICS
+   ========================================================= */
+
+(function () {
+  function updatePortfolioViewportMetrics() {
+    const root =
+      document.documentElement;
+
+    root.style.setProperty(
+      "--portfolio-vw",
+      window.innerWidth + "px"
+    );
+
+    root.style.setProperty(
+      "--portfolio-vh",
+      window.innerHeight + "px"
+    );
+
+    root.style.setProperty(
+      "--portfolio-short-edge",
+      Math.min(
+        window.innerWidth,
+        window.innerHeight
+      ) + "px"
+    );
+  }
+
+  updatePortfolioViewportMetrics();
+
+  window.addEventListener(
+    "resize",
+    updatePortfolioViewportMetrics,
+    {
+      passive: true
+    }
+  );
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
 
   /* =======================================================
